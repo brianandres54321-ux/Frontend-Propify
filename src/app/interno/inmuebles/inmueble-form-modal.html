@@ -1,0 +1,68 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nuevo inmueble' : 'Editar inmueble' }}</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <app-text-field
+      label="Nombre"
+      [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid"
+        formControlName="nombre"
+      />
+    </app-text-field>
+
+    <app-text-field label="Dirección">
+      <input type="text" class="form-control" formControlName="direccion" />
+    </app-text-field>
+
+    <fieldset class="mt-3">
+      <legend class="form-label fs-6">Módulos habilitados</legend>
+
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="tieneTorres" formControlName="tieneTorres" />
+        <label class="form-check-label" for="tieneTorres">Torres</label>
+      </div>
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="tieneZonasComunes"
+          formControlName="tieneZonasComunes"
+        />
+        <label class="form-check-label" for="tieneZonasComunes">Zonas comunes</label>
+      </div>
+      <div class="form-check">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="tieneParqueaderos"
+          formControlName="tieneParqueaderos"
+        />
+        <label class="form-check-label" for="tieneParqueaderos">Parqueaderos</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="tieneCelador" formControlName="tieneCelador" />
+        <label class="form-check-label" for="tieneCelador">Portería / celador</label>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="tieneCartelera" formControlName="tieneCartelera" />
+        <label class="form-check-label" for="tieneCartelera">Cartelera de avisos</label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Guardar
+    </app-button>
+  </div>
+</form>

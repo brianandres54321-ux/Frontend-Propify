@@ -1,0 +1,10 @@
+<nav class="navbar border-bottom bg-body px-4">
+  <span class="badge text-bg-light border">{{ auth.rol() }}</span>
+
+  <div class="d-flex align-items-center gap-3">
+    <span class="small">{{ auth.sesion()?.name }}</span>
+    <app-button variant="secondary" [fullWidth]="false" (click)="cerrarSesion()">
+      Salir
+    </app-button>
+  </div>
+</nav>

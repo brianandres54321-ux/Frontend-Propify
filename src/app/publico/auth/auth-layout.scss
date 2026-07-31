@@ -1,0 +1,46 @@
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  min-height: 100dvh;
+}
+
+@media (min-width: 900px) {
+  .auth-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  }
+}
+
+.auth-layout__brand {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-8);
+  background: var(--color-primary);
+  color: white;
+}
+
+@media (min-width: 900px) {
+  .auth-layout__brand {
+    display: flex;
+  }
+}
+
+.auth-layout__brand .marca {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+}
+
+.auth-layout__brand p {
+  max-width: 26ch;
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+.auth-layout__contenido {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+}

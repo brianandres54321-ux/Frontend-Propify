@@ -1,0 +1,50 @@
+<nav aria-label="breadcrumb" class="mb-2">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a routerLink="/app/inmuebles">Inmuebles</a></li>
+    <li class="breadcrumb-item active">Unidades</li>
+  </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Unidades</h1>
+  @if (puedeGestionar()) {
+    <app-button [fullWidth]="false" (click)="abrirCrear()">+ Nueva unidad</app-button>
+  }
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="filasPagina()"
+    textoVacio="Todavía no hay unidades registradas en este inmueble."
+  >
+    <ng-template let-fila>
+      <div class="d-flex gap-2 justify-content-end">
+        <app-button variant="secondary" [fullWidth]="false" [routerLink]="['/app/inmuebles', inmuebleId, 'unidades', fila.codUnidad, 'residentes']">
+          Residentes
+        </app-button>
+        @if (puedeGestionar()) {
+          <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
+            Editar
+          </app-button>
+          <app-button variant="secondary" [fullWidth]="false" (click)="eliminar(fila)">
+            Eliminar
+          </app-button>
+        }
+      </div>
+    </ng-template>
+  </app-table>
+
+  <app-pagination
+    [totalItems]="unidades().length"
+    [paginaActual]="paginaActual()"
+    [tamanioPagina]="TAMANIO_PAGINA"
+    (paginaCambio)="paginaActual.set($event)"
+  />
+}

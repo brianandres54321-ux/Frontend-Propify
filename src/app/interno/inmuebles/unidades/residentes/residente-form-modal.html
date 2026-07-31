@@ -1,0 +1,116 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nuevo inquilino' : 'Editar inquilino' }}</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <app-text-field
+      label="Nombre"
+      [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid"
+        formControlName="nombre"
+      />
+    </app-text-field>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field
+          label="Teléfono"
+          [error]="form.controls.telefono.touched && form.controls.telefono.invalid ? 'Ingresa un teléfono' : null"
+        >
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="form.controls.telefono.touched && form.controls.telefono.invalid"
+            formControlName="telefono"
+          />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field label="Cédula (opcional)">
+          <input type="text" class="form-control" formControlName="cedula" />
+        </app-text-field>
+      </div>
+    </div>
+
+    <app-text-field
+      label="Correo (opcional)"
+      hint="Para enviarle recordatorios de pago y avisos de mora"
+      [error]="form.controls.correo.touched && form.controls.correo.invalid ? 'Ingresa un correo válido' : null"
+    >
+      <input
+        type="email"
+        class="form-control"
+        [class.is-invalid]="form.controls.correo.touched && form.controls.correo.invalid"
+        formControlName="correo"
+      />
+    </app-text-field>
+
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="esPropietario" formControlName="esPropietario" />
+      <label class="form-check-label" for="esPropietario">Es propietario (no arrienda)</label>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field
+          label="Valor mensual"
+          hint="Cuánto paga cada mes"
+          [error]="form.controls.valorMensual.touched && form.controls.valorMensual.invalid ? 'Ingresa un monto válido' : null"
+        >
+          <input
+            type="number"
+            min="0"
+            step="1000"
+            class="form-control"
+            [class.is-invalid]="form.controls.valorMensual.touched && form.controls.valorMensual.invalid"
+            formControlName="valorMensual"
+          />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field
+          label="Día de pago"
+          hint="1 al 31"
+          [error]="form.controls.diaPago.touched && form.controls.diaPago.invalid ? 'Ingresa un día entre 1 y 31' : null"
+        >
+          <input
+            type="number"
+            min="1"
+            max="31"
+            class="form-control"
+            [class.is-invalid]="form.controls.diaPago.touched && form.controls.diaPago.invalid"
+            formControlName="diaPago"
+          />
+        </app-text-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field label="Fecha de inicio">
+          <input type="date" class="form-control" formControlName="fechaInicio" />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field label="Fecha de fin (opcional)">
+          <input type="date" class="form-control" formControlName="fechaFin" />
+        </app-text-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Guardar
+    </app-button>
+  </div>
+</form>

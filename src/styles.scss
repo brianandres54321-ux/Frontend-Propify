@@ -1,0 +1,98 @@
+// Paleta base de Propify — única fuente de verdad: alimenta tanto la
+// recompilación de Bootstrap (abajo) como nuestros tokens --color-* (al
+// final de este archivo). Cuando exista un endpoint de branding por tenant,
+// esto seguirá siendo el default; el override en runtime tendría que hacerse
+// por componente Bootstrap (--bs-btn-bg, etc.), no solo en :root, porque
+// Bootstrap hornea el color en el CSS compilado.
+$propify-primary: #1f6f5c;
+$propify-primary-hover: #185a4a;
+$propify-secondary: #4b5563;
+$propify-bg: #f7f7f5;
+$propify-surface: #ffffff;
+$propify-border: #e2e2df;
+$propify-text: #1a1a1a;
+$propify-text-muted: #6b7280;
+$propify-danger: #b3261e;
+$propify-success: #1f6f5c;
+$propify-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  Helvetica, Arial, sans-serif;
+
+// Overrides de variables de Bootstrap — deben ir ANTES del @import.
+$primary: $propify-primary;
+$secondary: $propify-secondary;
+$danger: $propify-danger;
+$success: $propify-success;
+$body-bg: $propify-bg;
+$body-color: $propify-text;
+$border-color: $propify-border;
+$border-radius: 0.5rem;
+$border-radius-sm: 0.25rem;
+$border-radius-lg: 0.75rem;
+$font-family-sans-serif: $propify-font-sans;
+$link-color: $primary;
+
+@import 'bootstrap/scss/bootstrap';
+
+// Reset básico
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure {
+  margin: 0;
+}
+
+// Tokens de diseño usados por los componentes propios (shared/components). Derivan
+// de la misma paleta que Bootstrap para que ambos se vean como un solo
+// sistema.
+:root {
+  --color-primary: #{$propify-primary};
+  --color-primary-hover: #{$propify-primary-hover};
+  --color-secondary: #{$propify-secondary};
+
+  --color-bg: #{$propify-bg};
+  --color-surface: #{$propify-surface};
+  --color-border: #{$propify-border};
+
+  --color-text: #{$propify-text};
+  --color-text-muted: #{$propify-text-muted};
+
+  --color-danger: #{$propify-danger};
+  --color-danger-bg: #fdecea;
+  --color-success: #{$propify-success};
+  --color-success-bg: #e8f3ef;
+
+  --font-sans: #{$propify-font-sans};
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 6%);
+  --shadow-md: 0 4px 16px rgb(0 0 0 / 8%);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-8: 48px;
+}

@@ -1,0 +1,17 @@
+<aside class="sidebar">
+  <a routerLink="/app/dashboard" class="sidebar__marca">Propify</a>
+
+  <nav>
+    @for (item of itemsVisibles(); track item.ruta) {
+      @if (item.implementado) {
+        <a [routerLink]="item.ruta" routerLinkActive="activo" class="sidebar__item">
+          {{ item.label }}
+        </a>
+      } @else {
+        <span class="sidebar__item sidebar__item--pendiente" [title]="'Próximamente: ' + item.label">
+          {{ item.label }}
+        </span>
+      }
+    }
+  </nav>
+</aside>

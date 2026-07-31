@@ -1,0 +1,55 @@
+<div class="auth-card">
+  <h1 class="h3 mb-4">Ingresar</h1>
+
+  @if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+    <app-text-field
+      label="Correo"
+      [error]="
+        form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+          ? 'Ingresa un correo válido'
+          : null
+      "
+    >
+      <input
+        type="email"
+        class="form-control"
+        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
+        formControlName="correoUsuario"
+        autocomplete="email"
+      />
+    </app-text-field>
+
+    <app-text-field
+      label="Contraseña"
+      [error]="
+        form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid
+          ? 'La contraseña es obligatoria'
+          : null
+      "
+    >
+      <input
+        type="password"
+        class="form-control"
+        [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
+        formControlName="claveAcceso"
+        autocomplete="current-password"
+      />
+    </app-text-field>
+
+    <a routerLink="/recuperar-password" class="d-block text-end small mb-3">
+      ¿Olvidaste tu contraseña?
+    </a>
+
+    <app-button type="submit" [loading]="enviando()" [disabled]="form.invalid">
+      Ingresar
+    </app-button>
+  </form>
+
+  <p class="text-muted small mt-3 mb-0">
+    ¿No tienes cuenta? <a routerLink="/registro">Crear cuenta</a>
+  </p>
+</div>

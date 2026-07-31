@@ -1,0 +1,13 @@
+<div class="card">
+  @if (titulo()) {
+    <div class="card-header bg-body">{{ titulo() }}</div>
+  }
+  <div class="card-body">
+    <ng-content />
+  </div>
+  @if (tieneFooter()) {
+    <div class="card-footer bg-body">
+      <ng-content select="[card-footer]" />
+    </div>
+  }
+</div>

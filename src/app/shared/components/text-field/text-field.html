@@ -1,0 +1,9 @@
+<div class="mb-3">
+  <label [for]="id" class="form-label">{{ label() }}</label>
+  <ng-content />
+  @if (error()) {
+    <div class="invalid-feedback d-block">{{ error() }}</div>
+  } @else if (hint()) {
+    <div class="form-text">{{ hint() }}</div>
+  }
+</div>

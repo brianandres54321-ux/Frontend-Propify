@@ -1,0 +1,123 @@
+<div class="auth-card">
+  <h1 class="h3">Crear cuenta</h1>
+  <p class="text-muted small mb-4">Registra tu conjunto o edificio en Propify.</p>
+
+  @if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="enviar()">
+    <app-text-field
+      label="Nombre del conjunto o edificio"
+      [error]="
+        form.controls.nombreTenant.touched && form.controls.nombreTenant.invalid
+          ? 'Ingresa un nombre de al menos 2 caracteres'
+          : null
+      "
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.nombreTenant.touched && form.controls.nombreTenant.invalid"
+        formControlName="nombreTenant"
+        autocomplete="organization"
+      />
+    </app-text-field>
+
+    <div class="mb-3">
+      <label class="form-label">¿Qué vas a administrar?</label>
+      <div class="d-flex gap-2">
+        @for (opcion of opcionesPlan; track opcion.valor) {
+          <label class="plan-opcion flex-fill" [class.plan-opcion--activa]="form.controls.plan.value === opcion.valor">
+            <input
+              type="radio"
+              class="btn-check"
+              name="plan"
+              [value]="opcion.valor"
+              formControlName="plan"
+            />
+            <span class="d-block fw-semibold">{{ opcion.titulo }}</span>
+            <span class="d-block small text-muted">{{ opcion.descripcion }}</span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <app-text-field
+      label="Tu nombre"
+      [error]="
+        form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid
+          ? 'Ingresa un nombre de al menos 2 caracteres'
+          : null
+      "
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid"
+        formControlName="nombreUsuario"
+        autocomplete="name"
+      />
+    </app-text-field>
+
+    <app-text-field
+      label="Correo"
+      [error]="
+        form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+          ? 'Ingresa un correo válido'
+          : null
+      "
+    >
+      <input
+        type="email"
+        class="form-control"
+        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
+        formControlName="correoUsuario"
+        autocomplete="email"
+      />
+    </app-text-field>
+
+    <app-text-field
+      label="Contraseña"
+      [hint]="passwordHint"
+      [error]="
+        form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid
+          ? passwordHint
+          : null
+      "
+    >
+      <input
+        type="password"
+        class="form-control"
+        [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
+        formControlName="claveAcceso"
+        autocomplete="new-password"
+      />
+    </app-text-field>
+
+    <app-text-field
+      label="Confirmar contraseña"
+      [error]="
+        form.controls.confirmarClave.touched && form.errors?.['passwordsNoCoinciden']
+          ? 'Las contraseñas no coinciden'
+          : null
+      "
+    >
+      <input
+        type="password"
+        class="form-control"
+        [class.is-invalid]="form.controls.confirmarClave.touched && form.errors?.['passwordsNoCoinciden']"
+        formControlName="confirmarClave"
+        autocomplete="new-password"
+      />
+    </app-text-field>
+
+    <app-button type="submit" [loading]="enviando()" [disabled]="form.invalid">
+      Crear cuenta
+    </app-button>
+  </form>
+
+  <p class="text-muted small mt-3 mb-0">
+    ¿Ya tienes cuenta? <a routerLink="/login">Ingresar</a>
+  </p>
+</div>

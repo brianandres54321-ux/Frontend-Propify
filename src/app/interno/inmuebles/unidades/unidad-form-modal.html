@@ -1,0 +1,51 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nueva unidad' : 'Editar unidad' }}</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <app-text-field
+      label="Identificador"
+      hint="Ej: Apto 101, Pieza 2, Local A"
+      [error]="form.controls.identificador.touched && form.controls.identificador.invalid ? 'Ingresa un identificador' : null"
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.identificador.touched && form.controls.identificador.invalid"
+        formControlName="identificador"
+      />
+    </app-text-field>
+
+    <app-text-field label="Tipo">
+      <select class="form-select" formControlName="tipo">
+        @for (opcion of opcionesTipo; track opcion.valor) {
+          <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+        }
+      </select>
+    </app-text-field>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field label="Piso (opcional)">
+          <input type="number" class="form-control" formControlName="piso" />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field label="Área m² (opcional)">
+          <input type="number" class="form-control" formControlName="areaM2" />
+        </app-text-field>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Guardar
+    </app-button>
+  </div>
+</form>

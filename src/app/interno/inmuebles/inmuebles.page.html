@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Inmuebles</h1>
+  @if (puedeGestionar()) {
+    <app-button [fullWidth]="false" (click)="abrirCrear()">+ Nuevo inmueble</app-button>
+  }
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="filasPagina()"
+    textoVacio="Todavía no has registrado ningún inmueble."
+  >
+    <ng-template let-fila>
+      <div class="d-flex gap-2 justify-content-end">
+        <app-button variant="secondary" [fullWidth]="false" [routerLink]="['/app/inmuebles', fila.codInmueble, 'unidades']">
+          Unidades
+        </app-button>
+        @if (puedeGestionar()) {
+          <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
+            Editar
+          </app-button>
+          <app-button variant="secondary" [fullWidth]="false" (click)="eliminar(fila)">
+            Eliminar
+          </app-button>
+        }
+      </div>
+    </ng-template>
+  </app-table>
+
+  <app-pagination
+    [totalItems]="inmuebles().length"
+    [paginaActual]="paginaActual()"
+    [tamanioPagina]="TAMANIO_PAGINA"
+    (paginaCambio)="paginaActual.set($event)"
+  />
+}

@@ -1,0 +1,16 @@
+.interno-layout {
+  display: flex;
+  min-height: 100dvh;
+}
+
+.interno-layout__contenido {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  padding: var(--space-5);
+  flex: 1;
+}
