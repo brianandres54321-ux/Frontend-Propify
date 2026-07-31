@@ -1,9 +1,9 @@
-// Paleta base de Propify — única fuente de verdad: alimenta tanto la
-// recompilación de Bootstrap (abajo) como nuestros tokens --color-* (al
-// final de este archivo). Cuando exista un endpoint de branding por tenant,
-// esto seguirá siendo el default; el override en runtime tendría que hacerse
-// por componente Bootstrap (--bs-btn-bg, etc.), no solo en :root, porque
-// Bootstrap hornea el color en el CSS compilado.
+// ============================================================
+// PALETA BASE DE PROPIFY
+// ============================================================
+// Única fuente de verdad para la personalización visual.
+// Alimenta Bootstrap y nuestros tokens CSS --color-*.
+
 $propify-primary: #1f6f5c;
 $propify-primary-hover: #185a4a;
 $propify-secondary: #4b5563;
@@ -14,26 +14,42 @@ $propify-text: #1a1a1a;
 $propify-text-muted: #6b7280;
 $propify-danger: #b3261e;
 $propify-success: #1f6f5c;
-$propify-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-  Helvetica, Arial, sans-serif;
 
-// Overrides de variables de Bootstrap — deben ir ANTES del @import.
-$primary: $propify-primary;
-$secondary: $propify-secondary;
-$danger: $propify-danger;
-$success: $propify-success;
-$body-bg: $propify-bg;
-$body-color: $propify-text;
-$border-color: $propify-border;
-$border-radius: 0.5rem;
-$border-radius-sm: 0.25rem;
-$border-radius-lg: 0.75rem;
-$font-family-sans-serif: $propify-font-sans;
-$link-color: $primary;
+$propify-font-sans: 'Inter',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  Helvetica,
+  Arial,
+  sans-serif;
 
-@import 'bootstrap/scss/bootstrap';
 
-// Reset básico
+// ============================================================
+// BOOTSTRAP
+// ============================================================
+// Bootstrap 5.3.8 configurado mediante la API moderna de Sass.
+// Esto reemplaza el @import que estaba generando la advertencia
+// deprecada de Dart Sass.
+
+@use 'bootstrap/scss/bootstrap' with ($primary: $propify-primary,
+  $secondary: $propify-secondary,
+  $danger: $propify-danger,
+  $success: $propify-success,
+  $body-bg: $propify-bg,
+  $body-color: $propify-text,
+  $border-color: $propify-border,
+  $border-radius: 0.5rem,
+  $border-radius-sm: 0.25rem,
+  $border-radius-lg: 0.75rem,
+  $font-family-sans-serif: $propify-font-sans,
+  $link-color: $propify-primary);
+
+
+// ============================================================
+// RESET BÁSICO
+// ============================================================
+
 *,
 *::before,
 *::after {
@@ -50,6 +66,11 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+
+// ============================================================
+// ELEMENTOS HTML
+// ============================================================
+
 h1,
 h2,
 h3,
@@ -59,34 +80,72 @@ figure {
   margin: 0;
 }
 
-// Tokens de diseño usados por los componentes propios (shared/components). Derivan
-// de la misma paleta que Bootstrap para que ambos se vean como un solo
-// sistema.
+
+// ============================================================
+// TOKENS DE DISEÑO
+// ============================================================
+// Derivados de la misma paleta utilizada por Bootstrap.
+// Los componentes propios pueden utilizar estos tokens para
+// mantener una apariencia consistente.
+
 :root {
+  // ----------------------------------------------------------
+  // Colores principales
+  // ----------------------------------------------------------
+
   --color-primary: #{$propify-primary};
   --color-primary-hover: #{$propify-primary-hover};
   --color-secondary: #{$propify-secondary};
+
+  // ----------------------------------------------------------
+  // Fondos y superficies
+  // ----------------------------------------------------------
 
   --color-bg: #{$propify-bg};
   --color-surface: #{$propify-surface};
   --color-border: #{$propify-border};
 
+  // ----------------------------------------------------------
+  // Texto
+  // ----------------------------------------------------------
+
   --color-text: #{$propify-text};
   --color-text-muted: #{$propify-text-muted};
 
+  // ----------------------------------------------------------
+  // Estados
+  // ----------------------------------------------------------
+
   --color-danger: #{$propify-danger};
   --color-danger-bg: #fdecea;
+
   --color-success: #{$propify-success};
   --color-success-bg: #e8f3ef;
 
+  // ----------------------------------------------------------
+  // Tipografía
+  // ----------------------------------------------------------
+
   --font-sans: #{$propify-font-sans};
+
+  // ----------------------------------------------------------
+  // Bordes
+  // ----------------------------------------------------------
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
 
+  // ----------------------------------------------------------
+  // Sombras
+  // ----------------------------------------------------------
+
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 6%);
   --shadow-md: 0 4px 16px rgb(0 0 0 / 8%);
+
+  // ----------------------------------------------------------
+  // Espaciado
+  // ----------------------------------------------------------
 
   --space-1: 4px;
   --space-2: 8px;
