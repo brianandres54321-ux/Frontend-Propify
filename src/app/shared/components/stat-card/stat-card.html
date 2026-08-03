@@ -1,0 +1,17 @@
+<div class="stat-card stat-card--{{ variante() }} stat-card--{{ color() }}">
+  <div class="stat-card__encabezado">
+    <span class="stat-card__titulo">{{ titulo() }}</span>
+    <span class="stat-card__icono">
+      <i class="bi bi-{{ icono() }}"></i>
+    </span>
+  </div>
+
+  <p class="stat-card__valor">{{ valor() }}</p>
+
+  @if (tendenciaTexto()) {
+    <p class="stat-card__tendencia">
+      <i class="bi bi-{{ tendenciaIcono() }}"></i>
+      {{ tendenciaTexto() }}
+    </p>
+  }
+</div>

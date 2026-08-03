@@ -1,1 +1,66 @@
-<h1>Dashboard</h1>
+<h1 class="h3 mb-4">Dashboard</h1>
+
+@if (puedeVerContratos()) {
+  <div class="dashboard__stats mb-4">
+    <app-stat-card
+      titulo="Inmuebles registrados"
+      [valor]="totalInmuebles() ?? '—'"
+      icono="building"
+      color="primary"
+      variante="solid"
+    />
+
+    <app-stat-card
+      titulo="Contratos por vencer"
+      [valor]="contratosPorVencer().length"
+      icono="calendar-event"
+      color="warning"
+      variante="soft"
+      tendenciaTexto="En los próximos 15 días"
+      tendenciaIcono="clock-history"
+    />
+  </div>
+
+  <div class="dashboard__fila mb-4">
+    <app-card
+      variante="warning"
+      icono="calendar-event"
+      titulo="Contratos por vencer (próximos 15 días)"
+      class="dashboard__tabla"
+    >
+      @if (errorMensaje()) {
+        <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+      } @else if (cargando()) {
+        <app-loading />
+      } @else {
+        <app-table
+          [columnas]="columnas"
+          [filas]="contratosPorVencer()"
+          textoVacio="No hay contratos por vencer en los próximos 15 días."
+        />
+      }
+    </app-card>
+
+    @if (!cargando() && contratosPorVencer().length > 0) {
+      <app-card titulo="Urgencia" icono="pie-chart" class="dashboard__donut">
+        <div class="donut" [style.background]="donutGradiente()">
+          <div class="donut__centro">
+            <span class="donut__valor">{{ porcentajeUrgentes() }}%</span>
+            <span class="donut__etiqueta">Urgentes</span>
+          </div>
+        </div>
+
+        <ul class="donut__leyenda">
+          <li>
+            <span class="donut__punto donut__punto--danger"></span>
+            Urgentes (≤7 días) — {{ urgentes() }}
+          </li>
+          <li>
+            <span class="donut__punto donut__punto--info"></span>
+            Próximos (8-15 días) — {{ proximos() }}
+          </li>
+        </ul>
+      </app-card>
+    }
+  </div>
+}

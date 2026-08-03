@@ -32,3 +32,25 @@ export interface CuentaMensual {
   creadoEn: string;
   cargos?: CargoDetalle[];
 }
+
+// Vista aplanada que devuelve GET /privado/cobranza/cuentas — ya viene con
+// el residente/unidad/inmueble unidos, para no tener que resolverlos aparte
+// en el listado de Cobranza.
+export interface CuentaResumen {
+  codCuenta: number;
+  periodo: string;
+  fechaVencimiento: string;
+  total: number;
+  totalPagado: number;
+  estado: EstadoCuenta;
+  codResidente: number;
+  nombreResidente: string;
+  identificadorUnidad: string;
+  codInmueble: number;
+  nombreInmueble: string;
+}
+
+export interface ConsultarCuentasFiltros {
+  estado?: EstadoCuenta;
+  inmuebleId?: number;
+}

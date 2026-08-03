@@ -14,6 +14,8 @@ $propify-text: #1a1a1a;
 $propify-text-muted: #6b7280;
 $propify-danger: #b3261e;
 $propify-success: #1f6f5c;
+$propify-warning: #b8860b;
+$propify-info: #2563a8;
 
 $propify-font-sans: 'Inter',
   -apple-system,
@@ -36,14 +38,23 @@ $propify-font-sans: 'Inter',
   $secondary: $propify-secondary,
   $danger: $propify-danger,
   $success: $propify-success,
+  $warning: $propify-warning,
+  $info: $propify-info,
   $body-bg: $propify-bg,
   $body-color: $propify-text,
   $border-color: $propify-border,
-  $border-radius: 0.5rem,
-  $border-radius-sm: 0.25rem,
-  $border-radius-lg: 0.75rem,
+  $border-radius: 0.75rem,
+  $border-radius-sm: 0.5rem,
+  $border-radius-lg: 1.25rem,
   $font-family-sans-serif: $propify-font-sans,
   $link-color: $propify-primary);
+
+
+// ============================================================
+// ICONOS
+// ============================================================
+
+@use 'bootstrap-icons/font/bootstrap-icons' as bi;
 
 
 // ============================================================
@@ -95,6 +106,7 @@ figure {
 
   --color-primary: #{$propify-primary};
   --color-primary-hover: #{$propify-primary-hover};
+  --color-primary-bg: #e8f3ef;
   --color-secondary: #{$propify-secondary};
 
   // ----------------------------------------------------------
@@ -122,6 +134,12 @@ figure {
   --color-success: #{$propify-success};
   --color-success-bg: #e8f3ef;
 
+  --color-warning: #{$propify-warning};
+  --color-warning-bg: #fdf3d9;
+
+  --color-info: #{$propify-info};
+  --color-info-bg: #e7eef7;
+
   // ----------------------------------------------------------
   // Tipografía
   // ----------------------------------------------------------
@@ -132,9 +150,9 @@ figure {
   // Bordes
   // ----------------------------------------------------------
 
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
 
   // ----------------------------------------------------------
   // Sombras
@@ -154,4 +172,54 @@ figure {
   --space-5: 24px;
   --space-6: 32px;
   --space-8: 48px;
+}
+
+
+// ============================================================
+// AJUSTES SOBRE COMPONENTES DE BOOTSTRAP
+// ============================================================
+// Pequeños toques para que los componentes reutilizables (Card,
+// Table) luzcan menos "de fábrica" sin reescribir Bootstrap.
+
+.card {
+  box-shadow: var(--shadow-sm);
+}
+
+.table {
+  thead th {
+    background: var(--color-bg);
+    color: var(--color-text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--color-border);
+  }
+
+  tbody tr {
+    border-bottom-color: var(--color-border);
+  }
+
+  tbody tr:hover {
+    background-color: var(--color-primary-bg);
+  }
+}
+
+// ----------------------------------------------------------
+// Badges "soft": fondo pastel + texto de color, para estados
+// (días restantes, activo/inactivo, tipo de unidad) sin el
+// contraste duro de los badges sólidos de Bootstrap.
+// ----------------------------------------------------------
+
+@each $nombre, $color, $fondo in (primary, var(--color-primary), var(--color-primary-bg)),
+  (success, var(--color-success), var(--color-success-bg)),
+  (warning, var(--color-warning), var(--color-warning-bg)),
+  (danger, var(--color-danger), var(--color-danger-bg)),
+  (info, var(--color-info), var(--color-info-bg)) {
+  .badge-soft-#{$nombre} {
+    background: $fondo;
+    color: $color;
+    font-weight: 600;
+  }
 }

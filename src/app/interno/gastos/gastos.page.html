@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-0">Gastos</h1>
+    <p class="text-muted small mb-0">Total del inmueble: {{ '$' + totalGastos().toLocaleString('es-CO') }}</p>
+  </div>
+  <app-button [fullWidth]="false" [disabled]="!inmuebleSeleccionado()" (click)="abrirCrear()">
+    + Nuevo gasto
+  </app-button>
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+<form class="row mb-3">
+  <div class="col-6 col-md-3">
+    <select
+      class="form-select"
+      [value]="inmuebleSeleccionado()"
+      (change)="cambiarInmueble($any($event.target).value)"
+    >
+      @for (inmueble of inmuebles(); track inmueble.codInmueble) {
+        <option [value]="inmueble.codInmueble">{{ inmueble.nombre }}</option>
+      }
+    </select>
+  </div>
+</form>
+
+@if (cargando()) {
+  <app-loading />
+} @else if (!inmuebleSeleccionado()) {
+  <p class="text-muted">Todavía no has registrado ningún inmueble.</p>
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="gastos()"
+    textoVacio="No hay gastos registrados para este inmueble."
+  >
+    <ng-template let-fila>
+      <div class="d-flex gap-2 justify-content-end">
+        <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
+          Editar
+        </app-button>
+        <app-button variant="secondary" [fullWidth]="false" (click)="eliminar(fila)">
+          Eliminar
+        </app-button>
+      </div>
+    </ng-template>
+  </app-table>
+}

@@ -28,7 +28,13 @@
                 [class.text-end]="columna.align === 'end'"
                 [class.text-center]="columna.align === 'center'"
               >
-                {{ columna.valor ? columna.valor(fila) : celda(fila, columna.key) }}
+                @if (columna.badge) {
+                  <span class="badge rounded-pill badge-soft-{{ columna.badge(fila).variante }}">
+                    {{ columna.badge(fila).texto }}
+                  </span>
+                } @else {
+                  {{ columna.valor ? columna.valor(fila) : celda(fila, columna.key) }}
+                }
               </td>
             }
             @if (accionesTemplate) {

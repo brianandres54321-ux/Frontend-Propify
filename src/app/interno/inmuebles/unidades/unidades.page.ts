@@ -13,7 +13,7 @@ import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/
 import { LoadingComponent } from '../../../shared/components/loading/loading';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination';
 import { TableComponent } from '../../../shared/components/table/table';
-import { TableColumn } from '../../../shared/interfaces/table-column.interface';
+import { TableBadgeVariant, TableColumn } from '../../../shared/interfaces/table-column.interface';
 import { UnidadFormModal } from './unidad-form-modal';
 
 const TAMANIO_PAGINA = 10;
@@ -24,6 +24,14 @@ const ETIQUETAS_TIPO: Record<TipoUnidad, string> = {
   [TipoUnidad.HABITACION]: 'Habitación / Pieza',
   [TipoUnidad.LOCAL]: 'Local comercial',
   [TipoUnidad.OFICINA]: 'Oficina',
+};
+
+const VARIANTE_TIPO: Record<TipoUnidad, TableBadgeVariant> = {
+  [TipoUnidad.APARTAMENTO]: 'primary',
+  [TipoUnidad.APARTAESTUDIO]: 'info',
+  [TipoUnidad.HABITACION]: 'warning',
+  [TipoUnidad.LOCAL]: 'success',
+  [TipoUnidad.OFICINA]: 'danger',
 };
 
 @Component({
@@ -65,7 +73,11 @@ export class UnidadesPage implements OnInit {
 
   protected readonly columnas: TableColumn<Unidad>[] = [
     { key: 'identificador', label: 'Identificador' },
-    { key: 'tipo', label: 'Tipo', valor: (f) => ETIQUETAS_TIPO[f.tipo] },
+    {
+      key: 'tipo',
+      label: 'Tipo',
+      badge: (f) => ({ texto: ETIQUETAS_TIPO[f.tipo], variante: VARIANTE_TIPO[f.tipo] }),
+    },
     { key: 'piso', label: 'Piso', valor: (f) => f.piso ?? '—' },
     { key: 'areaM2', label: 'Área m²', valor: (f) => f.areaM2 ?? '—' },
   ];

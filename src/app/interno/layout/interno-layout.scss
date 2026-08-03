@@ -13,4 +13,11 @@
 main {
   padding: var(--space-5);
   flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 575.98px) {
+  main {
+    padding: var(--space-4) var(--space-3);
+  }
 }

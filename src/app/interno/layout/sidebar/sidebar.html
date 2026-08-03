@@ -1,17 +1,43 @@
-<aside class="sidebar">
-  <a routerLink="/app/dashboard" class="sidebar__marca">Propify</a>
+@if (layout.sidebarMovilAbierto()) {
+  <div class="sidebar__backdrop" (click)="cerrarMovil()"></div>
+}
 
-  <nav>
-    @for (item of itemsVisibles(); track item.ruta) {
-      @if (item.implementado) {
-        <a [routerLink]="item.ruta" routerLinkActive="activo" class="sidebar__item">
-          {{ item.label }}
-        </a>
-      } @else {
-        <span class="sidebar__item sidebar__item--pendiente" [title]="'Próximamente: ' + item.label">
-          {{ item.label }}
-        </span>
+<aside
+  class="sidebar"
+  [class.sidebar--colapsado]="layout.sidebarColapsado()"
+  [class.sidebar--movil-abierto]="layout.sidebarMovilAbierto()"
+>
+  <a routerLink="/app/dashboard" class="sidebar__marca">
+    <i class="bi bi-house-door-fill sidebar__marca-icono"></i>
+    <span class="sidebar__marca-texto">Propify</span>
+  </a>
+
+  <div class="sidebar__grupo">
+    <span class="sidebar__seccion">Menú</span>
+
+    <nav>
+      @for (item of itemsVisibles(); track item.ruta) {
+        @if (item.implementado) {
+          <a
+            [routerLink]="item.ruta"
+            routerLinkActive="activo"
+            class="sidebar__item"
+            [title]="item.label"
+            (click)="cerrarMovil()"
+          >
+            <i class="bi bi-{{ item.icono }} sidebar__item-icono"></i>
+            <span class="sidebar__item-texto">{{ item.label }}</span>
+          </a>
+        } @else {
+          <span
+            class="sidebar__item sidebar__item--pendiente"
+            [title]="'Próximamente: ' + item.label"
+          >
+            <i class="bi bi-{{ item.icono }} sidebar__item-icono"></i>
+            <span class="sidebar__item-texto">{{ item.label }}</span>
+          </span>
+        }
       }
-    }
-  </nav>
+    </nav>
+  </div>
 </aside>

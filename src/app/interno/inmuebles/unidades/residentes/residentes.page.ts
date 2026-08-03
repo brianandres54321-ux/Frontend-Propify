@@ -72,7 +72,10 @@ export class ResidentesPage implements OnInit {
     {
       key: 'esPropietario',
       label: 'Calidad',
-      valor: (f) => (f.esPropietario ? 'Propietario' : 'Arrendatario'),
+      badge: (f) => ({
+        texto: f.esPropietario ? 'Propietario' : 'Arrendatario',
+        variante: f.esPropietario ? 'success' : 'info',
+      }),
     },
     { key: 'valorMensual', label: 'Valor mensual', valor: (f) => formatoMonto(f.valorMensual) },
     { key: 'diaPago', label: 'Día de pago' },
@@ -145,6 +148,38 @@ export class ResidentesPage implements OnInit {
       next: () => this.cargar(),
       error: (error: unknown) =>
         this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo eliminar el inquilino.')),
+    });
+  }
+
+  protected subirContrato(residente: Residente, input: HTMLInputElement): void {
+    const archivo = input.files?.[0];
+    if (!archivo) return;
+
+    this.residentesService.subirContrato(residente.codResidente, archivo).subscribe({
+      next: () => {
+        input.value = '';
+        this.cargar();
+      },
+      error: (error: unknown) => {
+        input.value = '';
+        this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo subir el contrato.'));
+      },
+    });
+  }
+
+  protected descargarContrato(residente: Residente): void {
+    this.residentesService.descargarContrato(residente.codResidente).subscribe({
+      next: (blob) => {
+        const extension = residente.archivoContrato?.split('.').pop() ?? 'pdf';
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = `contrato-${residente.nombre.replace(/\s+/g, '-')}.${extension}`;
+        enlace.click();
+        URL.revokeObjectURL(url);
+      },
+      error: (error: unknown) =>
+        this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo descargar el contrato.')),
     });
   }
 }

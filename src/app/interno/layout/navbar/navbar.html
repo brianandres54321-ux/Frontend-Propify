@@ -1,9 +1,33 @@
-<nav class="navbar border-bottom bg-body px-4">
-  <span class="badge text-bg-light border">{{ auth.rol() }}</span>
+<nav class="navbar">
+  <div class="d-flex align-items-center gap-2">
+    <button
+      type="button"
+      class="navbar__toggle navbar__toggle--movil"
+      title="Abrir menú"
+      (click)="toggleSidebarMovil()"
+    >
+      <i class="bi bi-list"></i>
+    </button>
+
+    <button
+      type="button"
+      class="navbar__toggle navbar__toggle--desktop"
+      [title]="layout.sidebarColapsado() ? 'Expandir menú' : 'Colapsar menú'"
+      (click)="toggleSidebarColapsado()"
+    >
+      <i class="bi" [class.bi-layout-sidebar-inset]="!layout.sidebarColapsado()" [class.bi-layout-sidebar]="layout.sidebarColapsado()"></i>
+    </button>
+
+    <span class="badge rounded-pill badge-soft-primary text-uppercase">{{ auth.rol() }}</span>
+  </div>
 
   <div class="d-flex align-items-center gap-3">
-    <span class="small">{{ auth.sesion()?.name }}</span>
+    <div class="navbar__usuario">
+      <span class="navbar__avatar">{{ iniciales() }}</span>
+      <span class="navbar__nombre">{{ auth.sesion()?.name }}</span>
+    </div>
     <app-button variant="secondary" [fullWidth]="false" (click)="cerrarSesion()">
+      <i class="bi bi-box-arrow-right"></i>
       Salir
     </app-button>
   </div>

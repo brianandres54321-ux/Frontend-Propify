@@ -12,6 +12,12 @@ export interface Residente {
   fechaInicio: string;
   fechaFin?: string;
   activo: boolean;
+  // Solo viene poblado en GET /privado/residentes/por-vencer (para mostrar
+  // en qué unidad está el contrato que se vence, sin otra consulta).
+  unidad?: { codUnidad: number; identificador: string };
+  // Nombre del archivo guardado en el servidor (no el nombre original) —
+  // presencia indica si ya se subió un contrato (Word/PDF) para este residente.
+  archivoContrato?: string;
 }
 
 export interface CrearResidenteRequest {
@@ -19,7 +25,7 @@ export interface CrearResidenteRequest {
   codUsuario?: number;
   nombre: string;
   telefono: string;
-  correo?: string;
+  correo: string;
   cedula?: string;
   esPropietario?: boolean;
   valorMensual: number;

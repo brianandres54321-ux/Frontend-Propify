@@ -27,7 +27,22 @@
   >
     <ng-template let-fila>
       @if (puedeGestionar()) {
-        <div class="d-flex gap-2 justify-content-end">
+        <div class="d-flex gap-2 justify-content-end flex-wrap">
+          @if (fila.archivoContrato) {
+            <app-button variant="secondary" [fullWidth]="false" (click)="descargarContrato(fila)">
+              Ver contrato
+            </app-button>
+          }
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            hidden
+            #inputContrato
+            (change)="subirContrato(fila, inputContrato)"
+          />
+          <app-button variant="secondary" [fullWidth]="false" (click)="inputContrato.click()">
+            {{ fila.archivoContrato ? 'Reemplazar contrato' : 'Subir contrato' }}
+          </app-button>
           <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
             Editar
           </app-button>

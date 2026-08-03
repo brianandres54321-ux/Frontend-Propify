@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-0">Cobranza</h1>
+    <p class="text-muted small mb-0">Saldo pendiente total: {{ totalPendiente() > 0 ? ('$' + totalPendiente().toLocaleString('es-CO')) : '$0' }}</p>
+  </div>
+  <app-button [fullWidth]="false" [loading]="generando()" (click)="generarCuentasDelMes()">
+    Generar cuentas del mes
+  </app-button>
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+@if (mensajeExito()) {
+  <app-alert variant="success">{{ mensajeExito() }}</app-alert>
+}
+
+<form [formGroup]="filtros" class="row mb-3">
+  <div class="col-6 col-md-3">
+    <select class="form-select" formControlName="estado">
+      <option value="">Todos los estados</option>
+      <option [value]="EstadoCuenta.PENDIENTE">Pendiente</option>
+      <option [value]="EstadoCuenta.VENCIDA">Vencida</option>
+      <option [value]="EstadoCuenta.PAGADA">Pagada</option>
+    </select>
+  </div>
+  <div class="col-6 col-md-3">
+    <select class="form-select" formControlName="inmuebleId">
+      <option value="">Todos los inmuebles</option>
+      @for (inmueble of inmuebles(); track inmueble.codInmueble) {
+        <option [value]="inmueble.codInmueble">{{ inmueble.nombre }}</option>
+      }
+    </select>
+  </div>
+</form>
+
+@if (cargando()) {
+  <app-loading />
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="cuentas()"
+    textoVacio="No hay cuentas registradas con estos filtros."
+  >
+    <ng-template let-fila>
+      @if (fila.estado !== EstadoCuenta.PAGADA) {
+        <app-button variant="secondary" [fullWidth]="false" (click)="registrarPago(fila)">
+          Registrar pago
+        </app-button>
+      }
+    </ng-template>
+  </app-table>
+}

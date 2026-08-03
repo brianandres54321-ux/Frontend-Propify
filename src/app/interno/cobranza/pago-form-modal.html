@@ -1,0 +1,73 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Registrar pago</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <div class="pago-resumen mb-3">
+      <div>
+        <span class="text-muted small d-block">Inquilino</span>
+        <strong>{{ cuenta.nombreResidente }}</strong> — {{ cuenta.identificadorUnidad }}
+      </div>
+      <div class="row mt-2">
+        <div class="col-4">
+          <span class="text-muted small d-block">Total</span>
+          {{ formatoMonto(cuenta.total) }}
+        </div>
+        <div class="col-4">
+          <span class="text-muted small d-block">Pagado</span>
+          {{ formatoMonto(cuenta.totalPagado) }}
+        </div>
+        <div class="col-4">
+          <span class="text-muted small d-block">Saldo</span>
+          <strong>{{ formatoMonto(saldoPendiente) }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <app-text-field
+      label="Monto"
+      [error]="form.controls.monto.touched && form.controls.monto.invalid ? 'Ingresa un monto válido' : null"
+    >
+      <input
+        type="text"
+        inputmode="numeric"
+        appMoneda
+        class="form-control"
+        [class.is-invalid]="form.controls.monto.touched && form.controls.monto.invalid"
+        formControlName="monto"
+      />
+    </app-text-field>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field label="Fecha">
+          <input type="date" class="form-control" formControlName="fecha" />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field label="Método">
+          <select class="form-select" formControlName="metodo">
+            @for (opcion of opcionesMetodo; track opcion) {
+              <option [value]="opcion">{{ opcion }}</option>
+            }
+          </select>
+        </app-text-field>
+      </div>
+    </div>
+
+    <app-text-field label="Referencia (opcional)">
+      <input type="text" class="form-control" formControlName="referencia" />
+    </app-text-field>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Registrar pago
+    </app-button>
+  </div>
+</form>

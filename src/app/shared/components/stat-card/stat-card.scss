@@ -1,0 +1,95 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.stat-card {
+  height: 100%;
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.stat-card__encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.stat-card__titulo {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.stat-card__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  font-size: 1.05rem;
+  flex-shrink: 0;
+}
+
+.stat-card__valor {
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.stat-card__tendencia {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: 0.8rem;
+  margin-bottom: 0;
+}
+
+// ----------------------------------------------------------
+// Variante "soft": fondo blanco, ícono en chip de color.
+// ----------------------------------------------------------
+
+.stat-card--soft {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text);
+
+  .stat-card__tendencia {
+    color: var(--color-text-muted);
+  }
+}
+
+@each $nombre in primary, warning, danger, success, info {
+  .stat-card--soft.stat-card--#{$nombre} .stat-card__icono {
+    background: var(--color-#{$nombre}-bg);
+    color: var(--color-#{$nombre});
+  }
+}
+
+// ----------------------------------------------------------
+// Variante "solid": fondo de color sólido, texto blanco.
+// ----------------------------------------------------------
+
+.stat-card--solid {
+  color: white;
+
+  .stat-card__icono {
+    background: rgb(255 255 255 / 20%);
+    color: white;
+  }
+
+  .stat-card__tendencia {
+    color: rgb(255 255 255 / 85%);
+  }
+}
+
+@each $nombre in primary, warning, danger, success, info {
+  .stat-card--solid.stat-card--#{$nombre} {
+    background: var(--color-#{$nombre});
+  }
+}

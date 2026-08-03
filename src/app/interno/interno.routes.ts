@@ -30,8 +30,18 @@ export const INTERNO_ROUTES: Routes = [
             (m) => m.ResidentesPage,
           ),
       },
-      // Próximos módulos (cobranza, portería, zonas comunes, avisos...) se
-      // agregan aquí como rutas hijas con loadComponent, usando rolesGuard +
+      {
+        path: 'cobranza',
+        loadComponent: () =>
+          import('./cobranza/cobranza.page').then((m) => m.CobranzaPage),
+      },
+      {
+        path: 'gastos',
+        loadComponent: () =>
+          import('./gastos/gastos.page').then((m) => m.GastosPage),
+      },
+      // Próximos módulos (portería, zonas comunes, avisos...) se agregan
+      // aquí como rutas hijas con loadComponent, usando rolesGuard +
       // data:{ roles: [...] } cuando el módulo no sea accesible para todos
       // los roles.
     ],

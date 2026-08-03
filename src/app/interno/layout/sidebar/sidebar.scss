@@ -1,8 +1,12 @@
+$ancho-expandido: 240px;
+$ancho-colapsado: 72px;
+$punto-quiebre-movil: 992px;
+
 .sidebar {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  width: 240px;
+  width: $ancho-expandido;
   flex-shrink: 0;
   padding: var(--space-5) var(--space-4);
   background: var(--color-surface);
@@ -10,14 +14,47 @@
   height: 100dvh;
   position: sticky;
   top: 0;
+  overflow-x: hidden;
   overflow-y: auto;
+  transition: width 0.2s ease;
+  z-index: 1030;
+}
+
+.sidebar--colapsado {
+  width: $ancho-colapsado;
+  padding-inline: var(--space-3);
 }
 
 .sidebar__marca {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-weight: 700;
   font-size: 1.15rem;
   text-decoration: none;
   color: var(--color-text);
+  white-space: nowrap;
+}
+
+.sidebar__marca-icono {
+  color: var(--color-primary);
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+
+.sidebar__grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.sidebar__seccion {
+  padding-inline: var(--space-3);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 nav {
@@ -27,12 +64,24 @@ nav {
 }
 
 .sidebar__item {
-  padding: 0.55rem var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0.6rem var(--space-3);
   border-radius: var(--radius-sm);
+  border-left: 3px solid transparent;
   text-decoration: none;
   color: var(--color-text);
   font-size: 0.9rem;
   font-weight: 500;
+  white-space: nowrap;
+}
+
+.sidebar__item-icono {
+  font-size: 1.05rem;
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
 }
 
 a.sidebar__item:hover {
@@ -40,11 +89,80 @@ a.sidebar__item:hover {
 }
 
 a.sidebar__item.activo {
-  background: var(--color-primary);
-  color: white;
+  background: var(--color-primary-bg);
+  border-left-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 .sidebar__item--pendiente {
   color: var(--color-text-muted);
   cursor: default;
+}
+
+.sidebar--colapsado {
+  .sidebar__marca-texto,
+  .sidebar__item-texto,
+  .sidebar__seccion {
+    display: none;
+  }
+
+  .sidebar__item {
+    justify-content: center;
+    padding-inline: 0;
+    border-left-width: 0;
+  }
+
+  a.sidebar__item.activo {
+    border-radius: var(--radius-sm);
+  }
+}
+
+.sidebar__backdrop {
+  display: none;
+}
+
+// ----------------------------------------------------------
+// Móvil: el sidebar se convierte en un panel off-canvas fijo,
+// oculto por defecto e independiente del estado "colapsado"
+// (ese solo aplica al modo icon-rail de escritorio).
+// ----------------------------------------------------------
+@media (max-width: #{$punto-quiebre-movil - 1px}) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    width: $ancho-expandido;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar--colapsado {
+    width: $ancho-expandido;
+    padding-inline: var(--space-4);
+
+    .sidebar__marca-texto,
+    .sidebar__item-texto,
+    .sidebar__seccion {
+      display: inline;
+    }
+
+    .sidebar__item {
+      justify-content: flex-start;
+      padding-inline: var(--space-3);
+      border-left-width: 3px;
+    }
+  }
+
+  .sidebar--movil-abierto {
+    transform: translateX(0);
+  }
+
+  .sidebar__backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 40%);
+    z-index: 1020;
+  }
 }
