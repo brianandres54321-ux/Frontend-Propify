@@ -36,6 +36,7 @@ export interface RegistroTenantRequest {
   plan?: PlanTipo;
   nombreUsuario: string;
   correoUsuario: string;
+  telefono: string;
   claveAcceso: string;
 }
 

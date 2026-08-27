@@ -5,6 +5,8 @@
 >
   @if (loading()) {
     <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+  } @else if (icono()) {
+    <i class="bi bi-{{ icono() }}"></i>
   }
   <ng-content />
 </button>

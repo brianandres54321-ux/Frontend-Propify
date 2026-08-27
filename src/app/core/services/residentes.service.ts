@@ -2,12 +2,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import {
-  ActualizarResidenteRequest,
-  CrearResidenteRequest,
-  Residente,
-} from '../models';
+import { environment } from '@env/environment';
+import { ActualizarResidenteRequest, CrearResidenteRequest, Residente } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class ResidentesService {
@@ -19,6 +15,15 @@ export class ResidentesService {
     return this.http.get<Residente[]>(this.baseUrl, {
       params: new HttpParams().set('unidadId', unidadId),
     });
+  }
+
+  // El propio residente logueado (para "Mis cuentas").
+  public consultarMe(): Observable<Residente> {
+    return this.http.get<Residente>(`${this.baseUrl}/me`);
+  }
+
+  public consultarUno(id: number): Observable<Residente> {
+    return this.http.get<Residente>(`${this.baseUrl}/${id}`);
   }
 
   public registrar(datos: CrearResidenteRequest): Observable<Residente> {

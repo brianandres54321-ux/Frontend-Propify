@@ -1,0 +1,43 @@
+<div class="bell" ngbDropdown placement="bottom-end">
+  <button type="button" class="bell__boton" ngbDropdownToggle title="Notificaciones">
+    <i class="bi bi-bell"></i>
+    @if (alertasService.alertas().length > 0) {
+      <span class="bell__contador">{{ alertasService.alertas().length }}</span>
+    }
+  </button>
+
+  <div ngbDropdownMenu class="bell__panel">
+    <div class="bell__encabezado">Notificaciones</div>
+
+    @if (alertasService.cargando()) {
+      <div class="bell__vacio">Cargando…</div>
+    } @else if (alertasService.alertas().length === 0) {
+      <div class="bell__vacio">
+        <i class="bi bi-check-circle-fill"></i>
+        Todo al día — no hay alertas pendientes.
+      </div>
+    } @else {
+      <ul class="bell__lista">
+        @for (alerta of alertasService.alertas(); track alerta.texto) {
+          <li>
+            @if (alerta.link) {
+              <a [routerLink]="alerta.link" class="bell__item" ngbDropdownItem>
+                <span class="bell__icono badge-soft-{{ alerta.color }}">
+                  <i class="bi bi-{{ alerta.icono }}"></i>
+                </span>
+                <span class="bell__texto">{{ alerta.texto }}</span>
+              </a>
+            } @else {
+              <span class="bell__item">
+                <span class="bell__icono badge-soft-{{ alerta.color }}">
+                  <i class="bi bi-{{ alerta.icono }}"></i>
+                </span>
+                <span class="bell__texto">{{ alerta.texto }}</span>
+              </span>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

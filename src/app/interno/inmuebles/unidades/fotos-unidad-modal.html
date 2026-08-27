@@ -1,0 +1,34 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Fotos — {{ identificadorUnidad }}</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  @if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  }
+
+  <label class="btn btn-outline-primary mb-3">
+    <input type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="seleccionarArchivo($event)" [disabled]="subiendo()" />
+    {{ subiendo() ? 'Subiendo...' : '+ Agregar foto' }}
+  </label>
+
+  @if (cargando()) {
+    <app-loading />
+  } @else if (fotos().length === 0) {
+    <p class="text-muted small">Todavía no has subido fotos de esta unidad.</p>
+  } @else {
+    <div class="galeria">
+      @for (item of fotos(); track item.foto.codFoto) {
+        <div class="foto-item">
+          <img [src]="item.url" alt="Foto de la unidad" />
+          <app-button variant="icon" color="danger" icono="trash" title="Eliminar foto" (click)="eliminar(item.foto)" />
+        </div>
+      }
+    </div>
+  }
+</div>
+
+<div class="modal-footer">
+  <app-button variant="secondary" [fullWidth]="false" (click)="activeModal.dismiss()">Cerrar</app-button>
+</div>

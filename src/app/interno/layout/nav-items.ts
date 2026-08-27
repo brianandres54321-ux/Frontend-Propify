@@ -1,4 +1,4 @@
-import { RoleNames, RolNombre } from '../../core/constants/roles.constant';
+import { BanderaModulo, RoleNames, RolNombre } from '@core/constants';
 
 export interface NavItem {
   label: string;
@@ -9,6 +9,11 @@ export interface NavItem {
   roles: RolNombre[];
   // false = módulo aún sin vista construida; se muestra pero no navega.
   implementado: boolean;
+  // Si se indica, el ítem solo se muestra cuando el plan del tenant ofrece
+  // esa bandera (ver BANDERAS_DISPONIBLES_POR_PLAN) — p. ej. una Casa nunca
+  // ve "Zonas comunes" en el menú, porque ningún inmueble suyo podría
+  // tenerla activa.
+  bandera?: BanderaModulo;
 }
 
 export const NAV_ITEMS: NavItem[] = [
@@ -49,35 +54,59 @@ export const NAV_ITEMS: NavItem[] = [
     ruta: '/app/zonas-comunes',
     icono: 'flower1',
     roles: [RoleNames.DUENO, RoleNames.ADMIN, RoleNames.RESIDENTE],
-    implementado: false,
+    implementado: true,
+    bandera: 'tieneZonasComunes',
   },
   {
     label: 'Portería',
     ruta: '/app/porteria',
     icono: 'shield-lock',
     roles: [RoleNames.DUENO, RoleNames.ADMIN, RoleNames.CELADOR],
-    implementado: false,
+    implementado: true,
+    bandera: 'tieneCelador',
   },
   {
     label: 'Avisos',
     ruta: '/app/avisos',
     icono: 'megaphone',
     roles: [],
-    implementado: false,
+    implementado: true,
+    bandera: 'tieneCartelera',
   },
   {
     label: 'Mis cuentas',
     ruta: '/app/mis-cuentas',
     icono: 'wallet2',
     roles: [RoleNames.RESIDENTE],
-    implementado: false,
+    implementado: true,
+  },
+  {
+    label: 'Reportes de daño',
+    ruta: '/app/reportes-dano',
+    icono: 'tools',
+    roles: [RoleNames.DUENO, RoleNames.ADMIN, RoleNames.RESIDENTE],
+    implementado: true,
+  },
+  {
+    label: 'Autorizar visitante',
+    ruta: '/app/autorizar-visitante',
+    icono: 'person-check',
+    roles: [RoleNames.RESIDENTE],
+    implementado: true,
   },
   {
     label: 'Usuarios',
     ruta: '/app/usuarios',
     icono: 'people',
     roles: [RoleNames.DUENO, RoleNames.ADMIN],
-    implementado: false,
+    implementado: true,
+  },
+  {
+    label: 'Configuración',
+    ruta: '/app/configuracion',
+    icono: 'gear',
+    roles: [],
+    implementado: true,
   },
   {
     label: 'Tenants',

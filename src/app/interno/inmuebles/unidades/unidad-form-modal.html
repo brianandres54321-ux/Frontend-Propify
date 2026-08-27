@@ -5,39 +5,106 @@
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
-    <app-text-field
-      label="Identificador"
-      hint="Ej: Apto 101, Pieza 2, Local A"
-      [error]="form.controls.identificador.touched && form.controls.identificador.invalid ? 'Ingresa un identificador' : null"
-    >
-      <input
-        type="text"
-        class="form-control"
-        [class.is-invalid]="form.controls.identificador.touched && form.controls.identificador.invalid"
-        formControlName="identificador"
-      />
-    </app-text-field>
-
-    <app-text-field label="Tipo">
-      <select class="form-select" formControlName="tipo">
-        @for (opcion of opcionesTipo; track opcion.valor) {
-          <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
-        }
-      </select>
-    </app-text-field>
+    <div class="row">
+      <div class="col-md-6">
+        <app-text-field
+          label="Identificador"
+          hint="Ej: Apto 101, Pieza 2, Local A"
+          [error]="form.controls.identificador.touched && form.controls.identificador.invalid ? 'Ingresa un identificador' : null"
+        >
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="form.controls.identificador.touched && form.controls.identificador.invalid"
+            formControlName="identificador"
+          />
+        </app-text-field>
+      </div>
+      <div class="col-md-6">
+        <app-text-field label="Tipo">
+          <select class="form-select" formControlName="tipo">
+            @for (opcion of opcionesTipo; track opcion.valor) {
+              <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+            }
+          </select>
+        </app-text-field>
+      </div>
+    </div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field label="Piso (opcional)">
           <input type="number" class="form-control" formControlName="piso" />
         </app-text-field>
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field label="Área m² (opcional)">
           <input type="number" class="form-control" formControlName="areaM2" />
         </app-text-field>
       </div>
     </div>
+
+    <hr />
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-text-field
+          label="Estado"
+          hint="Vacante = publicada como disponible para arrendar, con anuncio público."
+        >
+          <select class="form-select" formControlName="estadoOcupacion">
+            <option [value]="EstadoOcupacionUnidad.OCUPADA">Ocupada</option>
+            <option [value]="EstadoOcupacionUnidad.VACANTE">Vacante (en arriendo)</option>
+          </select>
+        </app-text-field>
+      </div>
+      <div class="col-md-6">
+        <app-text-field label="Precio de arriendo (opcional)">
+          <input
+            type="text"
+            inputmode="numeric"
+            appMoneda
+            class="form-control"
+            formControlName="precioArriendo"
+          />
+        </app-text-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <app-text-field label="Cuartos">
+          <input type="number" min="0" class="form-control" formControlName="numeroCuartos" />
+        </app-text-field>
+      </div>
+      <div class="col-md-6">
+        <app-text-field label="Baños">
+          <input type="number" min="0" class="form-control" formControlName="numeroBanos" />
+        </app-text-field>
+      </div>
+    </div>
+
+    <fieldset class="mt-2">
+      <legend class="form-label fs-6">Características</legend>
+      <div class="row">
+        <div class="col-md-6 form-check">
+          <input type="checkbox" class="form-check-input" id="tieneComedor" formControlName="tieneComedor" />
+          <label class="form-check-label" for="tieneComedor">Comedor</label>
+        </div>
+        <div class="col-md-6 form-check">
+          <input type="checkbox" class="form-check-input" id="tieneSala" formControlName="tieneSala" />
+          <label class="form-check-label" for="tieneSala">Sala</label>
+        </div>
+        <div class="col-md-6 form-check">
+          <input type="checkbox" class="form-check-input" id="tieneCocina" formControlName="tieneCocina" />
+          <label class="form-check-label" for="tieneCocina">Cocina</label>
+        </div>
+        <div class="col-md-6 form-check">
+          <input type="checkbox" class="form-check-input" id="amoblado" formControlName="amoblado" />
+          <label class="form-check-label" for="amoblado">Amoblado</label>
+        </div>
+      </div>
+    </fieldset>
   </div>
 
   <div class="modal-footer">

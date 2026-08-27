@@ -1,3 +1,5 @@
+import { TipoNotificacion } from './notificacion.model';
+
 export enum EstadoCuenta {
   PENDIENTE = 'PENDIENTE',
   PAGADA = 'PAGADA',
@@ -53,4 +55,28 @@ export interface CuentaResumen {
 export interface ConsultarCuentasFiltros {
   estado?: EstadoCuenta;
   inmuebleId?: number;
+}
+
+// "Caja Fuerte" del dashboard — ver GET /privado/cobranza/resumen.
+export interface ResumenFinanciero {
+  ingresosMes: number;
+  carteraVencida: number;
+  cuentasVencidas: number;
+  cuentasVencidasCriticas: number;
+  cuentasPendientes: number;
+}
+
+export type TipoNotificacionAccionable = TipoNotificacion.RECORDATORIO_PAGO | TipoNotificacion.MORA;
+
+// Recordatorios/avisos de mora identificados por el motor de cobranza que
+// todavía no se han enviado por WhatsApp (requiere un clic del dueño — ver
+// GET /privado/cobranza/pendientes-notificacion).
+export interface PendienteNotificacion {
+  codCuenta: number;
+  tipo: TipoNotificacionAccionable;
+  nombreResidente: string;
+  telefono: string;
+  periodo: string;
+  total: number;
+  fechaVencimiento: string;
 }

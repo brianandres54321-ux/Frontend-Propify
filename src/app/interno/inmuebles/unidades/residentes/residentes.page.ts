@@ -2,18 +2,18 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { RoleNames } from '../../../../core/constants/roles.constant';
-import { Residente } from '../../../../core/models';
-import { AuthService } from '../../../../core/services/auth.service';
-import { mensajeErrorApi } from '../../../../core/services/api-error.util';
-import { ResidentesService } from '../../../../core/services/residentes.service';
-import { AlertComponent } from '../../../../shared/components/alert/alert';
-import { ButtonComponent } from '../../../../shared/components/button/button';
-import { ConfirmDialogService } from '../../../../shared/components/confirm-dialog/confirm-dialog.service';
-import { LoadingComponent } from '../../../../shared/components/loading/loading';
-import { PaginationComponent } from '../../../../shared/components/pagination/pagination';
-import { TableComponent } from '../../../../shared/components/table/table';
-import { TableColumn } from '../../../../shared/interfaces/table-column.interface';
+import { RoleNames } from '@core/constants';
+import { Residente } from '@core/models';
+import { AuthService } from '@core/services/auth.service';
+import { mensajeErrorApi } from '@core/services/api-error.util';
+import { ResidentesService } from '@core/services/residentes.service';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-dialog.service';
+import { LoadingComponent } from '@shared/components/loading/loading';
+import { PaginationComponent } from '@shared/components/pagination/pagination';
+import { TableComponent } from '@shared/components/table/table';
+import { TableColumn } from '@shared/interfaces';
 import { ResidenteFormModal } from './residente-form-modal';
 
 const TAMANIO_PAGINA = 10;
@@ -100,7 +100,7 @@ export class ResidentesPage implements OnInit {
   }
 
   protected abrirCrear(): void {
-    const modalRef = this.modalService.open(ResidenteFormModal, { centered: true });
+    const modalRef = this.modalService.open(ResidenteFormModal, { centered: true, size: 'lg' });
     const instancia: ResidenteFormModal = modalRef.componentInstance;
     instancia.modo = 'crear';
 
@@ -117,7 +117,7 @@ export class ResidentesPage implements OnInit {
   }
 
   protected abrirEditar(residente: Residente): void {
-    const modalRef = this.modalService.open(ResidenteFormModal, { centered: true });
+    const modalRef = this.modalService.open(ResidenteFormModal, { centered: true, size: 'lg' });
     const instancia: ResidenteFormModal = modalRef.componentInstance;
     instancia.modo = 'editar';
     instancia.precargar(residente);

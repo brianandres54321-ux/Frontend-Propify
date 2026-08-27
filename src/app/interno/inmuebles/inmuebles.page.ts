@@ -2,18 +2,19 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { AuthService } from '../../core/services/auth.service';
-import { RoleNames } from '../../core/constants/roles.constant';
-import { mensajeErrorApi } from '../../core/services/api-error.util';
-import { InmueblesService } from '../../core/services/inmuebles.service';
-import { Inmueble } from '../../core/models';
-import { AlertComponent } from '../../shared/components/alert/alert';
-import { ButtonComponent } from '../../shared/components/button/button';
-import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
-import { LoadingComponent } from '../../shared/components/loading/loading';
-import { PaginationComponent } from '../../shared/components/pagination/pagination';
-import { TableComponent } from '../../shared/components/table/table';
-import { TableColumn } from '../../shared/interfaces/table-column.interface';
+import { AuthService } from '@core/services/auth.service';
+import { RoleNames } from '@core/constants';
+import { esLimitePlan, mensajeErrorApi } from '@core/services/api-error.util';
+import { InmueblesService } from '@core/services/inmuebles.service';
+import { TenantsService } from '@core/services/tenants.service';
+import { Inmueble } from '@core/models';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-dialog.service';
+import { LoadingComponent } from '@shared/components/loading/loading';
+import { PaginationComponent } from '@shared/components/pagination/pagination';
+import { TableComponent } from '@shared/components/table/table';
+import { TableColumn } from '@shared/interfaces';
 import { InmuebleFormModal } from './inmueble-form-modal';
 
 const TAMANIO_PAGINA = 10;
@@ -33,14 +34,19 @@ const TAMANIO_PAGINA = 10;
 })
 export class InmueblesPage implements OnInit {
   private readonly inmueblesService = inject(InmueblesService);
+  private readonly tenantsService = inject(TenantsService);
   private readonly modalService = inject(NgbModal);
   private readonly confirmDialog = inject(ConfirmDialogService);
   private readonly auth = inject(AuthService);
+
+  // Cargado por InternoLayout al entrar a /app — ver TenantsService.plan.
+  protected readonly planTenant = this.tenantsService.plan;
 
   protected readonly TAMANIO_PAGINA = TAMANIO_PAGINA;
   protected readonly inmuebles = signal<Inmueble[]>([]);
   protected readonly cargando = signal(true);
   protected readonly errorMensaje = signal<string | null>(null);
+  protected readonly limiteAlcanzado = signal(false);
   protected readonly paginaActual = signal(1);
 
   protected readonly puedeGestionar = computed(() =>
@@ -90,16 +96,22 @@ export class InmueblesPage implements OnInit {
   }
 
   protected abrirCrear(): void {
-    const modalRef = this.modalService.open(InmuebleFormModal, { centered: true });
+    const modalRef = this.modalService.open(InmuebleFormModal, { centered: true, size: 'lg' });
     const instancia: InmuebleFormModal = modalRef.componentInstance;
     instancia.modo = 'crear';
+    if (this.planTenant()) {
+      instancia.precargarPorPlan(this.planTenant()!);
+    }
 
     modalRef.result.then(
       (datos) => {
+        this.limiteAlcanzado.set(false);
         this.inmueblesService.registrar(datos).subscribe({
           next: () => this.cargar(),
-          error: (error: unknown) =>
-            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear el inmueble.')),
+          error: (error: unknown) => {
+            this.limiteAlcanzado.set(esLimitePlan(error));
+            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear el inmueble.'));
+          },
         });
       },
       () => undefined,
@@ -107,10 +119,11 @@ export class InmueblesPage implements OnInit {
   }
 
   protected abrirEditar(inmueble: Inmueble): void {
-    const modalRef = this.modalService.open(InmuebleFormModal, { centered: true });
+    const modalRef = this.modalService.open(InmuebleFormModal, { centered: true, size: 'lg' });
     const instancia: InmuebleFormModal = modalRef.componentInstance;
     instancia.modo = 'editar';
     instancia.inmuebleExistente = inmueble;
+    instancia.plan = this.planTenant();
     instancia.precargar(inmueble);
 
     modalRef.result.then(

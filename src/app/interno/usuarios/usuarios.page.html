@@ -1,0 +1,24 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Usuarios</h1>
+  <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo usuario</app-button>
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="usuarios()"
+    textoVacio="Todavía no has registrado ningún usuario."
+  >
+    <ng-template let-fila>
+      <div class="d-flex justify-content-end">
+        <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
+      </div>
+    </ng-template>
+  </app-table>
+}

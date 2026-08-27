@@ -26,3 +26,10 @@ export function mensajeErrorApi(
 
   return Array.isArray(cuerpo.message) ? cuerpo.message[0] : cuerpo.message;
 }
+
+// 402 Payment Required: el backend lo usa exclusivamente para los límites
+// del plan demo (ver LIMITES_PLAN_DEMO) — permite mostrar un botón
+// "Actualizar plan" en vez de (o junto a) el mensaje de error genérico.
+export function esLimitePlan(error: unknown): boolean {
+  return error instanceof HttpErrorResponse && error.status === 402;
+}

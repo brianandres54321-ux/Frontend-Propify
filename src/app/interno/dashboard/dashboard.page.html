@@ -1,13 +1,72 @@
-<h1 class="h3 mb-4">Dashboard</h1>
+<div class="dashboard__encabezado mb-4">
+  <div>
+    <h1 class="dashboard__titulo">Dashboard</h1>
+    <p class="dashboard__subtitulo mb-0">Un vistazo rápido a lo que necesita tu atención hoy.</p>
+  </div>
+</div>
 
-@if (puedeVerContratos()) {
+@if (esDuenoAdmin()) {
+  <div class="dashboard__stats mb-4">
+    <app-stat-card
+      titulo="Ingresos del mes"
+      [valor]="resumenFinanciero() ? formatoMonto(resumenFinanciero()!.ingresosMes) : '—'"
+      icono="graph-up-arrow"
+      color="success"
+      variante="soft"
+    />
+
+    <app-stat-card
+      titulo="Gastos del mes"
+      [valor]="resumenGastos() ? formatoMonto(resumenGastos()!.totalMes) : '—'"
+      icono="graph-down-arrow"
+      color="danger"
+      variante="soft"
+    />
+
+    <app-stat-card
+      titulo="Ganancia neta"
+      [valor]="gananciaNeta() !== null ? formatoMonto(gananciaNeta()!) : '—'"
+      icono="cash-stack"
+      [color]="colorGanancia()"
+      variante="soft"
+    />
+
+    <app-stat-card
+      titulo="Cartera vencida"
+      [valor]="resumenFinanciero() ? formatoMonto(resumenFinanciero()!.carteraVencida) : '—'"
+      icono="exclamation-triangle"
+      color="warning"
+      variante="soft"
+      [tendenciaTexto]="resumenFinanciero() ? (resumenFinanciero()!.cuentasVencidas + ' cuenta(s) vencida(s)') : null"
+      tendenciaIcono="clock-history"
+    />
+  </div>
+
   <div class="dashboard__stats mb-4">
     <app-stat-card
       titulo="Inmuebles registrados"
       [valor]="totalInmuebles() ?? '—'"
       icono="building"
       color="primary"
-      variante="solid"
+      variante="soft"
+    />
+
+    <app-stat-card
+      titulo="Unidades vacantes"
+      [valor]="resumenOcupacion() ? (resumenOcupacion()!.vacantes + ' / ' + resumenOcupacion()!.totalUnidades) : '—'"
+      icono="door-open"
+      color="info"
+      variante="soft"
+      tendenciaTexto="En arriendo ahora mismo"
+      tendenciaIcono="key"
+    />
+
+    <app-stat-card
+      titulo="Ocupación"
+      [valor]="ocupacionPct() !== null ? ocupacionPct() + '%' : '—'"
+      icono="house-check"
+      color="primary"
+      variante="soft"
     />
 
     <app-stat-card
@@ -19,48 +78,140 @@
       tendenciaTexto="En los próximos 15 días"
       tendenciaIcono="clock-history"
     />
+
+    <app-stat-card
+      titulo="Cuentas pendientes"
+      [valor]="resumenFinanciero()?.cuentasPendientes ?? '—'"
+      icono="receipt"
+      color="primary"
+      variante="soft"
+    />
   </div>
 
-  <div class="dashboard__fila mb-4">
-    <app-card
-      variante="warning"
-      icono="calendar-event"
-      titulo="Contratos por vencer (próximos 15 días)"
-      class="dashboard__tabla"
-    >
+  <app-card variante="warning" icono="calendar-event" titulo="Contratos por vencer" [autoAltura]="true" class="mb-4">
+    <div card-header-accion class="contratos-header">
+      @if (!cargando() && contratosPorVencer().length > 0) {
+        <span class="badge rounded-pill badge-soft-warning">{{ contratosPorVencer().length }}</span>
+      }
+      <button
+        type="button"
+        class="contratos-header__toggle"
+        (click)="contratosExpandido.set(!contratosExpandido())"
+        [attr.aria-expanded]="contratosExpandido()"
+        title="Mostrar/ocultar detalle"
+      >
+        <i class="bi" [class.bi-chevron-down]="!contratosExpandido()" [class.bi-chevron-up]="contratosExpandido()"></i>
+      </button>
+    </div>
+
+    <div [ngbCollapse]="!contratosExpandido()">
       @if (errorMensaje()) {
         <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
       } @else if (cargando()) {
         <app-loading />
+      } @else if (contratosPorVencer().length === 0) {
+        <p class="text-muted mb-0">No hay contratos por vencer en los próximos 15 días.</p>
       } @else {
         <app-table
           [columnas]="columnas"
           [filas]="contratosPorVencer()"
           textoVacio="No hay contratos por vencer en los próximos 15 días."
         />
+
+        <p class="contratos-leyenda mt-3 mb-0">
+          <span class="contratos-leyenda__punto contratos-leyenda__punto--danger"></span>
+          {{ urgentes() }} urgente(s) (≤7 días)
+          <span class="contratos-leyenda__punto contratos-leyenda__punto--info ms-3"></span>
+          {{ proximos() }} próximo(s) (8-15 días)
+        </p>
       }
-    </app-card>
+    </div>
+  </app-card>
+}
 
-    @if (!cargando() && contratosPorVencer().length > 0) {
-      <app-card titulo="Urgencia" icono="pie-chart" class="dashboard__donut">
-        <div class="donut" [style.background]="donutGradiente()">
-          <div class="donut__centro">
-            <span class="donut__valor">{{ porcentajeUrgentes() }}%</span>
-            <span class="donut__etiqueta">Urgentes</span>
+@if (esResidente()) {
+  @if (cargandoResidente()) {
+    <app-loading />
+  } @else {
+    <div class="dashboard__fila mb-4">
+      <app-card titulo="Tu cuenta" icono="receipt" class="dashboard__tabla">
+        @if (cuentaActual()) {
+          <div class="cuenta-actual">
+            <div>
+              <p class="cuenta-actual__periodo">{{ cuentaActual()!.periodo }}</p>
+              <p class="cuenta-actual__vence">
+                Vence el {{ cuentaActual()!.fechaVencimiento | date: 'dd/MM/yyyy' }}
+              </p>
+            </div>
+            <p class="cuenta-actual__total">{{ formatoMonto(cuentaActual()!.total) }}</p>
+            <span class="badge rounded-pill badge-soft-{{ varianteEstadoCuenta(cuentaActual()!.estado) }}">
+              {{ etiquetaEstadoCuenta(cuentaActual()!.estado) }}
+            </span>
           </div>
-        </div>
+        } @else {
+          <p class="text-muted mb-0">No tienes cuentas pendientes. ¡Estás al día!</p>
+        }
 
-        <ul class="donut__leyenda">
-          <li>
-            <span class="donut__punto donut__punto--danger"></span>
-            Urgentes (≤7 días) — {{ urgentes() }}
-          </li>
-          <li>
-            <span class="donut__punto donut__punto--info"></span>
-            Próximos (8-15 días) — {{ proximos() }}
-          </li>
-        </ul>
+        <app-button [fullWidth]="false" routerLink="/app/mis-cuentas">Ver mis cuentas</app-button>
       </app-card>
-    }
+
+      <app-card titulo="Tu contrato" icono="file-earmark-text" class="dashboard__donut">
+        @if (residente()) {
+          <p class="mb-1"><strong>Valor mensual:</strong> {{ formatoMonto(residente()!.valorMensual) }}</p>
+          @if (residente()!.fechaFin) {
+            <p class="mb-0">
+              <strong>Contrato vence:</strong>
+              {{ residente()!.fechaFin | date: 'dd/MM/yyyy' }}
+              @if (diasContratoResidente() !== null) {
+                <span class="badge rounded-pill badge-soft-{{ diasContratoResidente()! <= 7 ? 'danger' : 'info' }} ms-1">
+                  {{ diasContratoResidente() }} día(s)
+                </span>
+              }
+            </p>
+          }
+        } @else {
+          <p class="text-muted mb-0">No se encontró información de tu contrato.</p>
+        }
+      </app-card>
+    </div>
+
+    <div class="dashboard__accesos">
+      <app-button variant="secondary" [fullWidth]="false" routerLink="/app/zonas-comunes">
+        Reservar zona común
+      </app-button>
+      <app-button variant="secondary" [fullWidth]="false" routerLink="/app/avisos">
+        Ver avisos
+      </app-button>
+    </div>
+  }
+}
+
+@if (esCelador()) {
+  <div class="dashboard__stats mb-4">
+    <app-stat-card
+      titulo="Visitas activas"
+      [valor]="resumenPorteria() ? resumenPorteria()!.visitasActivas : '—'"
+      icono="person-walking"
+      color="info"
+      variante="solid"
+      tendenciaTexto="Sin salida registrada"
+      tendenciaIcono="clock-history"
+    />
+
+    <app-stat-card
+      titulo="Paquetes pendientes"
+      [valor]="resumenPorteria() ? resumenPorteria()!.paquetesPendientes : '—'"
+      icono="box-seam"
+      color="warning"
+      variante="solid"
+      tendenciaTexto="Sin retirar"
+      tendenciaIcono="clock-history"
+    />
+  </div>
+
+  <div class="dashboard__accesos">
+    <app-button variant="secondary" [fullWidth]="false" routerLink="/app/porteria">
+      Ir a Portería
+    </app-button>
   </div>
 }

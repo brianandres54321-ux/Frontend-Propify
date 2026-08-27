@@ -2,11 +2,11 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { mensajeErrorApi } from '../../../core/services/api-error.util';
-import { AlertComponent } from '../../../shared/components/alert/alert';
-import { ButtonComponent } from '../../../shared/components/button/button';
-import { TextFieldComponent } from '../../../shared/components/text-field/text-field';
+import { AuthService } from '@core/services/auth.service';
+import { mensajeErrorApi } from '@core/services/api-error.util';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { TextFieldComponent } from '@shared/components/text-field/text-field';
 
 @Component({
   selector: 'app-login-page',
@@ -22,6 +22,7 @@ export class LoginPage {
 
   protected readonly enviando = signal(false);
   protected readonly errorMensaje = signal<string | null>(null);
+  protected readonly mostrarClave = signal(false);
 
   protected readonly form = this.fb.group({
     correoUsuario: this.fb.control('', [Validators.required, Validators.email]),

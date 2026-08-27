@@ -11,9 +11,7 @@ export const PASSWORD_REGEX_MESSAGE =
 
 export function passwordSeguraValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null =>
-    control.value && !PASSWORD_REGEX.test(control.value)
-      ? { passwordInsegura: true }
-      : null;
+    control.value && !PASSWORD_REGEX.test(control.value) ? { passwordInsegura: true } : null;
 }
 
 export function passwordsCoincidenValidator(
@@ -23,8 +21,6 @@ export function passwordsCoincidenValidator(
   return (group: AbstractControl): ValidationErrors | null => {
     const clave = group.get(claveControlName)?.value;
     const confirmacion = group.get(confirmacionControlName)?.value;
-    return clave && confirmacion && clave !== confirmacion
-      ? { passwordsNoCoinciden: true }
-      : null;
+    return clave && confirmacion && clave !== confirmacion ? { passwordsNoCoinciden: true } : null;
   };
 }

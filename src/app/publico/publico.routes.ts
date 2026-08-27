@@ -14,13 +14,21 @@ export const PUBLICO_ROUTES: Routes = [
       },
       {
         path: 'nosotros',
-        loadComponent: () =>
-          import('./nosotros/nosotros.page').then((m) => m.NosotrosPage),
+        loadComponent: () => import('./nosotros/nosotros.page').then((m) => m.NosotrosPage),
       },
       {
         path: 'contacto',
+        loadComponent: () => import('./contacto/contacto.page').then((m) => m.ContactoPage),
+      },
+      {
+        path: 'arriendo/unidad/:unidadId',
         loadComponent: () =>
-          import('./contacto/contacto.page').then((m) => m.ContactoPage),
+          import('./arriendo/arriendo-unidad.page').then((m) => m.ArriendoUnidadPage),
+      },
+      {
+        path: 'arriendo/inmueble/:inmuebleId',
+        loadComponent: () =>
+          import('./arriendo/arriendo-inmueble.page').then((m) => m.ArriendoInmueblePage),
       },
     ],
   },
@@ -30,13 +38,11 @@ export const PUBLICO_ROUTES: Routes = [
     children: [
       {
         path: 'login',
-        loadComponent: () =>
-          import('./auth/login/login.page').then((m) => m.LoginPage),
+        loadComponent: () => import('./auth/login/login.page').then((m) => m.LoginPage),
       },
       {
         path: 'registro',
-        loadComponent: () =>
-          import('./auth/registro/registro.page').then((m) => m.RegistroPage),
+        loadComponent: () => import('./auth/registro/registro.page').then((m) => m.RegistroPage),
       },
       {
         path: 'recuperar-password',
@@ -48,9 +54,7 @@ export const PUBLICO_ROUTES: Routes = [
       {
         path: 'nueva-password',
         loadComponent: () =>
-          import('./auth/nueva-password/nueva-password.page').then(
-            (m) => m.NuevaPasswordPage,
-          ),
+          import('./auth/nueva-password/nueva-password.page').then((m) => m.NuevaPasswordPage),
       },
     ],
   },

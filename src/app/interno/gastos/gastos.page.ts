@@ -1,16 +1,16 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Gasto, Inmueble } from '../../core/models';
-import { mensajeErrorApi } from '../../core/services/api-error.util';
-import { GastosService } from '../../core/services/gastos.service';
-import { InmueblesService } from '../../core/services/inmuebles.service';
-import { AlertComponent } from '../../shared/components/alert/alert';
-import { ButtonComponent } from '../../shared/components/button/button';
-import { ConfirmDialogService } from '../../shared/components/confirm-dialog/confirm-dialog.service';
-import { LoadingComponent } from '../../shared/components/loading/loading';
-import { TableComponent } from '../../shared/components/table/table';
-import { TableColumn } from '../../shared/interfaces/table-column.interface';
+import { Gasto, Inmueble } from '@core/models';
+import { mensajeErrorApi } from '@core/services/api-error.util';
+import { GastosService } from '@core/services/gastos.service';
+import { InmueblesService } from '@core/services/inmuebles.service';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-dialog.service';
+import { LoadingComponent } from '@shared/components/loading/loading';
+import { TableComponent } from '@shared/components/table/table';
+import { TableColumn } from '@shared/interfaces';
 import { GastoFormModal } from './gasto-form-modal';
 
 // Los montos de Gasto vienen de columnas `numeric` de Postgres — pueden

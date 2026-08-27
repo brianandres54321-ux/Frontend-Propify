@@ -3,9 +3,20 @@
   height: 100%;
 }
 
+:host.card-host--auto {
+  height: auto;
+}
+
 .card {
   height: 100%;
-  border-top: 3px solid var(--color-border);
+  // El default queda plano (sin acento de color) para el look minimalista;
+  // solo las variantes semánticas (warning/danger/...) usan un borde de
+  // 3px para llamar la atención sobre alertas o estados.
+  border-top: 1px solid var(--color-border);
+}
+
+.card--auto {
+  height: auto;
 }
 
 .card-header {
@@ -14,6 +25,10 @@
   gap: var(--space-3);
   background: var(--color-surface);
   font-weight: 600;
+}
+
+.card-header__titulo {
+  flex: 1 1 auto;
 }
 
 .card__icono {

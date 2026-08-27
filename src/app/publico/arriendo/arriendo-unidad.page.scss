@@ -1,0 +1,72 @@
+.galeria {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+
+  img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+
+  img:first-child {
+    grid-column: 1 / -1;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.sin-fotos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 9;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+.badge-en-arriendo {
+  display: inline-block;
+  background: var(--color-success);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.precio {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: var(--space-3) 0;
+}
+
+.lista-datos,
+.lista-caracteristicas {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+}
+
+.lista-caracteristicas li {
+  background: var(--color-bg);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+}
+
+.boton-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-4);
+  background: #25d366;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  width: 100%;
+}

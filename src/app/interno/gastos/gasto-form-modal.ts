@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { Gasto } from '../../core/models';
-import { ButtonComponent } from '../../shared/components/button/button';
-import { MonedaInputDirective } from '../../shared/directives/moneda-input.directive';
-import { TextFieldComponent } from '../../shared/components/text-field/text-field';
+import { Gasto } from '@core/models';
+import { ButtonComponent } from '@shared/components/button/button';
+import { MonedaInputDirective } from '@shared/directives';
+import { TextFieldComponent } from '@shared/components/text-field/text-field';
 
 function hoyIso(): string {
   return new Date().toISOString().slice(0, 10);

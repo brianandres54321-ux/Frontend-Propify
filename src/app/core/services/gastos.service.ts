@@ -2,8 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { ActualizarGastoRequest, CrearGastoRequest, Gasto } from '../models';
+import { environment } from '@env/environment';
+import {
+  ActualizarGastoRequest,
+  CrearGastoRequest,
+  Gasto,
+  ResumenGastosMes,
+  TendenciaMensual,
+} from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class GastosService {
@@ -20,14 +26,21 @@ export class GastosService {
     return this.http.post<Gasto>(this.baseUrl, datos);
   }
 
-  public actualizar(
-    id: number,
-    datos: ActualizarGastoRequest,
-  ): Observable<{ mensaje: string }> {
+  public actualizar(id: number, datos: ActualizarGastoRequest): Observable<{ mensaje: string }> {
     return this.http.put<{ mensaje: string }>(`${this.baseUrl}/${id}`, datos);
   }
 
   public eliminar(id: number): Observable<{ mensaje: string }> {
     return this.http.delete<{ mensaje: string }>(`${this.baseUrl}/${id}`);
+  }
+
+  public consultarResumen(): Observable<ResumenGastosMes> {
+    return this.http.get<ResumenGastosMes>(`${this.baseUrl}/resumen`);
+  }
+
+  public consultarTendencia(meses = 6): Observable<TendenciaMensual[]> {
+    return this.http.get<TendenciaMensual[]>(`${this.baseUrl}/tendencia`, {
+      params: new HttpParams().set('meses', meses),
+    });
   }
 }

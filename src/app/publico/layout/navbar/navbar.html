@@ -1,16 +1,22 @@
-<nav class="navbar navbar-expand-md border-bottom bg-body">
-  <div class="container">
-    <a routerLink="/" class="navbar-brand fw-bold">Propify</a>
+<nav class="pnav" [class.pnav--transparente]="transparente()">
+  <div class="pnav__contenedor">
+    <a routerLink="/" class="pnav__marca">
+      <span class="pnav__insignia">
+        <i class="bi bi-house-door-fill"></i>
+      </span>
+      Propify
+    </a>
 
-    <div class="d-flex align-items-center gap-3">
-      <a routerLink="/nosotros" routerLinkActive="active" class="nav-link d-none d-md-inline">
-        Nosotros
-      </a>
-      <a routerLink="/contacto" routerLinkActive="active" class="nav-link d-none d-md-inline">
-        Contacto
-      </a>
-      <a routerLink="/login" class="nav-link">Ingresar</a>
-      <a routerLink="/registro" class="btn btn-primary btn-sm">Crear cuenta</a>
+    <div class="pnav__enlaces">
+      <a routerLink="/" fragment="planes" class="pnav__link">Planes</a>
+      <a routerLink="/nosotros" routerLinkActive="pnav__link--activo" class="pnav__link">Nosotros</a>
+      <a routerLink="/contacto" routerLinkActive="pnav__link--activo" class="pnav__link">Contacto</a>
+    </div>
+
+    <div class="pnav__acciones">
+      <a routerLink="/login" class="pnav__link pnav__link--ingresar">Ingresar</a>
+      <a routerLink="/registro" class="pnav__cta">Crear cuenta</a>
+      <app-theme-toggle />
     </div>
   </div>
 </nav>

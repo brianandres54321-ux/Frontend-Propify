@@ -1,12 +1,13 @@
 <div class="auth-card">
-  <h1 class="h3">Crear cuenta</h1>
+  <p class="auth-card__kicker">Empieza gratis</p>
+  <h1 class="h3">Crea tu cuenta</h1>
   <p class="text-muted small mb-4">Registra tu conjunto o edificio en Propify.</p>
 
   @if (errorMensaje()) {
     <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
   }
 
-  <form [formGroup]="form" (ngSubmit)="enviar()">
+  <form [formGroup]="form" (ngSubmit)="enviar()" class="registro-form">
     <app-text-field
       label="Nombre del conjunto o edificio"
       [error]="
@@ -24,7 +25,24 @@
       />
     </app-text-field>
 
-    <div class="mb-3">
+    <app-text-field
+      label="Correo"
+      [error]="
+        form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+          ? 'Ingresa un correo válido'
+          : null
+      "
+    >
+      <input
+        type="email"
+        class="form-control"
+        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
+        formControlName="correoUsuario"
+        autocomplete="email"
+      />
+    </app-text-field>
+
+    <div class="mb-3 registro-form__full">
       <label class="form-label">¿Qué vas a administrar?</label>
       <div class="d-flex gap-2">
         @for (opcion of opcionesPlan; track opcion.valor) {
@@ -61,19 +79,21 @@
     </app-text-field>
 
     <app-text-field
-      label="Correo"
+      label="Celular"
+      [hint]="telefonoHint"
       [error]="
-        form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
-          ? 'Ingresa un correo válido'
+        form.controls.telefono.touched && form.controls.telefono.invalid
+          ? telefonoHint
           : null
       "
     >
       <input
-        type="email"
+        type="tel"
         class="form-control"
-        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
-        formControlName="correoUsuario"
-        autocomplete="email"
+        [class.is-invalid]="form.controls.telefono.touched && form.controls.telefono.invalid"
+        formControlName="telefono"
+        autocomplete="tel"
+        placeholder="3001234567"
       />
     </app-text-field>
 
@@ -86,13 +106,23 @@
           : null
       "
     >
-      <input
-        type="password"
-        class="form-control"
-        [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
-        formControlName="claveAcceso"
-        autocomplete="new-password"
-      />
+      <div class="password-input">
+        <input
+          [type]="mostrarClave() ? 'text' : 'password'"
+          class="form-control"
+          [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
+          formControlName="claveAcceso"
+          autocomplete="new-password"
+        />
+        <button
+          type="button"
+          class="password-input__toggle"
+          (click)="mostrarClave.set(!mostrarClave())"
+          [title]="mostrarClave() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        >
+          <i class="bi" [class.bi-eye]="!mostrarClave()" [class.bi-eye-slash]="mostrarClave()"></i>
+        </button>
+      </div>
     </app-text-field>
 
     <app-text-field
@@ -103,16 +133,26 @@
           : null
       "
     >
-      <input
-        type="password"
-        class="form-control"
-        [class.is-invalid]="form.controls.confirmarClave.touched && form.errors?.['passwordsNoCoinciden']"
-        formControlName="confirmarClave"
-        autocomplete="new-password"
-      />
+      <div class="password-input">
+        <input
+          [type]="mostrarConfirmar() ? 'text' : 'password'"
+          class="form-control"
+          [class.is-invalid]="form.controls.confirmarClave.touched && form.errors?.['passwordsNoCoinciden']"
+          formControlName="confirmarClave"
+          autocomplete="new-password"
+        />
+        <button
+          type="button"
+          class="password-input__toggle"
+          (click)="mostrarConfirmar.set(!mostrarConfirmar())"
+          [title]="mostrarConfirmar() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        >
+          <i class="bi" [class.bi-eye]="!mostrarConfirmar()" [class.bi-eye-slash]="mostrarConfirmar()"></i>
+        </button>
+      </div>
     </app-text-field>
 
-    <app-button type="submit" [loading]="enviando()" [disabled]="form.invalid">
+    <app-button type="submit" [loading]="enviando()" [disabled]="form.invalid" class="registro-form__full">
       Crear cuenta
     </app-button>
   </form>

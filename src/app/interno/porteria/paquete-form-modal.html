@@ -1,0 +1,21 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Registrar llegada de paquete</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <app-text-field label="Descripción (opcional)">
+      <input type="text" class="form-control" formControlName="descripcion" />
+    </app-text-field>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Registrar llegada
+    </app-button>
+  </div>
+</form>

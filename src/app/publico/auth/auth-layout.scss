@@ -7,16 +7,38 @@
 @media (min-width: 900px) {
   .auth-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    // Solo la anchura de las columnas se anima; qué panel cae en cuál lo
+    // decide `order` más abajo (no es animable, cambia de golpe a la vez
+    // que el contenido de la página también cambia, así que no se nota
+    // como un salto).
+    transition: grid-template-columns 0.4s ease;
+  }
+
+  // Registro: formulario a la izquierda (columna ancha), marca a la
+  // derecha (columna angosta) — espejo de login.
+  .auth-layout--invertido {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   }
 }
 
 .auth-layout__brand {
   display: none;
+  position: relative;
   flex-direction: column;
   justify-content: space-between;
-  padding: var(--space-8);
-  background: var(--color-primary);
+  align-items: center;
+  padding: var(--space-6);
+  overflow: hidden;
   color: white;
+  text-align: center;
+}
+
+// Sin esta regla, el orden natural del DOM ya pone la marca primero
+// (izquierda) y el contenido segundo (derecha) — esto es lo único que hace
+// falta para el espejo: subir el order de la marca por encima del
+// contenido (que se queda en su 0 por defecto) la manda al otro lado.
+.auth-layout--invertido .auth-layout__brand {
+  order: 2;
 }
 
 @media (min-width: 900px) {
@@ -25,17 +47,96 @@
   }
 }
 
-.auth-layout__brand .marca {
-  font-size: 1.25rem;
+.auth-layout__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.auth-layout__velo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    165deg,
+    rgb(30 16 90 / 88%) 0%,
+    var(--color-primary-hover) 55%,
+    rgb(124 92 252 / 75%) 100%
+  );
+}
+
+.auth-layout__marca {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  font-size: 1.15rem;
   font-weight: 700;
   text-decoration: none;
   color: white;
+  opacity: 0.9;
 }
 
-.auth-layout__brand p {
+.auth-layout__centro {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+// El panel de marca vive en este layout persistente (no se destruye al
+// pasar de login a registro), así que su animación de aparición no puede
+// depender del montaje del componente como la del formulario — en vez de
+// una animación incondicional (que solo tocaría una vez, al cargar la
+// app), esta clase se agrega y quita desde AuthLayout en cada navegación
+// (ver dispararPulso()) para que se repita cada vez que se cambia de lado.
+.auth-layout__centro--pulso {
+  animation: auth-aparecer 0.6s ease both;
+}
+
+.auth-layout__insignia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: var(--space-2);
+  border-radius: 50%;
+  background: rgb(255 255 255 / 12%);
+  border: 1px solid rgb(255 255 255 / 25%);
+  font-size: 1.75rem;
+  color: white;
+}
+
+.auth-layout__eslogan {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 75%);
+}
+
+.auth-layout__titulo {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.auth-layout__subtitulo {
   max-width: 26ch;
-  font-size: 1.5rem;
-  line-height: 1.3;
+  margin: 0;
+  font-size: 1rem;
+  color: rgb(255 255 255 / 85%);
+}
+
+.auth-layout__copyright {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-size: 0.78rem;
+  color: rgb(255 255 255 / 65%);
 }
 
 .auth-layout__contenido {
@@ -43,4 +144,47 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-5);
+  background: var(--color-surface);
+}
+
+@keyframes auth-aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Usadas por .auth-card en login/registro (ver sus .scss) — cada una entra
+// desde el lado que le corresponde, para reforzar la sensación de que el
+// formulario "cruzó" al otro lado.
+@keyframes auth-card-desde-derecha {
+  from {
+    opacity: 0;
+    transform: translate(24px, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes auth-card-desde-izquierda {
+  from {
+    opacity: 0;
+    transform: translate(-24px, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-layout__centro--pulso {
+    animation: none;
+  }
 }

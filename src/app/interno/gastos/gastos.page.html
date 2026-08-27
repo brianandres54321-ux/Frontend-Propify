@@ -3,8 +3,8 @@
     <h1 class="h3 mb-0">Gastos</h1>
     <p class="text-muted small mb-0">Total del inmueble: {{ '$' + totalGastos().toLocaleString('es-CO') }}</p>
   </div>
-  <app-button [fullWidth]="false" [disabled]="!inmuebleSeleccionado()" (click)="abrirCrear()">
-    + Nuevo gasto
+  <app-button icono="plus-lg" [fullWidth]="false" [disabled]="!inmuebleSeleccionado()" (click)="abrirCrear()">
+    Nuevo gasto
   </app-button>
 </div>
 
@@ -38,12 +38,8 @@
   >
     <ng-template let-fila>
       <div class="d-flex gap-2 justify-content-end">
-        <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
-          Editar
-        </app-button>
-        <app-button variant="secondary" [fullWidth]="false" (click)="eliminar(fila)">
-          Eliminar
-        </app-button>
+        <app-button variant="icon" color="primary" icono="pencil-square" title="Editar" (click)="abrirEditar(fila)" />
+        <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
       </div>
     </ng-template>
   </app-table>

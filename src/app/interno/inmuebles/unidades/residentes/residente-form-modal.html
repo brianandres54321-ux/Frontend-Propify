@@ -5,20 +5,38 @@
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
-    <app-text-field
-      label="Nombre"
-      [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
-    >
-      <input
-        type="text"
-        class="form-control"
-        [class.is-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid"
-        formControlName="nombre"
-      />
-    </app-text-field>
+    <div class="row">
+      <div class="col-md-6">
+        <app-text-field
+          label="Nombre"
+          [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+        >
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid"
+            formControlName="nombre"
+          />
+        </app-text-field>
+      </div>
+      <div class="col-md-6">
+        <app-text-field
+          label="Correo"
+          hint="Obligatorio: por aquí le llegan los recordatorios de pago y avisos de mora"
+          [error]="form.controls.correo.touched && form.controls.correo.invalid ? 'Ingresa un correo válido' : null"
+        >
+          <input
+            type="email"
+            class="form-control"
+            [class.is-invalid]="form.controls.correo.touched && form.controls.correo.invalid"
+            formControlName="correo"
+          />
+        </app-text-field>
+      </div>
+    </div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field
           label="Teléfono (celular)"
           [error]="form.controls.telefono.touched && form.controls.telefono.invalid ? 'Debe tener 10 dígitos' : null"
@@ -33,25 +51,12 @@
           />
         </app-text-field>
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field label="Cédula (opcional)">
           <input type="text" class="form-control" formControlName="cedula" />
         </app-text-field>
       </div>
     </div>
-
-    <app-text-field
-      label="Correo"
-      hint="Obligatorio: por aquí le llegan los recordatorios de pago y avisos de mora"
-      [error]="form.controls.correo.touched && form.controls.correo.invalid ? 'Ingresa un correo válido' : null"
-    >
-      <input
-        type="email"
-        class="form-control"
-        [class.is-invalid]="form.controls.correo.touched && form.controls.correo.invalid"
-        formControlName="correo"
-      />
-    </app-text-field>
 
     <div class="form-check mb-3">
       <input type="checkbox" class="form-check-input" id="esPropietario" formControlName="esPropietario" />
@@ -59,7 +64,7 @@
     </div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field
           label="Valor mensual"
           hint="Cuánto paga cada mes"
@@ -75,7 +80,7 @@
           />
         </app-text-field>
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field
           label="Día de pago"
           hint="1 al 31"
@@ -94,12 +99,12 @@
     </div>
 
     <div class="row">
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field label="Fecha de inicio">
           <input type="date" class="form-control" formControlName="fechaInicio" />
         </app-text-field>
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <app-text-field label="Duración del contrato">
           <select class="form-select" formControlName="duracionContrato">
             @for (opcion of opcionesDuracion; track opcion.valor) {
@@ -111,9 +116,13 @@
     </div>
 
     @if (form.controls.duracionContrato.value) {
-      <app-text-field label="Fecha de fin">
-        <input type="date" class="form-control" formControlName="fechaFin" />
-      </app-text-field>
+      <div class="row">
+        <div class="col-md-6">
+          <app-text-field label="Fecha de fin">
+            <input type="date" class="form-control" formControlName="fechaFin" />
+          </app-text-field>
+        </div>
+      </div>
     }
   </div>
 

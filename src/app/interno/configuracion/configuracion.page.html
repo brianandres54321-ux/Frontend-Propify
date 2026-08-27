@@ -1,0 +1,234 @@
+<div class="config-header mb-4">
+  <span class="config-header__icono">
+    <i class="bi bi-gear-fill"></i>
+  </span>
+  <div>
+    <h1 class="h3 mb-0">Configuración</h1>
+    <p class="text-muted mb-0">Tu perfil, tu empresa y tus preferencias, en un solo lugar.</p>
+  </div>
+</div>
+
+<div class="config-layout">
+  <div
+    ngbNav
+    #nav="ngbNav"
+    [activeId]="pestanaActiva()"
+    (activeIdChange)="pestanaActiva.set($event)"
+    class="nav nav-pills flex-column config-tabs"
+    orientation="vertical"
+  >
+    <ng-container [ngbNavItem]="1">
+      <a ngbNavLink><i class="bi bi-person-circle"></i> Mi perfil</a>
+      <ng-template ngbNavContent>
+        @if (cargandoPerfil()) {
+          <app-loading />
+        } @else if (perfil()) {
+          <dl class="config-datos">
+            <dt>Nombre</dt>
+            <dd>{{ perfil()!.nombreUsuario }}</dd>
+            <dt>Correo</dt>
+            <dd>{{ perfil()!.correoUsuario }}</dd>
+            <dt>Rol</dt>
+            <dd class="text-uppercase">{{ perfil()!.nombreRol }}</dd>
+          </dl>
+          <p class="text-muted small mb-0">
+            Por ahora estos datos son de solo lectura. Si necesitas cambiar tu nombre o correo,
+            contacta al dueño de la cuenta.
+          </p>
+        } @else {
+          <p class="text-muted mb-0">No se pudo cargar tu perfil.</p>
+        }
+      </ng-template>
+    </ng-container>
+
+    @if (esDueno()) {
+      <ng-container [ngbNavItem]="2">
+        <a ngbNavLink><i class="bi bi-building"></i> Empresa</a>
+        <ng-template ngbNavContent>
+          @if (exitoEmpresa()) {
+            <app-alert variant="success">Información de la empresa actualizada.</app-alert>
+          }
+          @if (errorEmpresa()) {
+            <app-alert variant="danger">{{ errorEmpresa() }}</app-alert>
+          }
+
+          <form [formGroup]="empresaForm" (ngSubmit)="guardarEmpresa()">
+            <app-text-field
+              label="Nombre de la empresa"
+              [error]="
+                empresaForm.controls.nombre.touched && empresaForm.controls.nombre.invalid
+                  ? 'Ingresa un nombre de al menos 2 caracteres'
+                  : null
+              "
+            >
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="empresaForm.controls.nombre.touched && empresaForm.controls.nombre.invalid"
+                formControlName="nombre"
+              />
+            </app-text-field>
+
+            <div class="row">
+              <div class="col-sm-6">
+                <app-text-field label="Color primario">
+                  <input type="color" class="form-control form-control-color" formControlName="colorPrimario" />
+                </app-text-field>
+              </div>
+              <div class="col-sm-6">
+                <app-text-field label="Color secundario">
+                  <input type="color" class="form-control form-control-color" formControlName="colorSecundario" />
+                </app-text-field>
+              </div>
+            </div>
+
+            <app-text-field label="URL del logo" hint="Pega el enlace a una imagen ya subida a otro lugar (no hay subida de archivos todavía).">
+              <input type="text" class="form-control" formControlName="logoUrl" placeholder="https://..." />
+            </app-text-field>
+
+            <dl class="config-datos config-datos--inline mb-4">
+              <dt>Plan actual</dt>
+              <dd>{{ tenant()?.plan ?? '—' }}</dd>
+            </dl>
+
+            <app-button type="submit" [fullWidth]="false" [loading]="guardandoEmpresa()">
+              Guardar cambios
+            </app-button>
+          </form>
+        </ng-template>
+      </ng-container>
+
+      <ng-container [ngbNavItem]="3">
+        <a ngbNavLink><i class="bi bi-telephone"></i> Información de contacto</a>
+        <ng-template ngbNavContent>
+          @if (exitoContacto()) {
+            <app-alert variant="success">Teléfono de contacto actualizado.</app-alert>
+          }
+          @if (errorContacto()) {
+            <app-alert variant="danger">{{ errorContacto() }}</app-alert>
+          }
+
+          <form [formGroup]="contactoForm" (ngSubmit)="guardarContacto()">
+            <app-text-field
+              label="Teléfono de contacto (WhatsApp)"
+              hint="Es el número que ven los interesados en tus anuncios públicos de arriendo."
+            >
+              <input
+                type="text"
+                class="form-control"
+                formControlName="telefonoContacto"
+                placeholder="Ej: 3001234567"
+              />
+            </app-text-field>
+
+            <app-button type="submit" [fullWidth]="false" [loading]="guardandoContacto()">
+              Guardar
+            </app-button>
+          </form>
+        </ng-template>
+      </ng-container>
+    }
+
+    <ng-container [ngbNavItem]="4">
+      <a ngbNavLink><i class="bi bi-shield-lock"></i> Seguridad</a>
+      <ng-template ngbNavContent>
+        @if (exitoClave()) {
+          <app-alert variant="success">Contraseña actualizada correctamente.</app-alert>
+        }
+        @if (errorClave()) {
+          <app-alert variant="danger">{{ errorClave() }}</app-alert>
+        }
+
+        <form [formGroup]="claveForm" (ngSubmit)="cambiarClave()">
+          <app-text-field
+            label="Contraseña actual"
+            [error]="
+              claveForm.controls.claveActual.touched && claveForm.controls.claveActual.invalid
+                ? 'Ingresa tu contraseña actual'
+                : null
+            "
+          >
+            <input
+              type="password"
+              class="form-control"
+              [class.is-invalid]="claveForm.controls.claveActual.touched && claveForm.controls.claveActual.invalid"
+              formControlName="claveActual"
+              autocomplete="current-password"
+            />
+          </app-text-field>
+
+          <app-text-field
+            label="Nueva contraseña"
+            [hint]="passwordHint"
+            [error]="
+              claveForm.controls.nuevaClave.touched && claveForm.controls.nuevaClave.invalid
+                ? passwordHint
+                : null
+            "
+          >
+            <input
+              type="password"
+              class="form-control"
+              [class.is-invalid]="claveForm.controls.nuevaClave.touched && claveForm.controls.nuevaClave.invalid"
+              formControlName="nuevaClave"
+              autocomplete="new-password"
+            />
+          </app-text-field>
+
+          <app-text-field
+            label="Confirmar nueva contraseña"
+            [error]="
+              claveForm.controls.confirmarClave.touched && claveForm.errors?.['passwordsNoCoinciden']
+                ? 'Las contraseñas no coinciden'
+                : null
+            "
+          >
+            <input
+              type="password"
+              class="form-control"
+              [class.is-invalid]="claveForm.controls.confirmarClave.touched && claveForm.errors?.['passwordsNoCoinciden']"
+              formControlName="confirmarClave"
+              autocomplete="new-password"
+            />
+          </app-text-field>
+
+          <app-button type="submit" [fullWidth]="false" [loading]="cambiandoClave()">
+            Cambiar contraseña
+          </app-button>
+        </form>
+      </ng-template>
+    </ng-container>
+
+    <ng-container [ngbNavItem]="5">
+      <a ngbNavLink><i class="bi bi-sliders"></i> Preferencias</a>
+      <ng-template ngbNavContent>
+        <div class="config-preferencia">
+          <div>
+            <p class="fw-semibold mb-1">Tema de la interfaz</p>
+            <p class="text-muted small mb-0">Claro u oscuro — se recuerda en este dispositivo.</p>
+          </div>
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              [class.active]="themeService.tema() === 'light'"
+              (click)="themeService.establecer('light')"
+            >
+              <i class="bi bi-sun-fill"></i> Claro
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              [class.active]="themeService.tema() === 'dark'"
+              (click)="themeService.establecer('dark')"
+            >
+              <i class="bi bi-moon-stars-fill"></i> Oscuro
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+
+  <div [ngbNavOutlet]="nav" class="config-contenido"></div>
+</div>

@@ -2,23 +2,28 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 
-import { PlanTipo } from '../../../core/models';
-import { AuthService } from '../../../core/services/auth.service';
+import { PlanTipo } from '@core/models';
+import { AuthService } from '@core/services/auth.service';
 import {
   PASSWORD_REGEX_MESSAGE,
   passwordSeguraValidator,
   passwordsCoincidenValidator,
-} from '../../../core/services/password.validator';
-import { mensajeErrorApi } from '../../../core/services/api-error.util';
-import { AlertComponent } from '../../../shared/components/alert/alert';
-import { ButtonComponent } from '../../../shared/components/button/button';
-import { TextFieldComponent } from '../../../shared/components/text-field/text-field';
+} from '@core/services/password.validator';
+import { mensajeErrorApi } from '@core/services/api-error.util';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { TextFieldComponent } from '@shared/components/text-field/text-field';
 
 interface OpcionPlan {
   valor: PlanTipo;
   titulo: string;
   descripcion: string;
 }
+
+// Celular colombiano: siempre 10 dígitos (mismo criterio que se usa para
+// el teléfono de un Residente, ver residente-form-modal.ts).
+const TELEFONO_REGEX = /^\d{10}$/;
+const TELEFONO_MENSAJE = 'Ingresa un celular válido (10 dígitos)';
 
 // Alta de un tenant nuevo (nuevo cliente de Propify): crea el conjunto/edificio
 // y su usuario dueño. Unirse a un tenant ya existente (con código de invitación)
@@ -35,8 +40,11 @@ export class RegistroPage {
   private readonly router = inject(Router);
 
   protected readonly passwordHint = PASSWORD_REGEX_MESSAGE;
+  protected readonly telefonoHint = TELEFONO_MENSAJE;
   protected readonly enviando = signal(false);
   protected readonly errorMensaje = signal<string | null>(null);
+  protected readonly mostrarClave = signal(false);
+  protected readonly mostrarConfirmar = signal(false);
 
   // Categoría del cliente — hoy es informativa (no limita módulos por sí
   // sola, eso lo controla cada inmueble con tieneTorres/tieneZonasComunes/
@@ -66,6 +74,7 @@ export class RegistroPage {
       plan: this.fb.control<PlanTipo>(PlanTipo.CASAS, [Validators.required]),
       nombreUsuario: this.fb.control('', [Validators.required, Validators.minLength(2)]),
       correoUsuario: this.fb.control('', [Validators.required, Validators.email]),
+      telefono: this.fb.control('', [Validators.required, Validators.pattern(TELEFONO_REGEX)]),
       claveAcceso: this.fb.control('', [Validators.required, passwordSeguraValidator()]),
       confirmarClave: this.fb.control('', [Validators.required]),
     },

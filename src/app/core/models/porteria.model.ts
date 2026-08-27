@@ -46,3 +46,9 @@ export interface CrearAutorizacionPreviaRequest {
   ventanaInicio: string;
   ventanaFin: string;
 }
+
+// Dashboard de CELADOR/DUEÑO/ADMIN — ver GET /privado/porteria/resumen.
+export interface ResumenPorteria {
+  visitasActivas: number;
+  paquetesPendientes: number;
+}

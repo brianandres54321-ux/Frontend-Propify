@@ -1,0 +1,113 @@
+<div class="trend-chart">
+  <div class="trend-chart__cabecera">
+    <ul class="trend-chart__leyenda">
+      @for (serie of series(); track serie.nombre) {
+        <li>
+          <span class="trend-chart__swatch" [style.background]="serie.color"></span>
+          {{ serie.nombre }}
+        </li>
+      }
+    </ul>
+
+    <button type="button" class="trend-chart__toggle" (click)="toggleTabla()">
+      {{ mostrarTabla() ? 'Ver como gráfico' : 'Ver como tabla' }}
+    </button>
+  </div>
+
+  @if (mostrarTabla()) {
+    <div class="table-responsive">
+      <table class="table table-sm mb-0">
+        <thead>
+          <tr>
+            <th>Mes</th>
+            @for (serie of series(); track serie.nombre) {
+              <th class="text-end">{{ serie.nombre }}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (etiqueta of etiquetas(); track etiqueta; let i = $index) {
+            <tr>
+              <td>{{ etiqueta }}</td>
+              @for (serie of series(); track serie.nombre) {
+                <td class="text-end">{{ formatoValor()(serie.valores[i]) }}</td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <svg
+      [attr.viewBox]="viewBox"
+      class="trend-chart__svg"
+      role="img"
+      [attr.aria-label]="'Tendencia mensual: ' + series().map(s => s.nombre).join(' vs ')"
+    >
+      @for (linea of gridlines(); track linea.y) {
+        <line
+          class="trend-chart__gridline"
+          [attr.x1]="ejeXInicio"
+          [attr.x2]="ejeXFin"
+          [attr.y1]="linea.y"
+          [attr.y2]="linea.y"
+        />
+        <text class="trend-chart__eje-texto" [attr.x]="ejeXInicio - 8" [attr.y]="linea.y + 4" text-anchor="end">
+          {{ linea.etiqueta }}
+        </text>
+      }
+
+      @for (grupo of grupos(); track grupo.etiqueta; let i = $index) {
+        @for (barra of grupo.barras; track barra.serie) {
+          <path [attr.d]="barra.path" [attr.fill]="barra.color" class="trend-chart__barra" />
+        }
+
+        <text class="trend-chart__eje-texto" [attr.x]="grupo.centroX" [attr.y]="ejeXTextoY" text-anchor="middle">
+          {{ grupo.etiqueta }}
+        </text>
+
+        <rect
+          class="trend-chart__hit"
+          [attr.x]="grupo.hitX"
+          [attr.y]="hitY"
+          [attr.width]="grupo.hitAncho"
+          [attr.height]="hitAlto"
+          tabindex="0"
+          role="button"
+          [attr.aria-label]="grupo.etiqueta + ': ' + grupo.barras.map(b => b.serie + ' ' + formatoValor()(b.valor)).join(', ')"
+          (pointerenter)="activar(i)"
+          (pointerleave)="desactivar()"
+          (focus)="activar(i)"
+          (blur)="desactivar()"
+        />
+      }
+
+      @if (grupoActivo(); as grupo) {
+        <g class="trend-chart__tooltip" [attr.transform]="'translate(' + tooltipX() + ', 20)'">
+          <rect
+            class="trend-chart__tooltip-fondo"
+            width="160"
+            [attr.height]="24 + grupo.barras.length * 18"
+          />
+          <text class="trend-chart__tooltip-titulo" x="10" y="18">{{ grupo.etiqueta }}</text>
+          @for (barra of grupo.barras; track barra.serie; let j = $index) {
+            <line
+              class="trend-chart__tooltip-clave"
+              x1="10"
+              [attr.x2]="22"
+              [attr.y1]="30 + j * 18"
+              [attr.y2]="30 + j * 18"
+              [attr.stroke]="barra.color"
+            />
+            <text class="trend-chart__tooltip-valor" [attr.x]="150" [attr.y]="34 + j * 18" text-anchor="end">
+              {{ formatoValor()(barra.valor) }}
+            </text>
+            <text class="trend-chart__tooltip-serie" x="28" [attr.y]="34 + j * 18">
+              {{ barra.serie }}
+            </text>
+          }
+        </g>
+      }
+    </svg>
+  }
+</div>

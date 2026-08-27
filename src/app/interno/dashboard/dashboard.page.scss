@@ -1,5 +1,19 @@
-h1 {
+.dashboard__encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.dashboard__titulo {
   font-size: 1.5rem;
+  margin-bottom: var(--space-1);
+}
+
+.dashboard__subtitulo {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
 }
 
 .dashboard__stats {
@@ -21,64 +35,79 @@ h1 {
   }
 }
 
-.donut {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  margin: var(--space-2) auto var(--space-4);
+.contratos-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: var(--space-3);
 }
 
-.donut__centro {
-  width: 108px;
-  height: 108px;
-  border-radius: 50%;
-  background: var(--color-surface);
-  display: flex;
-  flex-direction: column;
+.contratos-header__toggle {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-bg);
+  }
 }
 
-.donut__valor {
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-.donut__etiqueta {
-  font-size: 0.75rem;
+.contratos-leyenda {
+  font-size: 0.85rem;
   color: var(--color-text-muted);
 }
 
-.donut__leyenda {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  font-size: 0.85rem;
-}
-
-.donut__leyenda li {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.donut__punto {
+.contratos-leyenda__punto {
+  display: inline-block;
   width: 0.6rem;
   height: 0.6rem;
   border-radius: 50%;
-  flex-shrink: 0;
+  margin-right: var(--space-1);
 }
 
-.donut__punto--danger {
+.contratos-leyenda__punto--danger {
   background: var(--color-danger);
 }
 
-.donut__punto--info {
+.contratos-leyenda__punto--info {
   background: var(--color-info);
+}
+
+.cuenta-actual {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.cuenta-actual__periodo {
+  font-weight: 600;
+  margin-bottom: var(--space-1);
+}
+
+.cuenta-actual__vence {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+.cuenta-actual__total {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.dashboard__accesos {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
 }

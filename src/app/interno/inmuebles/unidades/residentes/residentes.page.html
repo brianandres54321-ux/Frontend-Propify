@@ -9,7 +9,7 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Inquilinos</h1>
   @if (puedeGestionar()) {
-    <app-button [fullWidth]="false" (click)="abrirCrear()">+ Nuevo inquilino</app-button>
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo inquilino</app-button>
   }
 </div>
 
@@ -28,10 +28,21 @@
     <ng-template let-fila>
       @if (puedeGestionar()) {
         <div class="d-flex gap-2 justify-content-end flex-wrap">
+          <app-button
+            variant="icon"
+            color="info"
+            icono="eye"
+            title="Ver detalle"
+            [routerLink]="['/app/inmuebles', inmuebleId, 'unidades', unidadId, 'residentes', fila.codResidente]"
+          />
           @if (fila.archivoContrato) {
-            <app-button variant="secondary" [fullWidth]="false" (click)="descargarContrato(fila)">
-              Ver contrato
-            </app-button>
+            <app-button
+              variant="icon"
+              color="info"
+              icono="file-earmark-text"
+              title="Ver contrato"
+              (click)="descargarContrato(fila)"
+            />
           }
           <input
             type="file"
@@ -40,15 +51,15 @@
             #inputContrato
             (change)="subirContrato(fila, inputContrato)"
           />
-          <app-button variant="secondary" [fullWidth]="false" (click)="inputContrato.click()">
-            {{ fila.archivoContrato ? 'Reemplazar contrato' : 'Subir contrato' }}
-          </app-button>
-          <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
-            Editar
-          </app-button>
-          <app-button variant="secondary" [fullWidth]="false" (click)="eliminar(fila)">
-            Eliminar
-          </app-button>
+          <app-button
+            variant="icon"
+            color="primary"
+            icono="cloud-upload"
+            [title]="fila.archivoContrato ? 'Reemplazar contrato' : 'Subir contrato'"
+            (click)="inputContrato.click()"
+          />
+          <app-button variant="icon" color="primary" icono="pencil-square" title="Editar" (click)="abrirEditar(fila)" />
+          <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
         </div>
       }
     </ng-template>

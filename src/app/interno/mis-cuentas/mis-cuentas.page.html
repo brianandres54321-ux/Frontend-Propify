@@ -1,0 +1,34 @@
+<h1 class="h3 mb-4">Mis cuentas</h1>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+@if (residente()) {
+  <div class="row mb-4">
+    <div class="col-6 col-md-3">
+      <span class="text-muted small d-block">Valor mensual</span>
+      <strong>{{ formatoMonto(residente()!.valorMensual) }}</strong>
+    </div>
+    <div class="col-6 col-md-3">
+      <span class="text-muted small d-block">Día de pago</span>
+      <strong>{{ residente()!.diaPago }}</strong>
+    </div>
+  </div>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="cuentas()"
+    textoVacio="Todavía no tienes cuentas generadas."
+  >
+    <ng-template let-fila>
+      <div class="d-flex justify-content-end">
+        <app-button variant="icon" color="info" icono="eye" title="Ver detalle" (click)="verDetalle(fila)" />
+      </div>
+    </ng-template>
+  </app-table>
+}

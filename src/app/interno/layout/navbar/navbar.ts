@@ -1,13 +1,15 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../../core/services/auth.service';
-import { LayoutService } from '../../../core/services/layout.service';
-import { ButtonComponent } from '../../../shared/components/button/button';
+import { AuthService } from '@core/services/auth.service';
+import { LayoutService } from '@core/services/layout.service';
+import { ButtonComponent } from '@shared/components/button/button';
+import { NotificacionesBellComponent } from '@shared/components/notificaciones-bell/notificaciones-bell';
+import { ThemeToggleComponent } from '@shared/components/theme-toggle/theme-toggle';
 
 @Component({
   selector: 'app-navbar',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, NotificacionesBellComponent, ThemeToggleComponent],
   templateUrl: './navbar.html',
   styleUrl: './navbar.scss',
 })

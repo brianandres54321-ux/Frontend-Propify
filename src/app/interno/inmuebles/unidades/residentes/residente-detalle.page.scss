@@ -1,0 +1,31 @@
+.residente-detalle__fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  align-items: stretch;
+}
+
+@media (max-width: 767.98px) {
+  .residente-detalle__fila {
+    grid-template-columns: 1fr;
+  }
+}
+
+.residente-detalle__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3) var(--space-4);
+  margin: 0;
+
+  dt {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 500;
+  }
+}

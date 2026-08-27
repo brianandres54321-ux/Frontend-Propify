@@ -1,0 +1,109 @@
+<nav aria-label="breadcrumb" class="mb-2">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a routerLink="/app/inmuebles">Inmuebles</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/app/inmuebles', inmuebleId, 'unidades']">Unidades</a></li>
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/app/inmuebles', inmuebleId, 'unidades', unidadId, 'residentes']">Inquilinos</a>
+    </li>
+    <li class="breadcrumb-item active">{{ residente()?.nombre ?? 'Detalle' }}</li>
+  </ol>
+</nav>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+@if (!residente()) {
+  <app-loading />
+} @else {
+  <div class="d-flex align-items-center gap-2 mb-4 flex-wrap">
+    <h1 class="h3 mb-0">{{ residente()!.nombre }}</h1>
+    <span class="badge rounded-pill badge-soft-{{ residente()!.esPropietario ? 'success' : 'info' }}">
+      {{ residente()!.esPropietario ? 'Propietario' : 'Arrendatario' }}
+    </span>
+    <span class="badge rounded-pill badge-soft-{{ residente()!.activo ? 'success' : 'danger' }}">
+      {{ residente()!.activo ? 'Activo' : 'Inactivo' }}
+    </span>
+  </div>
+
+  <div class="residente-detalle__fila mb-4">
+    <app-card titulo="Información" icono="person-vcard" variante="primary">
+      <dl class="residente-detalle__lista">
+        <div>
+          <dt>Teléfono</dt>
+          <dd>{{ residente()!.telefono }}</dd>
+        </div>
+        <div>
+          <dt>Correo</dt>
+          <dd>{{ residente()!.correo ?? '—' }}</dd>
+        </div>
+        <div>
+          <dt>Cédula</dt>
+          <dd>{{ residente()!.cedula ?? '—' }}</dd>
+        </div>
+        <div>
+          <dt>Valor mensual</dt>
+          <dd>{{ formatoMonto(residente()!.valorMensual) }}</dd>
+        </div>
+        <div>
+          <dt>Día de pago</dt>
+          <dd>{{ residente()!.diaPago }}</dd>
+        </div>
+        <div>
+          <dt>Fecha de inicio</dt>
+          <dd>{{ residente()!.fechaInicio | date: 'dd/MM/yyyy' }}</dd>
+        </div>
+        @if (residente()!.fechaFin) {
+          <div>
+            <dt>Contrato vence</dt>
+            <dd>
+              {{ residente()!.fechaFin | date: 'dd/MM/yyyy' }}
+              @if (diasRestantesContrato() !== null) {
+                <span class="badge rounded-pill badge-soft-{{ diasRestantesContrato()! <= 7 ? 'danger' : 'info' }} ms-1">
+                  {{ diasRestantesContrato() }} día(s)
+                </span>
+              }
+            </dd>
+          </div>
+        }
+      </dl>
+    </app-card>
+
+    <app-card titulo="Contrato" icono="file-earmark-text" variante="warning">
+      @if (residente()!.archivoContrato) {
+        <p class="text-muted small">Ya hay un contrato cargado para este inquilino.</p>
+        <div class="d-flex gap-2 flex-wrap">
+          <app-button variant="secondary" icono="file-earmark-text" [fullWidth]="false" (click)="descargarContrato()">
+            Ver contrato
+          </app-button>
+          <input type="file" accept=".pdf,.doc,.docx" hidden #inputContrato (change)="subirContrato(inputContrato)" />
+          <app-button variant="secondary" icono="cloud-upload" [fullWidth]="false" (click)="inputContrato.click()">
+            Reemplazar contrato
+          </app-button>
+        </div>
+      } @else {
+        <p class="text-muted small">Todavía no se ha subido el contrato de este inquilino.</p>
+        <input type="file" accept=".pdf,.doc,.docx" hidden #inputContratoNuevo (change)="subirContrato(inputContratoNuevo)" />
+        <app-button icono="cloud-upload" [fullWidth]="false" (click)="inputContratoNuevo.click()">Subir contrato</app-button>
+      }
+    </app-card>
+  </div>
+
+  <app-card titulo="Historial de cuentas" icono="receipt">
+    @if (cargando()) {
+      <app-loading />
+    } @else {
+      <app-table
+        [columnas]="columnas"
+        [filas]="cuentas()"
+        textoVacio="Este inquilino todavía no tiene cuentas mensuales generadas."
+      >
+        <ng-template let-fila>
+          <div class="d-flex justify-content-end">
+            <app-button variant="icon" color="info" icono="eye" title="Ver detalle" (click)="verDetalleCuenta(fila)" />
+          </div>
+        </ng-template>
+      </app-table>
+    }
+  </app-card>
+}

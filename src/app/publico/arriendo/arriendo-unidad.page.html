@@ -1,0 +1,82 @@
+<div class="container py-5">
+  @if (cargando()) {
+    <app-loading />
+  } @else if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  } @else if (unidad()) {
+    <div class="row g-4">
+      <div class="col-12 col-lg-7">
+        @if (unidad()!.fotos.length > 0) {
+          <div class="galeria">
+            @for (foto of unidad()!.fotos; track foto.codFoto) {
+              <img [src]="urlFoto(foto.codFoto)" alt="Foto de {{ unidad()!.identificador }}" />
+            }
+          </div>
+        } @else {
+          <div class="sin-fotos">Sin fotos disponibles</div>
+        }
+      </div>
+
+      <div class="col-12 col-lg-5">
+        <span class="badge-en-arriendo">En arriendo</span>
+        <h1 class="h3 mt-2 mb-1">{{ etiquetasTipo[unidad()!.tipo] }} {{ unidad()!.identificador }}</h1>
+        <p class="text-muted mb-3">
+          {{ unidad()!.nombreInmueble }}
+          @if (unidad()!.direccionInmueble) {
+            — {{ unidad()!.direccionInmueble }}
+          }
+        </p>
+
+        @if (unidad()!.precioArriendo) {
+          <p class="precio">{{ formatoMonto(unidad()!.precioArriendo!) }} <span class="text-muted small">/ mes</span></p>
+        }
+
+        <ul class="lista-datos">
+          @if (unidad()!.areaM2) {
+            <li><strong>{{ unidad()!.areaM2 }}</strong> m²</li>
+          }
+          @if (unidad()!.numeroCuartos) {
+            <li><strong>{{ unidad()!.numeroCuartos }}</strong> cuartos</li>
+          }
+          @if (unidad()!.numeroBanos) {
+            <li><strong>{{ unidad()!.numeroBanos }}</strong> baños</li>
+          }
+          @if (unidad()!.piso) {
+            <li>Piso <strong>{{ unidad()!.piso }}</strong></li>
+          }
+        </ul>
+
+        <h2 class="h6 mt-4">Características</h2>
+        <ul class="lista-caracteristicas">
+          @if (unidad()!.tieneComedor) {
+            <li>Comedor</li>
+          }
+          @if (unidad()!.tieneSala) {
+            <li>Sala</li>
+          }
+          @if (unidad()!.tieneCocina) {
+            <li>Cocina</li>
+          }
+          @if (unidad()!.amoblado) {
+            <li>Amoblado</li>
+          }
+        </ul>
+
+        @if (unidad()!.telefonoContacto) {
+          <a
+            class="boton-whatsapp"
+            [href]="urlWhatsapp(unidad()!.telefonoContacto!)"
+            target="_blank"
+            rel="noopener"
+          >
+            Contactar por WhatsApp
+          </a>
+        } @else {
+          <p class="text-muted small mt-4">
+            Este anuncio todavía no tiene un teléfono de contacto publicado.
+          </p>
+        }
+      </div>
+    </div>
+  }
+</div>

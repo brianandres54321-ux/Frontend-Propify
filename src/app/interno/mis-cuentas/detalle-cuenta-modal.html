@@ -1,0 +1,72 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Detalle de la cuenta</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  @if (cargando()) {
+    <app-loading />
+  } @else if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  } @else if (cuenta()) {
+    <div class="row mb-3">
+      <div class="col-6">
+        <span class="text-muted small d-block">Periodo</span>
+        {{ cuenta()!.periodo }}
+      </div>
+      <div class="col-6">
+        <span class="text-muted small d-block">Vence</span>
+        {{ formatoFecha(cuenta()!.fechaVencimiento) }}
+      </div>
+    </div>
+
+    <h3 class="h6">Cargos</h3>
+    @if (cargos().length === 0) {
+      <p class="text-muted small">Esta cuenta no tiene cargos registrados.</p>
+    } @else {
+      <ul class="list-group mb-3">
+        @for (cargo of cargos(); track cargo.codCargo) {
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {{ cargo.concepto }}
+              <span class="text-muted small d-block">{{ etiquetaTipoCargo[cargo.tipo] }}</span>
+            </div>
+            <strong>{{ formatoMonto(cargo.monto) }}</strong>
+          </li>
+        }
+      </ul>
+    }
+
+    <div class="d-flex justify-content-between align-items-center total-cuenta mb-3">
+      <strong>Total</strong>
+      <strong>{{ formatoMonto(cuenta()!.total) }}</strong>
+    </div>
+
+    <h3 class="h6">Pagos registrados</h3>
+    @if (pagos().length === 0) {
+      <p class="text-muted small">Todavía no se ha registrado ningún pago para esta cuenta.</p>
+    } @else {
+      <ul class="list-group mb-2">
+        @for (pago of pagos(); track pago.codPago) {
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {{ formatoFecha(pago.fecha) }}
+              <span class="text-muted small d-block">
+                {{ pago.metodo ?? 'Sin método' }}{{ pago.referencia ? ' — ' + pago.referencia : '' }}
+              </span>
+            </div>
+            <strong>{{ formatoMonto(pago.monto) }}</strong>
+          </li>
+        }
+      </ul>
+      <div class="d-flex justify-content-between align-items-center">
+        <span class="text-muted small">Total pagado</span>
+        <strong>{{ formatoMonto(totalPagado()) }}</strong>
+      </div>
+    }
+  }
+</div>
+
+<div class="modal-footer">
+  <app-button variant="secondary" [fullWidth]="false" (click)="activeModal.dismiss()">Cerrar</app-button>
+</div>

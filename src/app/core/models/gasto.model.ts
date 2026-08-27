@@ -21,3 +21,8 @@ export interface ActualizarGastoRequest {
   fecha?: string;
   categoria?: string;
 }
+
+// "Caja Fuerte" del dashboard — ver GET /privado/gastos/resumen.
+export interface ResumenGastosMes {
+  totalMes: number;
+}

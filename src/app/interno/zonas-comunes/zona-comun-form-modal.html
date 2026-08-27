@@ -1,0 +1,68 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nueva zona común' : 'Editar zona común' }}</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <app-text-field
+      label="Nombre"
+      [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid"
+        formControlName="nombre"
+      />
+    </app-text-field>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field label="Precio por reserva">
+          <input type="text" inputmode="numeric" appMoneda class="form-control" formControlName="precio" />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field label="Capacidad (opcional)">
+          <input type="number" min="1" class="form-control" formControlName="capacidad" />
+        </app-text-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field
+          label="Hora apertura"
+          [error]="form.controls.horaApertura.touched && form.controls.horaApertura.invalid ? 'Formato HH:mm' : null"
+        >
+          <input type="time" class="form-control" formControlName="horaApertura" />
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field
+          label="Hora cierre"
+          [error]="form.controls.horaCierre.touched && form.controls.horaCierre.invalid ? 'Formato HH:mm' : null"
+        >
+          <input type="time" class="form-control" formControlName="horaCierre" />
+        </app-text-field>
+      </div>
+    </div>
+
+    @if (modo === 'editar') {
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="activa" formControlName="activa" />
+        <label class="form-check-label" for="activa">Zona activa</label>
+      </div>
+    }
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Guardar
+    </app-button>
+  </div>
+</form>

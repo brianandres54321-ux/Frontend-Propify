@@ -1,8 +1,207 @@
 <section class="hero">
-  <h1>Administra tu conjunto sin hojas de cálculo</h1>
-  <p>
-    Cobranza, residentes, portería y zonas comunes de tu edificio o
-    conjunto, todo en un solo lugar.
+  <div class="hero__fondo">
+    <img class="hero__foto hero__foto--1" src="/images/casa-3-pisos.jpg" alt="" aria-hidden="true" />
+    <img class="hero__foto hero__foto--2" src="/images/proyecto-edificio.jpg" alt="" aria-hidden="true" />
+    <img class="hero__foto hero__foto--3" src="/images/conjuntos1.jpg" alt="" aria-hidden="true" />
+    <div class="hero__degradado"></div>
+    <div class="hero__velo-nav"></div>
+  </div>
+
+  <div class="hero__contenido">
+    <h1>Administra tu propiedad<br /><span class="hero__resaltado">sin hojas de cálculo</span></h1>
+    <p>
+      Cobranza automática, residentes, portería y zonas comunes de tu casa,
+      edificio o conjunto — todo en un solo lugar.
+    </p>
+    <div class="hero__botones">
+      <a routerLink="/registro" class="cta">Crear cuenta gratis <i class="bi bi-arrow-right"></i></a>
+      <a routerLink="/" fragment="planes" class="cta-secundaria">Ver planes</a>
+    </div>
+  </div>
+</section>
+
+<div class="barra-confianza-contenedor">
+  <div class="barra-confianza">
+    @for (capacidad of capacidades; track capacidad.titulo) {
+    <div class="item-confianza">
+      <span class="item-confianza__icono">
+        <i class="bi bi-{{ capacidad.icono }}"></i>
+      </span>
+      <span>{{ capacidad.titulo }}</span>
+    </div>
+    }
+  </div>
+</div>
+
+<section class="tipos-propiedad">
+  <div appRevelarAlScroll>
+    <span class="eyebrow">Para cada tipo de propiedad</span>
+    <h2>Diseñado para lo que realmente administras</h2>
+  </div>
+
+  <div class="grid-tipos">
+    @for (tipo of tiposPropiedad; track tipo.nombre; let i = $index) {
+    <div class="tarjeta-tipo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+      <div class="tarjeta-tipo__foto">
+        <img [src]="tipo.foto" [alt]="tipo.nombre" />
+        <span class="tarjeta-tipo__icono">
+          <i class="bi bi-{{ tipo.icono }}"></i>
+        </span>
+      </div>
+      <div class="tarjeta-tipo__cuerpo">
+        <h3>{{ tipo.nombre }}</h3>
+        <p>{{ tipo.descripcion }}</p>
+      </div>
+    </div>
+    }
+  </div>
+</section>
+
+<section class="como-funciona">
+  <div appRevelarAlScroll>
+    <span class="eyebrow">Cómo funciona</span>
+    <h2>De cero a administrando, en un mismo día</h2>
+  </div>
+
+  <div class="linea-pasos">
+    <div class="linea-pasos__conector"></div>
+    @for (paso of pasos; track paso.numero; let i = $index) {
+    <div class="paso" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+      <span class="paso__icono">
+        <i class="bi bi-{{ paso.icono }}"></i>
+        <span class="paso__numero">{{ paso.numero }}</span>
+      </span>
+      <h3>{{ paso.titulo }}</h3>
+      <p>{{ paso.descripcion }}</p>
+    </div>
+    }
+  </div>
+</section>
+
+<section class="ejemplos">
+  <div appRevelarAlScroll>
+    <span class="eyebrow">Para cada tipo de propiedad</span>
+    <h2>Así se ve en la práctica</h2>
+    <p class="subtitulo">Ejemplos del tipo de inmueble que puedes administrar — no son clientes de Propify.</p>
+  </div>
+
+  <div class="grid-ejemplos">
+    @for (ejemplo of ejemplosPropiedad; track ejemplo.titulo; let i = $index) {
+    <div class="tarjeta-ejemplo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+      <img [src]="ejemplo.foto" [alt]="ejemplo.titulo" />
+      <div class="tarjeta-ejemplo__info">
+        <span class="tarjeta-ejemplo__etiqueta">{{ ejemplo.etiqueta }}</span>
+        <h3>{{ ejemplo.titulo }}</h3>
+      </div>
+    </div>
+    }
+  </div>
+</section>
+
+@if (destacadas().length > 0) {
+<section class="destacadas">
+  <div appRevelarAlScroll>
+    <span class="eyebrow">Publicaciones activas</span>
+    <h2>En arriendo ahora</h2>
+    <p class="subtitulo">Unidades publicadas por dueños que usan Propify.</p>
+  </div>
+
+  <div class="grid-destacadas">
+    @for (unidad of destacadas(); track unidad.codUnidad; let i = $index) {
+    <div class="tarjeta-destacada" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+      <a class="tarjeta-destacada-link" [routerLink]="['/arriendo/unidad', unidad.codUnidad]">
+        @if (unidad.codFotoPortada) {
+        <img [src]="urlFoto(unidad.codUnidad, unidad.codFotoPortada)" alt="Foto de {{ unidad.identificador }}" />
+        } @else {
+        <div class="sin-foto">Sin foto</div>
+        }
+        <div class="info">
+          <span class="badge-en-arriendo">En arriendo</span>
+          <h3>{{ unidad.identificador }}</h3>
+          <p class="text-muted">{{ unidad.nombreInmueble }}</p>
+          @if (unidad.precioArriendo) {
+          <p class="precio">{{ formatoMonto(unidad.precioArriendo) }} / mes</p>
+          }
+        </div>
+      </a>
+      @if (unidad.telefonoContacto) {
+      <a class="tarjeta-destacada-whatsapp" [href]="urlWhatsapp(unidad)" target="_blank" rel="noopener"
+        (click)="$event.stopPropagation()">
+        Preguntar por WhatsApp
+      </a>
+      }
+    </div>
+    }
+  </div>
+</section>
+}
+
+<section class="planes" id="planes">
+  <div appRevelarAlScroll>
+    <span class="eyebrow">Planes</span>
+    <h2>Un plan por cada tipo de propiedad</h2>
+    <p class="subtitulo">
+      Elige el plan según tu tipo de propiedad. Empieza gratis con el plan demo
+      (1 inmueble, hasta 5 unidades) y actualiza cuando lo necesites.
+    </p>
+  </div>
+
+  <div class="grid-planes">
+    @for (plan of planes; track plan.nombre; let i = $index) {
+    <div
+      class="tarjeta-plan"
+      [class.tarjeta-plan--destacada]="plan.destacado"
+      appRevelarAlScroll
+      [style.transition-delay.ms]="i * 90"
+    >
+      @if (plan.destacado) {
+      <span class="tarjeta-plan__badge">Más elegido</span>
+      }
+      <h3>{{ plan.nombre }}</h3>
+      <p class="precio">{{ plan.precio }}</p>
+      <p class="descripcion">{{ plan.descripcion }}</p>
+      <ul>
+        @for (item of plan.incluye; track item) {
+        <li>{{ item }}</li>
+        }
+      </ul>
+      <a routerLink="/registro" class="cta-plan">Empezar gratis</a>
+    </div>
+    }
+  </div>
+
+  <p class="nota-precios">
+    Precios de referencia. El plan demo es gratis y no requiere tarjeta.
   </p>
-  <a routerLink="/registro" class="cta">Crear cuenta gratis</a>
+</section>
+
+<section class="cta-faq" appRevelarAlScroll>
+  <div class="cta-banner">
+    <span class="cta-banner__icono">
+      <i class="bi bi-chat-dots-fill"></i>
+    </span>
+    <h2>¿Listo para dejar el Excel?</h2>
+    <p>Crea tu cuenta gratis y registra tu primer inmueble hoy mismo.</p>
+    <a routerLink="/registro" class="cta-banner__boton">Crear cuenta gratis</a>
+  </div>
+
+  <div class="faq">
+    <span class="eyebrow">Preguntas frecuentes</span>
+    <h2>Lo que más nos preguntan</h2>
+
+    <div class="faq__lista">
+      @for (item of faqs; track item.pregunta; let indice = $index) {
+      <div class="faq__item" [class.faq__item--abierto]="faqAbierta() === indice">
+        <button type="button" class="faq__pregunta" (click)="alternarFaq(indice)">
+          {{ item.pregunta }}
+          <i class="bi" [class.bi-chevron-down]="faqAbierta() !== indice"
+            [class.bi-chevron-up]="faqAbierta() === indice"></i>
+        </button>
+        @if (faqAbierta() === indice) {
+        <p class="faq__respuesta">{{ item.respuesta }}</p>
+        }
+      </div>
+      }
+    </div>
+  </div>
 </section>

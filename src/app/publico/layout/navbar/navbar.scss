@@ -1,0 +1,168 @@
+.pnav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  backdrop-filter: blur(12px);
+  transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+// Sobre el hero de "/": sin fondo, sin borde, texto blanco — apenas se
+// hace scroll (o se entra a cualquier otra página) pasa al estado sólido
+// de arriba, con blur, igual que hacen la mayoría de landings modernas.
+.pnav--transparente {
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+
+  .pnav__marca,
+  .pnav__link {
+    color: white;
+  }
+
+  .pnav__insignia {
+    background: rgb(255 255 255 / 18%);
+  }
+
+  .pnav__link--activo {
+    color: white;
+    opacity: 1;
+  }
+
+  .pnav__link--ingresar {
+    border-color: rgb(255 255 255 / 35%);
+  }
+}
+
+.pnav__contenedor {
+  max-width: 1100px;
+  min-height: var(--nav-height);
+  margin: 0 auto;
+  padding-inline: var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.pnav__marca {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: var(--color-text);
+  transition: color 0.2s ease;
+}
+
+.pnav__insignia {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  font-size: 1rem;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.pnav__enlaces {
+  display: none;
+  align-items: center;
+  gap: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .pnav__enlaces {
+    display: flex;
+  }
+}
+
+.pnav__link {
+  position: relative;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: color 0.2s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 2px;
+    transition: width 0.2s ease;
+  }
+
+  &:hover {
+    color: var(--color-text);
+
+    &::after {
+      width: 100%;
+    }
+  }
+}
+
+.pnav--transparente .pnav__link:hover {
+  color: white;
+}
+
+.pnav__link--activo {
+  color: var(--color-primary);
+
+  &::after {
+    width: 100%;
+  }
+}
+
+.pnav__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.pnav__link--ingresar {
+  display: none;
+  border: 1px solid var(--color-border);
+  border-radius: 50rem;
+  padding: 0.4rem 0.9rem;
+  transition: border-color 0.2s ease, color 0.2s ease;
+
+  &::after {
+    display: none;
+  }
+}
+
+@media (min-width: 480px) {
+  .pnav__link--ingresar {
+    display: inline-flex;
+  }
+}
+
+.pnav__cta {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(145deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 50rem;
+  box-shadow: 0 4px 14px rgb(124 92 252 / 35%);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgb(124 92 252 / 45%);
+  }
+}

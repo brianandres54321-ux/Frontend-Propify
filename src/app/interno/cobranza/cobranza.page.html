@@ -15,6 +15,34 @@
   <app-alert variant="success">{{ mensajeExito() }}</app-alert>
 }
 
+@if (pendientesNotificacion().length > 0) {
+  <div class="pendientes mb-4">
+    <h2 class="h6 mb-2">Recordatorios y avisos de mora pendientes de enviar hoy</h2>
+    <ul class="pendientes__lista">
+      @for (pendiente of pendientesNotificacion(); track pendiente.codCuenta + pendiente.tipo) {
+        <li class="pendientes__item">
+          <div>
+            <span class="badge-soft-{{ pendiente.tipo === 'MORA' ? 'danger' : 'warning' }} rounded-pill">
+              {{ etiquetaTipoNotificacion[pendiente.tipo] }}
+            </span>
+            <strong class="ms-2">{{ pendiente.nombreResidente }}</strong>
+            <span class="text-muted small ms-1">— {{ pendiente.periodo }}</span>
+          </div>
+          <a
+            class="btn btn-sm boton-whatsapp-pendiente"
+            [href]="urlWhatsappPendiente(pendiente)"
+            target="_blank"
+            rel="noopener"
+            (click)="marcarNotificado(pendiente)"
+          >
+            <i class="bi bi-whatsapp"></i> Enviar por WhatsApp
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+}
+
 <form [formGroup]="filtros" class="row mb-3">
   <div class="col-6 col-md-3">
     <select class="form-select" formControlName="estado">
@@ -44,7 +72,7 @@
   >
     <ng-template let-fila>
       @if (fila.estado !== EstadoCuenta.PAGADA) {
-        <app-button variant="secondary" [fullWidth]="false" (click)="registrarPago(fila)">
+        <app-button variant="secondary" icono="cash-stack" [fullWidth]="false" (click)="registrarPago(fila)">
           Registrar pago
         </app-button>
       }

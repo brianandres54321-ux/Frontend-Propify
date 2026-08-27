@@ -1,4 +1,27 @@
 .auth-card {
   width: 100%;
   max-width: 380px;
+  // El formulario de login vive a la derecha — entra desde ese lado.
+  animation: auth-card-desde-derecha 0.45s ease both;
+}
+
+.auth-card__kicker {
+  margin-bottom: var(--space-1);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+.auth-card__titulo {
+  margin-bottom: var(--space-4);
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-card {
+    animation: none;
+  }
 }

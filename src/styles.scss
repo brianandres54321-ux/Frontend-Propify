@@ -4,20 +4,20 @@
 // Única fuente de verdad para la personalización visual.
 // Alimenta Bootstrap y nuestros tokens CSS --color-*.
 
-$propify-primary: #1f6f5c;
-$propify-primary-hover: #185a4a;
+$propify-primary: #7c5cfc;
+$propify-primary-hover: #6942e0;
 $propify-secondary: #4b5563;
-$propify-bg: #f7f7f5;
+$propify-bg: #f5f7fa;
 $propify-surface: #ffffff;
-$propify-border: #e2e2df;
+$propify-border: #dbe1ea;
 $propify-text: #1a1a1a;
-$propify-text-muted: #6b7280;
-$propify-danger: #b3261e;
-$propify-success: #1f6f5c;
-$propify-warning: #b8860b;
-$propify-info: #2563a8;
+$propify-text-muted: #5b6472;
+$propify-danger: #dc2626;
+$propify-success: #16a34a;
+$propify-warning: #d97706;
+$propify-info: #0891b2;
 
-$propify-font-sans: 'Inter',
+$propify-font-sans: 'Plus Jakarta Sans',
   -apple-system,
   BlinkMacSystemFont,
   'Segoe UI',
@@ -75,6 +75,13 @@ body {
 
 body {
   -webkit-font-smoothing: antialiased;
+  // Sin esto, el fondo de <body> lo pone el $body-bg-dark automático de
+  // Bootstrap (un gris neutro) en vez de nuestro --color-bg (azul oscuro) —
+  // se nota como una costura de color entre el lienzo de la página y las
+  // superficies (--color-surface) de nuestras propias tarjetas/sidebar.
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 
@@ -91,6 +98,13 @@ figure {
   margin: 0;
 }
 
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
 
 // ============================================================
 // TOKENS DE DISEÑO
@@ -101,12 +115,14 @@ figure {
 
 :root {
   // ----------------------------------------------------------
-  // Colores principales
+  // Colores principales — valores CLARO por defecto. El modo oscuro
+  // (ver bloque [data-theme='dark'] más abajo) solo redefine estos
+  // mismos nombres; los componentes nunca deben usar hex directo.
   // ----------------------------------------------------------
 
   --color-primary: #{$propify-primary};
   --color-primary-hover: #{$propify-primary-hover};
-  --color-primary-bg: #e8f3ef;
+  --color-primary-bg: #f1ecfe;
   --color-secondary: #{$propify-secondary};
 
   // ----------------------------------------------------------
@@ -132,13 +148,24 @@ figure {
   --color-danger-bg: #fdecea;
 
   --color-success: #{$propify-success};
-  --color-success-bg: #e8f3ef;
+  --color-success-bg: #e7f6ec;
 
   --color-warning: #{$propify-warning};
-  --color-warning-bg: #fdf3d9;
+  --color-warning-bg: #fdf1dc;
 
   --color-info: #{$propify-info};
-  --color-info-bg: #e7eef7;
+  --color-info-bg: #e3f4f8;
+
+  // ----------------------------------------------------------
+  // Gráficos — pares validados con el validador de paletas de dataviz
+  // (contraste + separación CVD deutan/protan/tritan). --color-success
+  // vs --color-danger NO pasa (ΔE deutan 5.0, por debajo del piso de 6);
+  // primary/danger sí (ΔE > 27 en los tres tipos), de ahí este par
+  // dedicado en vez de reusar success para "ingresos".
+  // ----------------------------------------------------------
+
+  --chart-ingresos: var(--color-primary);
+  --chart-gastos: #dc2626;
 
   // ----------------------------------------------------------
   // Tipografía
@@ -158,8 +185,8 @@ figure {
   // Sombras
   // ----------------------------------------------------------
 
-  --shadow-sm: 0 1px 2px rgb(0 0 0 / 6%);
-  --shadow-md: 0 4px 16px rgb(0 0 0 / 8%);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 6%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 14%), 0 2px 6px rgb(0 0 0 / 8%);
 
   // ----------------------------------------------------------
   // Espaciado
@@ -172,6 +199,81 @@ figure {
   --space-5: 24px;
   --space-6: 32px;
   --space-8: 48px;
+
+  // Altura de referencia del navbar público — el hero de la home la resta
+  // como margen negativo para que su foto se extienda detrás del navbar
+  // transparente (ver .pnav en navbar.scss y .hero en home.page.scss).
+  --nav-height: 4rem;
+}
+
+// ============================================================
+// MODO OSCURO
+// ============================================================
+// ThemeService pone data-theme="dark" (y data-bs-theme="dark" para que
+// los componentes nativos de Bootstrap — inputs, modales, dropdowns —
+// se adapten solos) en <html>. Un script inline en index.html aplica el
+// atributo antes de que Angular arranque, para no parpadear en claro.
+
+:root[data-theme='dark'] {
+  --color-primary: #a78bfa;
+  --color-primary-hover: #bda3ff;
+  --color-primary-bg: rgb(167 139 250 / 16%);
+  --color-secondary: #8b95a5;
+
+  --color-bg: #0d1117;
+  --color-surface: #161b25;
+  --color-border: #2a3242;
+
+  --color-text: #e6e9ef;
+  --color-text-muted: #9aa4b2;
+
+  --color-danger: #f87171;
+  --color-danger-bg: rgb(248 113 113 / 14%);
+
+  --color-success: #4ade80;
+  --color-success-bg: rgb(74 222 128 / 14%);
+
+  --color-warning: #fbbf24;
+  --color-warning-bg: rgb(251 191 36 / 14%);
+
+  --color-info: #22d3ee;
+  --color-info-bg: rgb(34 211 238 / 14%);
+
+  // #f87171 (--color-danger) queda muy claro para el piso de luminancia
+  // categórico del validador en modo oscuro — este rojo dedicado para
+  // "gastos" sí pasa (ver validación arriba).
+  --chart-ingresos: var(--color-primary);
+  --chart-gastos: #ef4444;
+
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 40%), 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 55%), 0 2px 6px rgb(0 0 0 / 35%);
+}
+
+
+// ============================================================
+// REVELAR AL HACER SCROLL
+// ============================================================
+// Usado junto con RevelarAlScrollDirective ([appRevelarAlScroll]) — el
+// elemento arranca invisible/desplazado y se asienta con un fade-in suave
+// la primera vez que entra en el viewport.
+
+.revelar-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.revelar-scroll.revelado {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revelar-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 
@@ -183,6 +285,14 @@ figure {
 
 .card {
   box-shadow: var(--shadow-sm);
+}
+
+// Píldora en cualquier .btn de la app, no solo los que pasan por
+// <app-button> — sin esto, enlaces sueltos como "Ver foto" o "Ver anuncio"
+// (que usan clases de Bootstrap directas) se ven cuadrados al lado de todo
+// lo demás.
+.btn:not(.btn-link):not(.btn-icon) {
+  border-radius: 50rem;
 }
 
 .table {
@@ -221,5 +331,87 @@ figure {
     background: $fondo;
     color: $color;
     font-weight: 600;
+  }
+}
+
+// ----------------------------------------------------------
+// Botón/enlace redondo de solo ícono — usado por app-button
+// (variant="icon") y por anclas sueltas que necesitan el mismo look
+// (ej. un enlace externo en una fila de tabla). Global porque el
+// encapsulamiento de estilos de Angular no deja que el CSS de un
+// componente alcance elementos de otro.
+// ----------------------------------------------------------
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.94);
+  }
+}
+
+@each $nombre in primary, warning, danger, success, info {
+  .btn-icon--#{$nombre} {
+    background: var(--color-#{$nombre}-bg);
+    color: var(--color-#{$nombre});
+  }
+}
+
+// ----------------------------------------------------------
+// Campo de contraseña con botón de mostrar/ocultar (ojo) — usado en login,
+// registro y donde más se pida una clave. El input necesita padding-right
+// para que el texto no quede debajo del botón.
+// ----------------------------------------------------------
+
+.password-input {
+  position: relative;
+}
+
+.password-input .form-control {
+  padding-right: 2.5rem;
+}
+
+// ----------------------------------------------------------
+// Feedback táctil en los enlaces de login/registro (ej. "Crear cuenta",
+// "Ingresar") — el fade-in de .auth-card en cada página ya anima la
+// llegada; esto anima el instante del clic que la dispara.
+// ----------------------------------------------------------
+
+.auth-card a {
+  transition: opacity 0.15s ease;
+}
+
+.auth-card a:active {
+  opacity: 0.6;
+}
+
+.password-input__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text);
   }
 }

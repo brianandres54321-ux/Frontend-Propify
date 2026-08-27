@@ -1,6 +1,43 @@
 .auth-card {
   width: 100%;
-  max-width: 460px;
+  max-width: 620px;
+  // El formulario de registro vive a la izquierda — entra desde ese lado.
+  animation: auth-card-desde-izquierda 0.45s ease both;
+}
+
+// Formulario en 2 columnas para no alargar tanto la página — los campos
+// afines (identidad de la cuenta, datos personales, seguridad) se agrupan
+// de a dos por fila; los que no tienen pareja natural (plan, botón) ocupan
+// el ancho completo con .registro-form__full.
+.registro-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--space-4);
+}
+
+@media (min-width: 520px) {
+  .registro-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.registro-form__full {
+  grid-column: 1 / -1;
+}
+
+.auth-card__kicker {
+  margin-bottom: var(--space-1);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-card {
+    animation: none;
+  }
 }
 
 .plan-opcion {
@@ -18,5 +55,5 @@
 
 .plan-opcion--activa {
   border-color: var(--color-primary);
-  background: var(--color-success-bg);
+  background: var(--color-primary-bg);
 }

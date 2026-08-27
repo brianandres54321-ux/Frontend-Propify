@@ -1,10 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  Renderer2,
-  forwardRef,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 // Formatea un <input> como precio colombiano (separador de miles con

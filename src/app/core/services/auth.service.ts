@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '@env/environment';
 import { RolNombre } from '../constants/roles.constant';
 import {
   CambioPasswordRequest,
@@ -24,9 +24,7 @@ const CLAVE_TOKEN = 'propify_token';
 export class AuthService {
   private readonly baseUrl = environment.apiUrl;
 
-  private readonly sesionSignal = signal<SesionUsuario | null>(
-    this.leerSesionAlmacenada(),
-  );
+  private readonly sesionSignal = signal<SesionUsuario | null>(this.leerSesionAlmacenada());
 
   public readonly sesion = this.sesionSignal.asReadonly();
   public readonly estaAutenticado = computed(() => this.sesionSignal() !== null);
@@ -59,17 +57,13 @@ export class AuthService {
       .pipe(tap((respuesta) => this.guardarToken(respuesta.token)));
   }
 
-  public registrarTenant(
-    datos: RegistroTenantRequest,
-  ): Observable<TokenResponse> {
+  public registrarTenant(datos: RegistroTenantRequest): Observable<TokenResponse> {
     return this.http
       .post<TokenResponse>(`${this.baseUrl}/publico/registros/tenant`, datos)
       .pipe(tap((respuesta) => this.guardarToken(respuesta.token)));
   }
 
-  public recuperarPassword(
-    datos: RecuperarPasswordRequest,
-  ): Observable<MensajeResponse> {
+  public recuperarPassword(datos: RecuperarPasswordRequest): Observable<MensajeResponse> {
     return this.http.post<MensajeResponse>(
       `${this.baseUrl}/publico/registros/recuperar-password`,
       datos,
@@ -83,9 +77,7 @@ export class AuthService {
     );
   }
 
-  public cambiarPassword(
-    datos: CambioPasswordRequest,
-  ): Observable<MensajeResponse> {
+  public cambiarPassword(datos: CambioPasswordRequest): Observable<MensajeResponse> {
     return this.http.patch<MensajeResponse>(
       `${this.baseUrl}/publico/registros/cambiar-password`,
       datos,

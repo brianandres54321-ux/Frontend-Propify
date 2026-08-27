@@ -1,0 +1,47 @@
+<div class="container py-5">
+  @if (cargando()) {
+    <app-loading />
+  } @else if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  } @else if (datos()) {
+    <h1 class="h3 mb-1">{{ datos()!.inmueble.nombre }}</h1>
+    @if (datos()!.inmueble.direccion) {
+      <p class="text-muted mb-4">{{ datos()!.inmueble.direccion }}</p>
+    }
+
+    @if (datos()!.unidades.length === 0) {
+      <p class="text-muted">Este inmueble no tiene unidades en arriendo por ahora.</p>
+    } @else {
+      <div class="tarjetas">
+        @for (unidad of datos()!.unidades; track unidad.codUnidad) {
+          <div class="tarjeta">
+            <a class="tarjeta-link" [routerLink]="['/arriendo/unidad', unidad.codUnidad]">
+              @if (unidad.codFotoPortada) {
+                <img [src]="urlFotoPortada(unidad.codUnidad, unidad.codFotoPortada)" alt="" />
+              } @else {
+                <div class="sin-foto"></div>
+              }
+              <div class="tarjeta-body">
+                <strong>{{ etiquetasTipo[unidad.tipo] }} {{ unidad.identificador }}</strong>
+                @if (unidad.precioArriendo) {
+                  <span class="precio">{{ formatoMonto(unidad.precioArriendo) }} / mes</span>
+                }
+              </div>
+            </a>
+            @if (datos()!.telefonoContacto) {
+              <a
+                class="tarjeta-whatsapp"
+                [href]="urlWhatsapp(unidad)"
+                target="_blank"
+                rel="noopener"
+                (click)="$event.stopPropagation()"
+              >
+                Preguntar por WhatsApp
+              </a>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

@@ -2,12 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import {
-  ActualizarInmuebleRequest,
-  CrearInmuebleRequest,
-  Inmueble,
-} from '../models';
+import { environment } from '@env/environment';
+import { ActualizarInmuebleRequest, CrearInmuebleRequest, Inmueble } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class InmueblesService {
@@ -23,10 +19,7 @@ export class InmueblesService {
     return this.http.post<Inmueble>(this.baseUrl, datos);
   }
 
-  public actualizar(
-    id: number,
-    datos: ActualizarInmuebleRequest,
-  ): Observable<{ mensaje: string }> {
+  public actualizar(id: number, datos: ActualizarInmuebleRequest): Observable<{ mensaje: string }> {
     return this.http.put<{ mensaje: string }>(`${this.baseUrl}/${id}`, datos);
   }
 

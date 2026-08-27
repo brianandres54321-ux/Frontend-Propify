@@ -1,0 +1,91 @@
+<h1 class="h3 mb-4">Portería</h1>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+<form class="row mb-3 g-2">
+  <div class="col-6 col-md-3">
+    <select
+      class="form-select"
+      [value]="inmuebleSeleccionado()"
+      (change)="cambiarInmueble($any($event.target).value)"
+    >
+      @for (inmueble of inmuebles(); track inmueble.codInmueble) {
+        <option [value]="inmueble.codInmueble">{{ inmueble.nombre }}</option>
+      }
+    </select>
+  </div>
+  <div class="col-6 col-md-3">
+    <select
+      class="form-select"
+      [value]="unidadSeleccionada()"
+      (change)="cambiarUnidad($any($event.target).value)"
+    >
+      @for (unidad of unidades(); track unidad.codUnidad) {
+        <option [value]="unidad.codUnidad">{{ unidad.identificador }}</option>
+      }
+    </select>
+  </div>
+</form>
+
+@if (cargando()) {
+  <app-loading />
+} @else if (!inmuebleSeleccionado()) {
+  <p class="text-muted">Ninguno de tus inmuebles tiene el módulo de portería activo.</p>
+} @else if (!unidadSeleccionada()) {
+  <p class="text-muted">Este inmueble todavía no tiene unidades registradas.</p>
+} @else {
+  <div class="d-flex justify-content-between align-items-center mb-2">
+    <h2 class="h5 mb-0">Visitas</h2>
+    @if (esCelador()) {
+      <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirRegistrarVisita()">
+        Registrar entrada
+      </app-button>
+    }
+  </div>
+  <app-table
+    [columnas]="columnasVisitas"
+    [filas]="visitas()"
+    textoVacio="No hay visitas registradas para esta unidad."
+  >
+    <ng-template let-fila>
+      @if (esCelador() && !fila.horaSalida) {
+        <app-button variant="secondary" icono="box-arrow-right" [fullWidth]="false" (click)="registrarSalida(fila)">
+          Registrar salida
+        </app-button>
+      }
+    </ng-template>
+  </app-table>
+
+  <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
+    <h2 class="h5 mb-0">Paquetes</h2>
+    @if (esCelador()) {
+      <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirRegistrarPaquete()">
+        Registrar paquete
+      </app-button>
+    }
+  </div>
+  <app-table
+    [columnas]="columnasPaquetes"
+    [filas]="paquetes()"
+    textoVacio="No hay paquetes registrados para esta unidad."
+  >
+    <ng-template let-fila>
+      @if (esCelador() && !fila.horaRetiro) {
+        <app-button variant="secondary" icono="check2-circle" [fullWidth]="false" (click)="registrarEntrega(fila)">
+          Marcar entregado
+        </app-button>
+      }
+    </ng-template>
+  </app-table>
+
+  @if (esCelador()) {
+    <h2 class="h5 mb-2 mt-4">Autorizaciones previas vigentes</h2>
+    <app-table
+      [columnas]="columnasAutorizaciones"
+      [filas]="autorizaciones()"
+      textoVacio="No hay autorizaciones previas vigentes para esta unidad."
+    />
+  }
+}

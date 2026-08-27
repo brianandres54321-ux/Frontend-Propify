@@ -1,5 +1,6 @@
 <div class="auth-card">
-  <h1 class="h3 mb-4">Ingresar</h1>
+  <p class="auth-card__kicker">Acceso al panel</p>
+  <h1 class="h3 auth-card__titulo">Inicia sesión</h1>
 
   @if (errorMensaje()) {
     <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
@@ -31,13 +32,23 @@
           : null
       "
     >
-      <input
-        type="password"
-        class="form-control"
-        [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
-        formControlName="claveAcceso"
-        autocomplete="current-password"
-      />
+      <div class="password-input">
+        <input
+          [type]="mostrarClave() ? 'text' : 'password'"
+          class="form-control"
+          [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
+          formControlName="claveAcceso"
+          autocomplete="current-password"
+        />
+        <button
+          type="button"
+          class="password-input__toggle"
+          (click)="mostrarClave.set(!mostrarClave())"
+          [title]="mostrarClave() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+        >
+          <i class="bi" [class.bi-eye]="!mostrarClave()" [class.bi-eye-slash]="mostrarClave()"></i>
+        </button>
+      </div>
     </app-text-field>
 
     <a routerLink="/recuperar-password" class="d-block text-end small mb-3">
@@ -49,7 +60,7 @@
     </app-button>
   </form>
 
-  <p class="text-muted small mt-3 mb-0">
+  <p class="text-muted small mt-3 mb-0 text-center">
     ¿No tienes cuenta? <a routerLink="/registro">Crear cuenta</a>
   </p>
 </div>

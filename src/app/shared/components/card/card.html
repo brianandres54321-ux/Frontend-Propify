@@ -1,4 +1,4 @@
-<div class="card card--{{ variante() }}">
+<div class="card card--{{ variante() }}" [class.card--auto]="autoAltura()">
   @if (titulo()) {
     <div class="card-header">
       @if (icono()) {
@@ -6,7 +6,8 @@
           <i class="bi bi-{{ icono() }}"></i>
         </span>
       }
-      <span>{{ titulo() }}</span>
+      <span class="card-header__titulo">{{ titulo() }}</span>
+      <ng-content select="[card-header-accion]" />
     </div>
   }
   <div class="card-body">

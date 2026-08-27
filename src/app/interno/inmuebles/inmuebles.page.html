@@ -1,12 +1,17 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Inmuebles</h1>
   @if (puedeGestionar()) {
-    <app-button [fullWidth]="false" (click)="abrirCrear()">+ Nuevo inmueble</app-button>
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo inmueble</app-button>
   }
 </div>
 
 @if (errorMensaje()) {
-  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  <app-alert variant="danger">
+    {{ errorMensaje() }}
+    @if (limiteAlcanzado()) {
+      <a routerLink="/" fragment="planes" class="alert-link ms-2">Actualizar plan →</a>
+    }
+  </app-alert>
 }
 
 @if (cargando()) {
@@ -23,12 +28,8 @@
           Unidades
         </app-button>
         @if (puedeGestionar()) {
-          <app-button variant="secondary" [fullWidth]="false" (click)="abrirEditar(fila)">
-            Editar
-          </app-button>
-          <app-button variant="secondary" [fullWidth]="false" (click)="eliminar(fila)">
-            Eliminar
-          </app-button>
+          <app-button variant="icon" color="primary" icono="pencil-square" title="Editar" (click)="abrirEditar(fila)" />
+          <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
         }
       </div>
     </ng-template>

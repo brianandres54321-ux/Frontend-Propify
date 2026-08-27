@@ -2,16 +2,28 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { EstadoCuenta, Inmueble, CuentaResumen } from '../../core/models';
-import { mensajeErrorApi } from '../../core/services/api-error.util';
-import { CobranzaService } from '../../core/services/cobranza.service';
-import { InmueblesService } from '../../core/services/inmuebles.service';
-import { AlertComponent } from '../../shared/components/alert/alert';
-import { ButtonComponent } from '../../shared/components/button/button';
-import { LoadingComponent } from '../../shared/components/loading/loading';
-import { TableComponent } from '../../shared/components/table/table';
-import { TableBadgeVariant, TableColumn } from '../../shared/interfaces/table-column.interface';
+import {
+  EstadoCuenta,
+  Inmueble,
+  CuentaResumen,
+  PendienteNotificacion,
+  TipoNotificacion,
+} from '@core/models';
+import { mensajeErrorApi } from '@core/services/api-error.util';
+import { urlWhatsapp } from '@core/services/whatsapp.util';
+import { CobranzaService } from '@core/services/cobranza.service';
+import { InmueblesService } from '@core/services/inmuebles.service';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { LoadingComponent } from '@shared/components/loading/loading';
+import { TableComponent } from '@shared/components/table/table';
+import { TableBadgeVariant, TableColumn } from '@shared/interfaces';
 import { PagoFormModal, formatoMonto } from './pago-form-modal';
+
+const ETIQUETA_TIPO_NOTIFICACION: Record<string, string> = {
+  [TipoNotificacion.RECORDATORIO_PAGO]: 'Recordatorio de pago',
+  [TipoNotificacion.MORA]: 'Aviso de mora',
+};
 
 const VARIANTE_ESTADO: Record<EstadoCuenta, TableBadgeVariant> = {
   [EstadoCuenta.PENDIENTE]: 'warning',
@@ -38,8 +50,10 @@ export class CobranzaPage implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
 
   protected readonly EstadoCuenta = EstadoCuenta;
+  protected readonly etiquetaTipoNotificacion = ETIQUETA_TIPO_NOTIFICACION;
   protected readonly cuentas = signal<CuentaResumen[]>([]);
   protected readonly inmuebles = signal<Inmueble[]>([]);
+  protected readonly pendientesNotificacion = signal<PendienteNotificacion[]>([]);
   protected readonly cargando = signal(true);
   protected readonly generando = signal(false);
   protected readonly errorMensaje = signal<string | null>(null);
@@ -67,7 +81,12 @@ export class CobranzaPage implements OnInit {
       valor: (f) => new Date(f.fechaVencimiento).toLocaleDateString('es-CO'),
     },
     { key: 'total', label: 'Total', valor: (f) => formatoMonto(f.total), align: 'end' },
-    { key: 'totalPagado', label: 'Pagado', valor: (f) => formatoMonto(f.totalPagado), align: 'end' },
+    {
+      key: 'totalPagado',
+      label: 'Pagado',
+      valor: (f) => formatoMonto(f.totalPagado),
+      align: 'end',
+    },
     {
       key: 'estado',
       label: 'Estado',
@@ -83,6 +102,36 @@ export class CobranzaPage implements OnInit {
 
     this.filtros.valueChanges.subscribe(() => this.cargar());
     this.cargar();
+    this.cargarPendientesNotificacion();
+  }
+
+  private cargarPendientesNotificacion(): void {
+    this.cobranzaService.consultarPendientesNotificacion().subscribe({
+      next: (pendientes) => this.pendientesNotificacion.set(pendientes),
+      error: () => this.pendientesNotificacion.set([]),
+    });
+  }
+
+  protected urlWhatsappPendiente(pendiente: PendienteNotificacion): string {
+    const mensaje =
+      pendiente.tipo === TipoNotificacion.MORA
+        ? `Tu cuenta de ${pendiente.periodo} está vencida. Total adeudado: ${formatoMonto(pendiente.total)}.`
+        : `Recordatorio: tu cuenta de ${pendiente.periodo} por ${formatoMonto(pendiente.total)} vence el ${new Date(pendiente.fechaVencimiento).toLocaleDateString('es-CO')}.`;
+    return urlWhatsapp(pendiente.telefono, mensaje);
+  }
+
+  // No usa preventDefault: el enlace wa.me se abre igual en una pestaña
+  // nueva, esto solo registra en paralelo que el dueño ya lo mandó.
+  protected marcarNotificado(pendiente: PendienteNotificacion): void {
+    this.cobranzaService.marcarNotificado(pendiente.codCuenta, pendiente.tipo).subscribe({
+      next: () => {
+        this.pendientesNotificacion.update((lista) =>
+          lista.filter((p) => !(p.codCuenta === pendiente.codCuenta && p.tipo === pendiente.tipo)),
+        );
+      },
+      error: (error: unknown) =>
+        this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo registrar el envío.')),
+    });
   }
 
   private cargar(): void {

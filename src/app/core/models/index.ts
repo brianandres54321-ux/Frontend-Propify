@@ -16,3 +16,4 @@ export * from './porteria.model';
 export * from './aviso.model';
 export * from './reporte-dano.model';
 export * from './notificacion.model';
+export * from './tendencia.model';

@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Registrar entrada de visitante</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <app-text-field
+      label="Nombre del visitante"
+      [error]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid ? 'Ingresa un nombre' : null"
+    >
+      <input
+        type="text"
+        class="form-control"
+        [class.is-invalid]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid"
+        formControlName="nombreVisitante"
+      />
+    </app-text-field>
+
+    <app-text-field label="Cédula (opcional)">
+      <input type="text" class="form-control" formControlName="cedulaVisitante" />
+    </app-text-field>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
+      Registrar entrada
+    </app-button>
+  </div>
+</form>

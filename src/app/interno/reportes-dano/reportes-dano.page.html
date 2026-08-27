@@ -1,0 +1,104 @@
+<h1 class="h3 mb-4">Reportes de daño</h1>
+
+@if (esDuenoAdmin()) {
+  @if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  }
+
+  <form class="row mb-3 g-2">
+    <div class="col-6 col-md-3">
+      <select
+        class="form-select"
+        [value]="inmuebleSeleccionado()"
+        (change)="cambiarInmueble($any($event.target).value)"
+      >
+        @for (inmueble of inmuebles(); track inmueble.codInmueble) {
+          <option [value]="inmueble.codInmueble">{{ inmueble.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="col-6 col-md-3">
+      <select
+        class="form-select"
+        [value]="unidadSeleccionada()"
+        (change)="cambiarUnidad($any($event.target).value)"
+      >
+        @for (unidad of unidades(); track unidad.codUnidad) {
+          <option [value]="unidad.codUnidad">{{ unidad.identificador }}</option>
+        }
+      </select>
+    </div>
+  </form>
+
+  @if (cargando()) {
+    <app-loading />
+  } @else if (!inmuebleSeleccionado()) {
+    <p class="text-muted">Todavía no has registrado ningún inmueble.</p>
+  } @else if (!unidadSeleccionada()) {
+    <p class="text-muted">Este inmueble todavía no tiene unidades registradas.</p>
+  } @else {
+    <app-table
+      [columnas]="columnas"
+      [filas]="reportes()"
+      textoVacio="No hay reportes de daño para esta unidad."
+    >
+      <ng-template let-fila>
+        <div class="d-flex gap-2 justify-content-end flex-wrap">
+          @if (fila.fotoUrl) {
+            <a [href]="fila.fotoUrl" target="_blank" rel="noopener" class="btn-icon btn-icon--info" title="Ver foto">
+              <i class="bi bi-image"></i>
+            </a>
+          }
+          @if (fila.estado === EstadoReporte.PENDIENTE) {
+            <app-button
+              variant="secondary"
+              icono="hourglass-split"
+              [fullWidth]="false"
+              (click)="marcarEstado(fila, EstadoReporte.EN_PROCESO)"
+            >
+              Marcar en proceso
+            </app-button>
+          }
+          @if (fila.estado !== EstadoReporte.RESUELTO) {
+            <app-button icono="check2-circle" [fullWidth]="false" (click)="marcarEstado(fila, EstadoReporte.RESUELTO)">
+              Marcar resuelto
+            </app-button>
+          }
+        </div>
+      </ng-template>
+    </app-table>
+  }
+}
+
+@if (esResidente()) {
+  <p class="text-muted mb-4">
+    Cuéntanos qué daño encontraste en tu unidad — le llega al dueño/administrador de inmediato.
+  </p>
+
+  @if (errorEnvio()) {
+    <app-alert variant="danger">{{ errorEnvio() }}</app-alert>
+  }
+  @if (enviado()) {
+    <app-alert variant="success">Reporte enviado correctamente.</app-alert>
+  }
+
+  <form [formGroup]="formularioReporte" (ngSubmit)="enviarReporte()" class="reporte-form">
+    <app-text-field
+      label="Descripción del daño"
+      [error]="formularioReporte.controls.descripcion.touched && formularioReporte.controls.descripcion.invalid ? 'La descripción es obligatoria.' : null"
+    >
+      <textarea
+        class="form-control"
+        rows="4"
+        formControlName="descripcion"
+        placeholder="Ej: se dañó la llave del baño principal y está goteando"
+      ></textarea>
+    </app-text-field>
+
+    <app-text-field label="URL de una foto (opcional)" hint="Si ya subiste una foto a otro lugar, pega el enlace aquí.">
+      <input type="text" class="form-control" formControlName="fotoUrl" placeholder="https://..." />
+    </app-text-field>
+
+    <app-button type="submit" [fullWidth]="false" [loading]="enviando()">Enviar reporte</app-button>
+  </form>
+}

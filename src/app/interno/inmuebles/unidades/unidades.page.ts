@@ -2,18 +2,19 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-import { RoleNames } from '../../../core/constants/roles.constant';
-import { TipoUnidad, Unidad } from '../../../core/models';
-import { AuthService } from '../../../core/services/auth.service';
-import { mensajeErrorApi } from '../../../core/services/api-error.util';
-import { UnidadesService } from '../../../core/services/unidades.service';
-import { AlertComponent } from '../../../shared/components/alert/alert';
-import { ButtonComponent } from '../../../shared/components/button/button';
-import { ConfirmDialogService } from '../../../shared/components/confirm-dialog/confirm-dialog.service';
-import { LoadingComponent } from '../../../shared/components/loading/loading';
-import { PaginationComponent } from '../../../shared/components/pagination/pagination';
-import { TableComponent } from '../../../shared/components/table/table';
-import { TableBadgeVariant, TableColumn } from '../../../shared/interfaces/table-column.interface';
+import { RoleNames } from '@core/constants';
+import { EstadoOcupacionUnidad, TipoUnidad, Unidad } from '@core/models';
+import { AuthService } from '@core/services/auth.service';
+import { esLimitePlan, mensajeErrorApi } from '@core/services/api-error.util';
+import { UnidadesService } from '@core/services/unidades.service';
+import { AlertComponent } from '@shared/components/alert/alert';
+import { ButtonComponent } from '@shared/components/button/button';
+import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-dialog.service';
+import { LoadingComponent } from '@shared/components/loading/loading';
+import { PaginationComponent } from '@shared/components/pagination/pagination';
+import { TableComponent } from '@shared/components/table/table';
+import { TableBadgeVariant, TableColumn } from '@shared/interfaces';
+import { FotosUnidadModal } from './fotos-unidad-modal';
 import { UnidadFormModal } from './unidad-form-modal';
 
 const TAMANIO_PAGINA = 10;
@@ -32,6 +33,16 @@ const VARIANTE_TIPO: Record<TipoUnidad, TableBadgeVariant> = {
   [TipoUnidad.HABITACION]: 'warning',
   [TipoUnidad.LOCAL]: 'success',
   [TipoUnidad.OFICINA]: 'danger',
+};
+
+const ETIQUETA_ESTADO: Record<EstadoOcupacionUnidad, string> = {
+  [EstadoOcupacionUnidad.OCUPADA]: 'Ocupada',
+  [EstadoOcupacionUnidad.VACANTE]: 'Vacante',
+};
+
+const VARIANTE_ESTADO: Record<EstadoOcupacionUnidad, TableBadgeVariant> = {
+  [EstadoOcupacionUnidad.OCUPADA]: 'info',
+  [EstadoOcupacionUnidad.VACANTE]: 'success',
 };
 
 @Component({
@@ -60,6 +71,7 @@ export class UnidadesPage implements OnInit {
   protected readonly unidades = signal<Unidad[]>([]);
   protected readonly cargando = signal(true);
   protected readonly errorMensaje = signal<string | null>(null);
+  protected readonly limiteAlcanzado = signal(false);
   protected readonly paginaActual = signal(1);
 
   protected readonly puedeGestionar = computed(() =>
@@ -80,7 +92,17 @@ export class UnidadesPage implements OnInit {
     },
     { key: 'piso', label: 'Piso', valor: (f) => f.piso ?? '—' },
     { key: 'areaM2', label: 'Área m²', valor: (f) => f.areaM2 ?? '—' },
+    {
+      key: 'estadoOcupacion',
+      label: 'Estado',
+      badge: (f) => ({
+        texto: ETIQUETA_ESTADO[f.estadoOcupacion],
+        variante: VARIANTE_ESTADO[f.estadoOcupacion],
+      }),
+    },
   ];
+
+  protected readonly EstadoOcupacionUnidad = EstadoOcupacionUnidad;
 
   ngOnInit(): void {
     this.cargar();
@@ -101,24 +123,34 @@ export class UnidadesPage implements OnInit {
   }
 
   protected abrirCrear(): void {
-    const modalRef = this.modalService.open(UnidadFormModal, { centered: true });
+    const modalRef = this.modalService.open(UnidadFormModal, { centered: true, size: 'lg' });
     const instancia: UnidadFormModal = modalRef.componentInstance;
     instancia.modo = 'crear';
 
     modalRef.result.then(
       (datos) => {
+        this.limiteAlcanzado.set(false);
         this.unidadesService.registrar({ ...datos, codInmueble: this.inmuebleId }).subscribe({
           next: () => this.cargar(),
-          error: (error: unknown) =>
-            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear la unidad.')),
+          error: (error: unknown) => {
+            this.limiteAlcanzado.set(esLimitePlan(error));
+            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear la unidad.'));
+          },
         });
       },
       () => undefined,
     );
   }
 
+  protected abrirFotos(unidad: Unidad): void {
+    const modalRef = this.modalService.open(FotosUnidadModal, { centered: true, size: 'lg' });
+    const instancia: FotosUnidadModal = modalRef.componentInstance;
+    instancia.unidadId = unidad.codUnidad;
+    instancia.identificadorUnidad = unidad.identificador;
+  }
+
   protected abrirEditar(unidad: Unidad): void {
-    const modalRef = this.modalService.open(UnidadFormModal, { centered: true });
+    const modalRef = this.modalService.open(UnidadFormModal, { centered: true, size: 'lg' });
     const instancia: UnidadFormModal = modalRef.componentInstance;
     instancia.modo = 'editar';
     instancia.precargar(unidad);

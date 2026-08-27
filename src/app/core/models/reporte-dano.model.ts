@@ -24,3 +24,9 @@ export interface CrearReporteDanoRequest {
 export interface ActualizarReporteDanoRequest {
   estado: EstadoReporte;
 }
+
+// Alerta del dashboard — conteo agregado del tenant, ver
+// GET /privado/reportes-dano/resumen.
+export interface ResumenReportesDano {
+  pendientes: number;
+}
