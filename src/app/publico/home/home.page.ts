@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { ArriendoDestacada } from '@core/models';
 import { ArriendosService } from '@core/services/arriendos.service';
-import { urlWhatsapp } from '@core/services/whatsapp.util';
+import { urlWhatsapp } from '@core/utils';
 import { RevelarAlScrollDirective } from '@shared/directives';
 
 function formatoMonto(valor: number): string {

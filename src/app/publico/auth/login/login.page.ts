@@ -3,7 +3,7 @@ import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '@core/services/auth.service';
-import { mensajeErrorApi } from '@core/services/api-error.util';
+import { mensajeErrorApi } from '@core/utils';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { ButtonComponent } from '@shared/components/button/button';
 import { TextFieldComponent } from '@shared/components/text-field/text-field';

@@ -16,7 +16,7 @@ import {
   SesionUsuario,
   TokenResponse,
 } from '../models';
-import { decodificarJwt, tokenExpirado } from './jwt.util';
+import { decodificarJwt, tokenExpirado } from '@core/utils';
 
 const CLAVE_TOKEN = 'propify_token';
 

@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { PublicoLayout } from './layout/publico-layout';
-import { AuthLayout } from './auth/auth-layout';
+import { PublicoLayout } from '@layout/publico/publico-layout';
+import { AuthLayout } from '@layout/auth/auth-layout';
 
 export const PUBLICO_ROUTES: Routes = [
   {

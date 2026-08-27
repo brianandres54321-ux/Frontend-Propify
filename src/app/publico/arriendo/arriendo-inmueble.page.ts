@@ -3,8 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { ArriendoInmueblePublico, ArriendoResumenUnidad, TipoUnidad } from '@core/models';
 import { ArriendosService } from '@core/services/arriendos.service';
-import { mensajeErrorApi } from '@core/services/api-error.util';
-import { urlWhatsapp } from '@core/services/whatsapp.util';
+import { mensajeErrorApi, urlWhatsapp } from '@core/utils';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { LoadingComponent } from '@shared/components/loading/loading';
 

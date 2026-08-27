@@ -14,7 +14,7 @@ import {
   ResumenPorteria,
 } from '@core/models';
 import { AuthService } from '@core/services/auth.service';
-import { mensajeErrorApi } from '@core/services/api-error.util';
+import { mensajeErrorApi } from '@core/utils';
 import { CobranzaService } from '@core/services/cobranza.service';
 import { CuentasMensualesService } from '@core/services/cuentas-mensuales.service';
 import { GastosService } from '@core/services/gastos.service';

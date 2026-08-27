@@ -8,8 +8,8 @@ import {
   PASSWORD_REGEX_MESSAGE,
   passwordSeguraValidator,
   passwordsCoincidenValidator,
-} from '@core/services/password.validator';
-import { mensajeErrorApi } from '@core/services/api-error.util';
+} from '@shared/validators';
+import { mensajeErrorApi } from '@core/utils';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { ButtonComponent } from '@shared/components/button/button';
 import { TextFieldComponent } from '@shared/components/text-field/text-field';

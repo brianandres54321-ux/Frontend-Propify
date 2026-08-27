@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 
-import { ThemeService } from '@core/services/theme.service';
+import { ThemeService } from '@shared/services/theme.service';
 
 // Botón redondo con ícono de sol/luna — se usa en ambos navbars (público e
 // interno). Reutilizable porque ThemeService ya centraliza todo el estado.
