@@ -52,9 +52,11 @@ export const PUBLICO_ROUTES: Routes = [
           ),
       },
       {
-        path: 'nueva-password',
+        // El correo de recuperación enlaza a /reset-password/:token
+        // (ver registros.service.ts → `enlace`).
+        path: 'reset-password/:token',
         loadComponent: () =>
-          import('./auth/nueva-password/nueva-password.page').then((m) => m.NuevaPasswordPage),
+          import('./auth/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
       },
     ],
   },
