@@ -60,7 +60,10 @@ export class UnidadFormModal {
       identificador: unidad.identificador,
       tipo: unidad.tipo,
       piso: unidad.piso ?? null,
-      areaM2: unidad.areaM2 ?? null,
+      // areaM2 y precioArriendo llegan como string desde la API (columnas
+      // numeric de Postgres) — hay que convertirlos o el PUT falla la
+      // validación (@IsNumber/@Min) al reenviar el valor sin tocarlo.
+      areaM2: unidad.areaM2 != null ? Number(unidad.areaM2) : null,
       estadoOcupacion: unidad.estadoOcupacion,
       precioArriendo: unidad.precioArriendo != null ? Number(unidad.precioArriendo) : null,
       numeroCuartos: unidad.numeroCuartos ?? null,
