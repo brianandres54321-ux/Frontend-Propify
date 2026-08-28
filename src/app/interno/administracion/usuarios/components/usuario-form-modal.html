@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h2 class="modal-title fs-5">Nuevo usuario</h2>
+  <h2 class="modal-title fs-5">{{ modoEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
   <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
 </div>
 
@@ -30,13 +30,18 @@
     </app-text-field>
 
     <app-text-field
-      label="Contraseña"
-      hint="Mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial."
+      [label]="modoEdicion ? 'Nueva contraseña (opcional)' : 'Contraseña'"
+      [hint]="
+        modoEdicion
+          ? 'Déjala vacía para no cambiarla. Si la cambias: mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial.'
+          : 'Mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial.'
+      "
       [error]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid ? 'La contraseña no cumple el formato requerido' : null"
     >
       <input
         type="password"
         class="form-control"
+        autocomplete="new-password"
         [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
         formControlName="claveAcceso"
       />
@@ -53,7 +58,7 @@
       >
         <option [ngValue]="null">Selecciona un rol</option>
         @for (rol of roles; track rol.codRol) {
-          <option [ngValue]="rol.codRol">{{ rol.nombreRol }}</option>
+          <option [ngValue]="rol.codRol">{{ etiquetaRol(rol.nombreRol) }}</option>
         }
       </select>
     </app-text-field>

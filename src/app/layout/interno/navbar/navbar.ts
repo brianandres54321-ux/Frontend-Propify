@@ -1,6 +1,7 @@
 import { Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { etiquetaRol } from '@core/constants';
 import { AuthService } from '@core/services/auth.service';
 import { LayoutService } from '@shared/services/layout.service';
 import { ButtonComponent } from '@shared/components/button/button';
@@ -17,6 +18,8 @@ export class NavbarComponent {
   protected readonly auth = inject(AuthService);
   protected readonly layout = inject(LayoutService);
   private readonly router = inject(Router);
+
+  protected readonly rolEtiqueta = computed(() => etiquetaRol(this.auth.rol()));
 
   protected readonly iniciales = computed(() => {
     const nombre = this.auth.sesion()?.name ?? '';

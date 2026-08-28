@@ -3,7 +3,12 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '@env/environment';
-import { CrearUsuarioRequest, PerfilUsuario, UsuarioResumen } from '../models';
+import {
+  ActualizarUsuarioRequest,
+  CrearUsuarioRequest,
+  PerfilUsuario,
+  UsuarioResumen,
+} from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class UsuariosService {
@@ -21,6 +26,13 @@ export class UsuariosService {
 
   public registrar(datos: CrearUsuarioRequest): Observable<{ mensaje: string }> {
     return this.http.post<{ mensaje: string }>(this.baseUrl, datos);
+  }
+
+  public actualizar(
+    id: number,
+    datos: ActualizarUsuarioRequest,
+  ): Observable<{ mensaje: string }> {
+    return this.http.put<{ mensaje: string }>(`${this.baseUrl}/${id}`, datos);
   }
 
   public eliminar(id: number): Observable<{ mensaje: string }> {

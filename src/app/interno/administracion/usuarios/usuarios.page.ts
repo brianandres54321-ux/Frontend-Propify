@@ -3,7 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { Rol, UsuarioResumen } from '@core/models';
 import { AuthService } from '@core/services/auth.service';
-import { RoleNames } from '@core/constants';
+import { RoleNames, etiquetaRol } from '@core/constants';
 import { mensajeErrorApi } from '@core/utils';
 import { RolesService } from '@core/services/roles.service';
 import { UsuariosService } from '@core/services/usuarios.service';
@@ -13,7 +13,7 @@ import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-
 import { LoadingComponent } from '@shared/components/loading/loading';
 import { TableComponent } from '@shared/components/table/table';
 import { TableColumn } from '@shared/interfaces';
-import { UsuarioFormModal } from './components/usuario-form-modal';
+import { UsuarioFormModal, UsuarioFormResultado } from './components/usuario-form-modal';
 
 @Component({
   selector: 'app-usuarios-page',
@@ -33,17 +33,25 @@ export class UsuariosPage implements OnInit {
   protected readonly cargando = signal(true);
   protected readonly errorMensaje = signal<string | null>(null);
 
-  // Solo un dueño puede asignar el rol dueño — el backend ya lo exige, esto
-  // solo evita ofrecer una opción que terminaría en un 403.
+  // Roles que se pueden crear desde esta pantalla:
+  //  - `residente` no se crea aquí: un residente se gestiona como ficha en su
+  //    unidad (Inmuebles → Unidades → Residentes), no necesita cuenta de acceso.
+  //  - `superadministrador` nunca se asigna por esta vía (lo bloquea el backend).
+  //  - `dueno` solo lo puede asignar otro dueño (el backend devuelve 403 si no).
   protected readonly rolesAsignables = computed(() => {
     const esDueno = this.auth.tieneRol(RoleNames.DUENO);
-    return this.roles().filter((rol) => esDueno || rol.nombreRol !== RoleNames.DUENO);
+    return this.roles().filter((rol) => {
+      if (rol.nombreRol === RoleNames.RESIDENTE || rol.nombreRol === RoleNames.SUPERADMIN) {
+        return false;
+      }
+      return esDueno || rol.nombreRol !== RoleNames.DUENO;
+    });
   });
 
   protected readonly columnas: TableColumn<UsuarioResumen>[] = [
     { key: 'nombre_usuario', label: 'Nombre' },
     { key: 'correo_usuario', label: 'Correo' },
-    { key: 'nombre_rol', label: 'Rol' },
+    { key: 'nombre_rol', label: 'Rol', valor: (fila) => etiquetaRol(fila.nombre_rol) },
   ];
 
   ngOnInit(): void {
@@ -68,17 +76,53 @@ export class UsuariosPage implements OnInit {
     });
   }
 
+  // Un admin operativo no puede tocar la cuenta del dueño (el backend también
+  // lo bloquea) — se le ocultan las acciones sobre esa fila.
+  protected puedeGestionar(usuario: UsuarioResumen): boolean {
+    if (usuario.nombre_rol === RoleNames.DUENO) {
+      return this.auth.tieneRol(RoleNames.DUENO);
+    }
+    return true;
+  }
+
   protected abrirCrear(): void {
     const modalRef = this.modalService.open(UsuarioFormModal, { centered: true });
     const instancia: UsuarioFormModal = modalRef.componentInstance;
     instancia.roles = this.rolesAsignables();
 
     modalRef.result.then(
-      (datos) => {
-        this.usuariosService.registrar(datos).subscribe({
+      (datos: UsuarioFormResultado) => {
+        this.usuariosService
+          .registrar({ ...datos, claveAcceso: datos.claveAcceso! })
+          .subscribe({
+            next: () => this.cargar(),
+            error: (error: unknown) =>
+              this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear el usuario.')),
+          });
+      },
+      () => undefined,
+    );
+  }
+
+  protected abrirEditar(usuario: UsuarioResumen): void {
+    const modalRef = this.modalService.open(UsuarioFormModal, { centered: true });
+    const instancia: UsuarioFormModal = modalRef.componentInstance;
+    // Ofrece también el rol actual aunque ya no sea asignable (p. ej. un
+    // `residente` heredado), para que el select lo muestre y se pueda corregir.
+    const asignables = this.rolesAsignables();
+    const actual = this.roles().find((r) => r.codRol === usuario.cod_rol);
+    instancia.roles =
+      actual && !asignables.some((r) => r.codRol === actual.codRol)
+        ? [...asignables, actual]
+        : asignables;
+    instancia.usuario = usuario;
+
+    modalRef.result.then(
+      (datos: UsuarioFormResultado) => {
+        this.usuariosService.actualizar(usuario.cod_usuario, datos).subscribe({
           next: () => this.cargar(),
           error: (error: unknown) =>
-            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear el usuario.')),
+            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo actualizar el usuario.')),
         });
       },
       () => undefined,

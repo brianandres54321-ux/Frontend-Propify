@@ -16,6 +16,15 @@ export interface CrearUsuarioRequest {
   claveAcceso: string;
 }
 
+// PUT /privado/usuarios/:id — todos los campos opcionales; claveAcceso solo
+// si se quiere restablecer la contraseña.
+export interface ActualizarUsuarioRequest {
+  codRol?: number;
+  nombreUsuario?: string;
+  correoUsuario?: string;
+  claveAcceso?: string;
+}
+
 // GET /privado/usuarios/perfil — datos del usuario autenticado para
 // /app/configuracion (pestaña "Mi perfil").
 export interface PerfilUsuario {
@@ -32,6 +41,7 @@ export interface UsuarioResumen {
   cod_usuario: number;
   nombre_usuario: string;
   correo_usuario: string;
+  cod_rol: number;
   nombre_rol: string;
   // Solo lo trae la variante CONSULTAR_TODOS, exclusiva del superadministrador.
   cod_tenant?: number;
