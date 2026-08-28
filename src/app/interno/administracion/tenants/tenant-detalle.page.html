@@ -1,0 +1,101 @@
+<nav aria-label="breadcrumb" class="mb-2">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a routerLink="/app/tenants/pagados">Clientes</a></li>
+    <li class="breadcrumb-item active">{{ tenant()?.nombre ?? 'Detalle' }}</li>
+  </ol>
+</nav>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+@if (exitoMensaje()) {
+  <app-alert variant="success">{{ exitoMensaje() }}</app-alert>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else if (tenant(); as t) {
+  <div class="d-flex align-items-center gap-2 mb-4 flex-wrap">
+    <h1 class="h3 mb-0">{{ t.nombre }}</h1>
+    <span class="badge rounded-pill badge-soft-primary">{{ etiquetasPlan[t.plan] }}</span>
+    <span class="badge rounded-pill badge-soft-{{ t.pagado ? 'success' : 'warning' }}">
+      {{ t.pagado ? 'Pagado' : 'Demo' }}
+    </span>
+    <span class="badge rounded-pill badge-soft-{{ t.activo ? 'success' : 'danger' }}">
+      {{ t.activo ? 'Activo' : 'Inactivo' }}
+    </span>
+  </div>
+
+  <div class="d-flex gap-2 flex-wrap mb-4">
+    <app-button variant="secondary" icono="pencil" [fullWidth]="false" (click)="abrirEditar()">
+      Editar
+    </app-button>
+    @if (hayInvitacionPendiente()) {
+      <app-button variant="secondary" icono="envelope" [fullWidth]="false" (click)="reenviarInvitacion()">
+        Reenviar invitación
+      </app-button>
+    }
+    <app-button variant="secondary" icono="trash" [fullWidth]="false" (click)="eliminar()">
+      Eliminar
+    </app-button>
+  </div>
+
+  <div class="tenant-detalle__fila mb-4">
+    <app-card titulo="Uso y límites" icono="bar-chart" variante="primary" [autoAltura]="true">
+      <dl class="tenant-detalle__lista">
+        <div>
+          <dt>Inmuebles</dt>
+          <dd>{{ fraccion(t.uso?.inmuebles, t.uso?.limiteInmuebles) }}</dd>
+        </div>
+        <div>
+          <dt>Unidades</dt>
+          <dd>{{ fraccion(t.uso?.unidades, t.uso?.limiteUnidades) }}</dd>
+        </div>
+        <div>
+          <dt>Límite manual</dt>
+          <dd>
+            @if (t.limiteInmuebles == null && t.limiteUnidades == null) {
+              <span class="text-muted">— (usa el del plan)</span>
+            } @else {
+              {{ t.limiteInmuebles ?? 'plan' }} inmuebles · {{ t.limiteUnidades ?? 'plan' }} unidades
+            }
+          </dd>
+        </div>
+      </dl>
+    </app-card>
+
+    <app-card titulo="Datos" icono="info-circle" [autoAltura]="true">
+      <dl class="tenant-detalle__lista">
+        <div>
+          <dt>Creado</dt>
+          <dd>{{ t.creadoEn | date: 'dd/MM/yyyy' }}</dd>
+        </div>
+        <div>
+          <dt>Teléfono de contacto</dt>
+          <dd>{{ t.telefonoContacto ?? '—' }}</dd>
+        </div>
+        <div>
+          <dt>ID interno</dt>
+          <dd>{{ t.codTenant }}</dd>
+        </div>
+      </dl>
+    </app-card>
+  </div>
+
+  <app-card titulo="Usuarios del cliente" icono="people">
+    <app-table
+      [columnas]="columnas"
+      [filas]="usuarios()"
+      textoVacio="Este cliente no tiene usuarios."
+    />
+    @if (hayInvitacionPendiente()) {
+      <p class="text-muted small mt-3 mb-0">
+        "Invitación pendiente" = el usuario todavía no definió su contraseña. Puedes reenviarle el
+        correo con el botón de arriba.
+      </p>
+    }
+  </app-card>
+} @else {
+  <app-alert variant="danger">No se encontró el cliente.</app-alert>
+  <a routerLink="/app/tenants/pagados">Volver a clientes</a>
+}

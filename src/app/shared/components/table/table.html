@@ -22,7 +22,13 @@
       </thead>
       <tbody>
         @for (fila of filas(); track $index) {
-          <tr>
+          <tr
+            [class.tabla-fila--clicable]="filasClicables()"
+            [attr.role]="filasClicables() ? 'button' : null"
+            [attr.tabindex]="filasClicables() ? 0 : null"
+            (click)="filasClicables() && filaClick.emit(fila)"
+            (keydown.enter)="filasClicables() && filaClick.emit(fila)"
+          >
             @for (columna of columnas(); track columna.key) {
               <td
                 [class.text-end]="columna.align === 'end'"

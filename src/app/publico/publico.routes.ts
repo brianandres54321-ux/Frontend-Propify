@@ -66,6 +66,15 @@ export const PUBLICO_ROUTES: Routes = [
         loadComponent: () =>
           import('./auth/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
       },
+      {
+        // Alta de un cliente por el superadmin: el correo de invitación
+        // enlaza aquí para que el dueño defina su primera contraseña
+        // (ver tenants.service.ts → `enlace`). Misma pantalla, otro copy.
+        path: 'activar-cuenta/:token',
+        data: { activacion: true },
+        loadComponent: () =>
+          import('./auth/reset-password/reset-password.page').then((m) => m.ResetPasswordPage),
+      },
     ],
   },
 ];

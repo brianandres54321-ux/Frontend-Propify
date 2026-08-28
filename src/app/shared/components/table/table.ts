@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, ContentChild, TemplateRef, input } from '@angular/core';
+import { Component, ContentChild, TemplateRef, input, output } from '@angular/core';
 
 import { TableColumn } from '../../interfaces/table-column.interface';
 import { LoadingComponent } from '../loading/loading';
@@ -24,6 +24,11 @@ export class TableComponent<T> {
   public readonly filas = input.required<T[]>();
   public readonly cargando = input(false);
   public readonly textoVacio = input('No hay datos para mostrar.');
+
+  // Con `filasClicables`, cada fila emite `filaClick` al hacer clic (cursor +
+  // rol de botón). Útil para listados que abren un detalle.
+  public readonly filasClicables = input(false);
+  public readonly filaClick = output<T>();
 
   @ContentChild(TemplateRef) protected accionesTemplate?: TemplateRef<{ $implicit: T }>;
 

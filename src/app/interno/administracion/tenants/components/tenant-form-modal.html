@@ -28,14 +28,59 @@
       </select>
     </app-text-field>
 
-    @if (modoEdicion) {
-      <div class="form-check mb-2">
-        <input type="checkbox" class="form-check-input" id="pagado" formControlName="pagado" />
-        <label class="form-check-label" for="pagado">
-          Plan pagado <span class="text-muted">(si está apagado, aplican los límites del demo: 1 inmueble, 5 unidades)</span>
-        </label>
-      </div>
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="pagado" formControlName="pagado" />
+      <label class="form-check-label" for="pagado">
+        Plan pagado <span class="text-muted">(si está apagado, aplican los límites del demo: 1 inmueble, 5 unidades)</span>
+      </label>
+    </div>
 
+    @if (!modoEdicion) {
+      <hr />
+      <p class="form-label fs-6 mb-1">Usuario dueño de la cuenta</p>
+      <p class="form-text mt-0 mb-2">
+        No defines la contraseña: al crear el cliente, el dueño recibe un correo para crearla él mismo.
+      </p>
+
+      <app-text-field
+        label="Nombre del dueño"
+        [error]="form.controls.duenoNombre.touched && form.controls.duenoNombre.invalid ? 'Ingresa un nombre (mínimo 2 caracteres)' : null"
+      >
+        <input
+          type="text"
+          class="form-control"
+          [class.is-invalid]="form.controls.duenoNombre.touched && form.controls.duenoNombre.invalid"
+          formControlName="duenoNombre"
+        />
+      </app-text-field>
+
+      <app-text-field
+        label="Correo del dueño"
+        [error]="form.controls.duenoCorreo.touched && form.controls.duenoCorreo.invalid ? 'Ingresa un correo válido' : null"
+      >
+        <input
+          type="email"
+          class="form-control"
+          [class.is-invalid]="form.controls.duenoCorreo.touched && form.controls.duenoCorreo.invalid"
+          formControlName="duenoCorreo"
+        />
+      </app-text-field>
+
+      <app-text-field
+        label="Teléfono del dueño"
+        hint="10 dígitos"
+        [error]="form.controls.duenoTelefono.touched && form.controls.duenoTelefono.invalid ? 'El teléfono debe tener 10 dígitos' : null"
+      >
+        <input
+          type="tel"
+          class="form-control"
+          [class.is-invalid]="form.controls.duenoTelefono.touched && form.controls.duenoTelefono.invalid"
+          formControlName="duenoTelefono"
+        />
+      </app-text-field>
+    }
+
+    @if (modoEdicion) {
       <div class="form-check mb-3">
         <input type="checkbox" class="form-check-input" id="activo" formControlName="activo" />
         <label class="form-check-label" for="activo">Cliente activo</label>
@@ -65,7 +110,7 @@
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">
-      Guardar
+      {{ modoEdicion ? 'Guardar' : 'Crear y enviar invitación' }}
     </app-button>
   </div>
 </form>

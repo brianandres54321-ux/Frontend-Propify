@@ -31,6 +31,10 @@ export class ResetPasswordPage {
 
   private readonly token = this.route.snapshot.paramMap.get('token') ?? '';
 
+  // true cuando se llega por /activar-cuenta/:token (invitación del superadmin
+  // a un cliente nuevo) en vez de por /reset-password/:token (olvido de clave).
+  protected readonly activacion = this.route.snapshot.data['activacion'] === true;
+
   protected readonly passwordHint = PASSWORD_REGEX_MESSAGE;
   protected readonly enviando = signal(false);
   protected readonly errorMensaje = signal<string | null>(null);

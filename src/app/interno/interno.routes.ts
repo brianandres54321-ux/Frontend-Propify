@@ -94,8 +94,38 @@ export const INTERNO_ROUTES: Routes = [
         path: 'tenants',
         canActivate: [rolesGuard],
         data: { roles: [RoleNames.SUPERADMIN] },
+        children: [
+          { path: '', redirectTo: 'pagados', pathMatch: 'full' },
+          {
+            path: 'pagados',
+            data: { roles: [RoleNames.SUPERADMIN], modo: 'pagados' },
+            loadComponent: () =>
+              import('./administracion/tenants/tenants.page').then((m) => m.TenantsPage),
+          },
+          {
+            path: 'demo',
+            data: { roles: [RoleNames.SUPERADMIN], modo: 'demo' },
+            loadComponent: () =>
+              import('./administracion/tenants/tenants.page').then((m) => m.TenantsPage),
+          },
+          {
+            path: ':id',
+            data: { roles: [RoleNames.SUPERADMIN] },
+            loadComponent: () =>
+              import('./administracion/tenants/tenant-detalle.page').then(
+                (m) => m.TenantDetallePage,
+              ),
+          },
+        ],
+      },
+      {
+        path: 'mensajes-contacto',
+        canActivate: [rolesGuard],
+        data: { roles: [RoleNames.SUPERADMIN] },
         loadComponent: () =>
-          import('./administracion/tenants/tenants.page').then((m) => m.TenantsPage),
+          import('./administracion/mensajes-contacto/mensajes-contacto.page').then(
+            (m) => m.MensajesContactoPage,
+          ),
       },
       // Nuevos módulos: agregar como rutas hijas con loadComponent dentro de
       // su dominio (propiedad/finanzas/comunidad/seguridad/administracion),

@@ -9,6 +9,7 @@ import {
   CrearTenantRequest,
   PlanTipo,
   Tenant,
+  TenantDetalle,
 } from '../models';
 
 @Injectable({ providedIn: 'root' })
@@ -51,14 +52,19 @@ export class TenantsService {
     return this.http.get<Tenant[]>(this.baseUrl);
   }
 
-  public crear(datos: CrearTenantRequest): Observable<Tenant> {
-    return this.http.post<Tenant>(this.baseUrl, datos);
+  public consultarUno(id: number): Observable<TenantDetalle> {
+    return this.http.get<TenantDetalle>(`${this.baseUrl}/${id}`);
   }
 
-  public actualizar(
-    id: number,
-    datos: ActualizarTenantRequest,
-  ): Observable<{ mensaje: string }> {
+  public crear(datos: CrearTenantRequest): Observable<TenantDetalle> {
+    return this.http.post<TenantDetalle>(this.baseUrl, datos);
+  }
+
+  public reenviarInvitacion(id: number): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(`${this.baseUrl}/${id}/reenviar-invitacion`, {});
+  }
+
+  public actualizar(id: number, datos: ActualizarTenantRequest): Observable<{ mensaje: string }> {
     return this.http.put<{ mensaje: string }>(`${this.baseUrl}/${id}`, datos);
   }
 

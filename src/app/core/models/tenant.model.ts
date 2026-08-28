@@ -32,6 +32,28 @@ export interface Tenant {
 export interface CrearTenantRequest {
   nombre: string;
   plan?: PlanTipo;
+  pagado?: boolean;
+  // Datos del usuario dueño — se crea sin contraseña y recibe un correo de
+  // invitación para definirla (POST /privado/tenants).
+  duenoNombre: string;
+  duenoCorreo: string;
+  duenoTelefono: string;
+}
+
+// Un usuario del cliente, como lo devuelve GET /privado/tenants/:id.
+export interface TenantUsuario {
+  codUsuario: number;
+  nombreUsuario: string;
+  correoUsuario: string;
+  telefono: string | null;
+  // Slug del rol (dueno/admin/...). Usar etiquetaRol() para mostrarlo.
+  rol: string;
+  // false = invitación pendiente (nunca definió su contraseña).
+  tieneAcceso: boolean;
+}
+
+export interface TenantDetalle extends Tenant {
+  usuarios: TenantUsuario[];
 }
 
 export interface ActualizarTenantRequest {

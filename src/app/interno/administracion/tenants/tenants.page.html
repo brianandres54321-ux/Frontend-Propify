@@ -1,12 +1,16 @@
 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
   <div>
-    <h1 class="h3 mb-1">Clientes (tenants)</h1>
+    <h1 class="h3 mb-1">{{ titulo }}</h1>
     <p class="text-muted small mb-0">
-      {{ totales().tenants }} clientes · {{ totales().pagados }} pagados ·
-      {{ totales().inmuebles }} inmuebles · {{ totales().unidades }} unidades en total
+      {{ totales().tenants }} {{ totales().tenants === 1 ? 'cliente' : 'clientes' }} ·
+      {{ totales().inmuebles }} inmuebles · {{ totales().unidades }} unidades
     </p>
   </div>
-  <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo cliente</app-button>
+  @if (esPagados) {
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo cliente</app-button>
+  } @else {
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo cliente demo</app-button>
+  }
 </div>
 
 @if (errorMensaje()) {
@@ -21,19 +25,21 @@
 } @else {
   <app-table
     [columnas]="columnas"
-    [filas]="tenants()"
-    textoVacio="No hay clientes registrados."
-  >
-    <ng-template let-fila>
-      <div class="d-flex justify-content-end gap-1">
-        <app-button variant="icon" icono="pencil" title="Editar" (click)="abrirEditar(fila)" />
-        <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
-      </div>
-    </ng-template>
-  </app-table>
+    [filas]="tenantsPagina()"
+    [filasClicables]="true"
+    (filaClick)="irADetalle($event)"
+    textoVacio="No hay clientes en esta vista."
+  />
+
+  <app-pagination
+    [totalItems]="tenants().length"
+    [paginaActual]="pagina()"
+    [tamanioPagina]="tamanioPagina"
+    (paginaCambio)="cambiarPagina($event)"
+  />
 
   <p class="text-muted small mt-3">
-    "∞" = sin límite. El plan Conjuntos y un cliente con "pagado" desactivado
-    (demo) tienen sus propias reglas — al editar puedes fijar un límite manual.
+    Haz clic en un cliente para ver su detalle, sus usuarios y editar plan, estado o límites.
+    "∞" = sin límite.
   </p>
 }

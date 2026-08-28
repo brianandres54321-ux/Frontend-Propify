@@ -5,6 +5,7 @@ import { Residente } from '../models';
 import { TableBadgeVariant } from '@shared/interfaces';
 import { AuthService } from './auth.service';
 import { CobranzaService } from './cobranza.service';
+import { MensajesContactoService } from './mensajes-contacto.service';
 import { ReportesDanoService } from './reportes-dano.service';
 import { ResidentesService } from './residentes.service';
 import { UnidadesService } from './unidades.service';
@@ -35,6 +36,7 @@ export class AlertasService {
   private readonly residentesService = inject(ResidentesService);
   private readonly reportesDanoService = inject(ReportesDanoService);
   private readonly unidadesService = inject(UnidadesService);
+  private readonly mensajesContactoService = inject(MensajesContactoService);
 
   private readonly cargado = signal(false);
   private readonly cargandoFinanciero = signal(true);
@@ -46,6 +48,8 @@ export class AlertasService {
   private readonly contratosPorVencer = signal<Residente[]>([]);
   private readonly reportesPendientes = signal(0);
   private readonly vaciasProlongadas = signal(0);
+  // Solo superadmin: mensajes del formulario de contacto sin atender.
+  private readonly mensajesContactoSinAtender = signal(0);
 
   public readonly cargando = computed(
     () =>
@@ -99,6 +103,16 @@ export class AlertasService {
       });
     }
 
+    const mensajes = this.mensajesContactoSinAtender();
+    if (mensajes > 0) {
+      lista.push({
+        color: 'info',
+        icono: 'envelope',
+        texto: `${mensajes} mensaje${mensajes === 1 ? '' : 's'} de contacto sin atender`,
+        link: '/app/mensajes-contacto',
+      });
+    }
+
     return lista;
   });
 
@@ -106,7 +120,25 @@ export class AlertasService {
   // si el rol no tiene acceso a estos datos (RESIDENTE/CELADOR recibirían
   // 403 de estos endpoints, así que ni se intenta).
   public cargar(): void {
-    if (this.cargado() || !this.auth.tieneRol(RoleNames.DUENO, RoleNames.ADMIN)) {
+    if (this.cargado()) {
+      return;
+    }
+
+    // El superadministrador no tiene tenant: los endpoints de cobranza /
+    // reportes / ocupación le darían 403. Su única alerta es la bandeja de
+    // mensajes de contacto.
+    if (this.auth.tieneRol(RoleNames.SUPERADMIN)) {
+      this.cargado.set(true);
+      this.cargandoFinanciero.set(false);
+      this.cargandoContratos.set(false);
+      this.cargandoReportes.set(false);
+      this.cargandoOcupacion.set(false);
+
+      this.refrescarMensajesContacto();
+      return;
+    }
+
+    if (!this.auth.tieneRol(RoleNames.DUENO, RoleNames.ADMIN)) {
       return;
     }
     this.cargado.set(true);
@@ -141,6 +173,19 @@ export class AlertasService {
         this.cargandoOcupacion.set(false);
       },
       error: () => this.cargandoOcupacion.set(false),
+    });
+  }
+
+  // La bandeja de mensajes de contacto la llama tras marcar/reabrir un
+  // mensaje, para que el contador de la campana no quede desfasado.
+  public refrescarMensajesContacto(): void {
+    if (!this.auth.tieneRol(RoleNames.SUPERADMIN)) {
+      return;
+    }
+    this.mensajesContactoService.consultar().subscribe({
+      next: (mensajes) =>
+        this.mensajesContactoSinAtender.set(mensajes.filter((m) => !m.atendido).length),
+      error: () => undefined,
     });
   }
 }

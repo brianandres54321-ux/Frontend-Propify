@@ -31,12 +31,24 @@ export class TenantFormModal implements OnInit {
     private readonly fb: NonNullableFormBuilder,
   ) {
     this.form = this.fb.group({
-      nombre: this.fb.control('', [Validators.required, Validators.minLength(2), Validators.maxLength(250)]),
+      nombre: this.fb.control('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(250),
+      ]),
       plan: this.fb.control<PlanTipo>(PlanTipo.CASAS),
       pagado: this.fb.control(false),
       activo: this.fb.control(true),
       limiteInmuebles: this.fb.control<number | null>(null),
       limiteUnidades: this.fb.control<number | null>(null),
+      // Solo en alta: datos del usuario dueño (no aplica al editar).
+      duenoNombre: this.fb.control('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(100),
+      ]),
+      duenoCorreo: this.fb.control('', [Validators.required, Validators.email]),
+      duenoTelefono: this.fb.control('', [Validators.required, Validators.pattern(/^\d{10}$/)]),
     });
   }
 
@@ -51,6 +63,11 @@ export class TenantFormModal implements OnInit {
   ngOnInit(): void {
     if (!this.tenant) {
       return;
+    }
+    // En edición no se tocan los datos del dueño por esta vía.
+    for (const control of ['duenoNombre', 'duenoCorreo', 'duenoTelefono'] as const) {
+      this.form.controls[control].clearValidators();
+      this.form.controls[control].updateValueAndValidity();
     }
     this.form.patchValue({
       nombre: this.tenant.nombre,
@@ -70,7 +87,14 @@ export class TenantFormModal implements OnInit {
     const v = this.form.getRawValue();
 
     if (!this.modoEdicion) {
-      this.activeModal.close({ nombre: v.nombre.trim(), plan: v.plan });
+      this.activeModal.close({
+        nombre: v.nombre.trim(),
+        plan: v.plan,
+        pagado: v.pagado,
+        duenoNombre: v.duenoNombre.trim(),
+        duenoCorreo: v.duenoCorreo.trim().toLowerCase(),
+        duenoTelefono: v.duenoTelefono.trim(),
+      });
       return;
     }
 
