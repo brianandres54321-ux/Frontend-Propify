@@ -180,6 +180,25 @@ export class GenerarUnidadesModal {
   protected readonly ocultas = computed(() =>
     Math.max(0, this.total() - PREVIEW_VISIBLE),
   );
+
+  // Vista previa agrupada por piso (solo tiene sentido en modo pisos; en
+  // consecutivo devuelve un único grupo sin etiqueta).
+  protected readonly gruposPreview = computed<
+    { piso: number | null; unidades: Plantilla[] }[]
+  >(() => {
+    const items = this.visibles();
+    if (this.valores().modo !== 'pisos') {
+      return [{ piso: null, unidades: items }];
+    }
+    const mapa = new Map<number, Plantilla[]>();
+    for (const p of items) {
+      const piso = p.piso ?? 0;
+      const lista = mapa.get(piso) ?? [];
+      lista.push(p);
+      mapa.set(piso, lista);
+    }
+    return [...mapa.entries()].map(([piso, unidades]) => ({ piso, unidades }));
+  });
   protected readonly excede = computed(() => this.total() > MAX_LOTE);
   protected readonly puedeGenerar = computed(
     () => this.nuevas() > 0 && !this.excede() && !this.errorPrefijoPisos(),

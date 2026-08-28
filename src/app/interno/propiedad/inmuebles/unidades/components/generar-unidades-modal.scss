@@ -24,12 +24,29 @@
   }
 }
 
+.preview__lista {
+  max-height: 12rem;
+  overflow-y: auto;
+}
+
+.preview__grupo + .preview__grupo {
+  margin-top: var(--space-2);
+}
+
+.preview__piso {
+  display: block;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  margin-bottom: 2px;
+}
+
 .preview__chips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
-  max-height: 8rem;
-  overflow-y: auto;
 }
 
 .preview__chip {

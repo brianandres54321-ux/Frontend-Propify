@@ -113,16 +113,25 @@
       @if (total() === 0) {
         <p class="text-muted small mb-0">Ajusta los valores para ver las unidades que se crearán.</p>
       } @else {
-        <div class="preview__chips">
-          @for (p of visibles(); track p.id + '|' + p.piso) {
-            <span class="preview__chip" [class.preview__chip--existe]="p.existe">
-              {{ p.id }}@if (p.existe) { <i class="bi bi-check2-circle"></i> }
-            </span>
-          }
-          @if (ocultas() > 0) {
-            <span class="preview__chip preview__chip--mas">+{{ ocultas() }} más</span>
+        <div class="preview__lista">
+          @for (grupo of gruposPreview(); track grupo.piso) {
+            <div class="preview__grupo">
+              @if (grupo.piso !== null) {
+                <span class="preview__piso">Piso {{ grupo.piso }}</span>
+              }
+              <div class="preview__chips">
+                @for (p of grupo.unidades; track p.id + '|' + p.piso) {
+                  <span class="preview__chip" [class.preview__chip--existe]="p.existe">
+                    {{ p.id }}@if (p.existe) { <i class="bi bi-check2-circle"></i> }
+                  </span>
+                }
+              </div>
+            </div>
           }
         </div>
+        @if (ocultas() > 0) {
+          <span class="preview__chip preview__chip--mas mt-2 d-inline-block">+{{ ocultas() }} más</span>
+        }
         @if (duplicadas() > 0) {
           <p class="text-muted small mb-0 mt-2">
             <i class="bi bi-check2-circle"></i> ya existe — se omitirá al generar.
