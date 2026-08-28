@@ -1,13 +1,20 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">Nuevo aviso</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
     <app-text-field
       label="Título"
-      [error]="form.controls.titulo.touched && form.controls.titulo.invalid ? 'Ingresa un título' : null"
+      [error]="
+        form.controls.titulo.touched && form.controls.titulo.invalid ? 'Ingresa un título' : null
+      "
     >
       <input
         type="text"
@@ -19,7 +26,9 @@
 
     <app-text-field
       label="Mensaje"
-      [error]="form.controls.mensaje.touched && form.controls.mensaje.invalid ? 'Ingresa un mensaje' : null"
+      [error]="
+        form.controls.mensaje.touched && form.controls.mensaje.invalid ? 'Ingresa un mensaje' : null
+      "
     >
       <textarea
         rows="4"
@@ -31,7 +40,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

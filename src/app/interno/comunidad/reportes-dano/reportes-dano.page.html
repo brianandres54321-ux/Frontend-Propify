@@ -45,7 +45,13 @@
       <ng-template let-fila>
         <div class="d-flex gap-2 justify-content-end flex-wrap">
           @if (fila.fotoUrl) {
-            <a [href]="fila.fotoUrl" target="_blank" rel="noopener" class="btn-icon btn-icon--info" title="Ver foto">
+            <a
+              [href]="fila.fotoUrl"
+              target="_blank"
+              rel="noopener"
+              class="btn-icon btn-icon--info"
+              title="Ver foto"
+            >
               <i class="bi bi-image"></i>
             </a>
           }
@@ -60,7 +66,11 @@
             </app-button>
           }
           @if (fila.estado !== EstadoReporte.RESUELTO) {
-            <app-button icono="check2-circle" [fullWidth]="false" (click)="marcarEstado(fila, EstadoReporte.RESUELTO)">
+            <app-button
+              icono="check2-circle"
+              [fullWidth]="false"
+              (click)="marcarEstado(fila, EstadoReporte.RESUELTO)"
+            >
               Marcar resuelto
             </app-button>
           }
@@ -85,7 +95,12 @@
   <form [formGroup]="formularioReporte" (ngSubmit)="enviarReporte()" class="reporte-form">
     <app-text-field
       label="Descripción del daño"
-      [error]="formularioReporte.controls.descripcion.touched && formularioReporte.controls.descripcion.invalid ? 'La descripción es obligatoria.' : null"
+      [error]="
+        formularioReporte.controls.descripcion.touched &&
+        formularioReporte.controls.descripcion.invalid
+          ? 'La descripción es obligatoria.'
+          : null
+      "
     >
       <textarea
         class="form-control"
@@ -95,7 +110,10 @@
       ></textarea>
     </app-text-field>
 
-    <app-text-field label="URL de una foto (opcional)" hint="Si ya subiste una foto a otro lugar, pega el enlace aquí.">
+    <app-text-field
+      label="URL de una foto (opcional)"
+      hint="Si ya subiste una foto a otro lugar, pega el enlace aquí."
+    >
       <input type="text" class="form-control" formControlName="fotoUrl" placeholder="https://..." />
     </app-text-field>
 

@@ -72,9 +72,7 @@ export class VisitaFormModal {
       cedulaVisitante: datos.cedulaVisitante || undefined,
       numeroPersonas,
       acompanantes:
-        numeroPersonas > 1 && datos.acompanantes.trim()
-          ? datos.acompanantes.trim()
-          : undefined,
+        numeroPersonas > 1 && datos.acompanantes.trim() ? datos.acompanantes.trim() : undefined,
       vehiculos: datos.vehiculos.trim() || undefined,
       firma: datos.firma ?? undefined,
     });

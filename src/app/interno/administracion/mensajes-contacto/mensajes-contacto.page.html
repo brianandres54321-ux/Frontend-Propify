@@ -77,7 +77,9 @@
                   </div>
                   <div>
                     <dt>Correo</dt>
-                    <dd><a [href]="'mailto:' + m.correo">{{ m.correo }}</a></dd>
+                    <dd>
+                      <a [href]="'mailto:' + m.correo">{{ m.correo }}</a>
+                    </dd>
                   </div>
                 </dl>
                 <p class="mensajes__texto mb-0">{{ m.mensaje }}</p>

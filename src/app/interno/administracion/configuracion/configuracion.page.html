@@ -64,7 +64,9 @@
               <input
                 type="text"
                 class="form-control"
-                [class.is-invalid]="empresaForm.controls.nombre.touched && empresaForm.controls.nombre.invalid"
+                [class.is-invalid]="
+                  empresaForm.controls.nombre.touched && empresaForm.controls.nombre.invalid
+                "
                 formControlName="nombre"
               />
             </app-text-field>
@@ -134,7 +136,9 @@
             <input
               type="password"
               class="form-control"
-              [class.is-invalid]="claveForm.controls.claveActual.touched && claveForm.controls.claveActual.invalid"
+              [class.is-invalid]="
+                claveForm.controls.claveActual.touched && claveForm.controls.claveActual.invalid
+              "
               formControlName="claveActual"
               autocomplete="current-password"
             />
@@ -152,7 +156,9 @@
             <input
               type="password"
               class="form-control"
-              [class.is-invalid]="claveForm.controls.nuevaClave.touched && claveForm.controls.nuevaClave.invalid"
+              [class.is-invalid]="
+                claveForm.controls.nuevaClave.touched && claveForm.controls.nuevaClave.invalid
+              "
               formControlName="nuevaClave"
               autocomplete="new-password"
             />
@@ -161,7 +167,8 @@
           <app-text-field
             label="Confirmar nueva contraseña"
             [error]="
-              claveForm.controls.confirmarClave.touched && claveForm.errors?.['passwordsNoCoinciden']
+              claveForm.controls.confirmarClave.touched &&
+              claveForm.errors?.['passwordsNoCoinciden']
                 ? 'Las contraseñas no coinciden'
                 : null
             "
@@ -169,7 +176,10 @@
             <input
               type="password"
               class="form-control"
-              [class.is-invalid]="claveForm.controls.confirmarClave.touched && claveForm.errors?.['passwordsNoCoinciden']"
+              [class.is-invalid]="
+                claveForm.controls.confirmarClave.touched &&
+                claveForm.errors?.['passwordsNoCoinciden']
+              "
               formControlName="confirmarClave"
               autocomplete="new-password"
             />

@@ -1,13 +1,22 @@
 <div class="modal-header">
-  <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nueva zona común' : 'Editar zona común' }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <h2 class="modal-title fs-5">
+    {{ modo === 'crear' ? 'Nueva zona común' : 'Editar zona común' }}
+  </h2>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
     <app-text-field
       label="Nombre"
-      [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+      [error]="
+        form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null
+      "
     >
       <input
         type="text"
@@ -20,7 +29,13 @@
     <div class="row">
       <div class="col-6">
         <app-text-field label="Precio por reserva">
-          <input type="text" inputmode="numeric" appMoneda class="form-control" formControlName="precio" />
+          <input
+            type="text"
+            inputmode="numeric"
+            appMoneda
+            class="form-control"
+            formControlName="precio"
+          />
         </app-text-field>
       </div>
       <div class="col-6">
@@ -34,7 +49,11 @@
       <div class="col-6">
         <app-text-field
           label="Hora apertura"
-          [error]="form.controls.horaApertura.touched && form.controls.horaApertura.invalid ? 'Formato HH:mm' : null"
+          [error]="
+            form.controls.horaApertura.touched && form.controls.horaApertura.invalid
+              ? 'Formato HH:mm'
+              : null
+          "
         >
           <input type="time" class="form-control" formControlName="horaApertura" />
         </app-text-field>
@@ -42,7 +61,11 @@
       <div class="col-6">
         <app-text-field
           label="Hora cierre"
-          [error]="form.controls.horaCierre.touched && form.controls.horaCierre.invalid ? 'Formato HH:mm' : null"
+          [error]="
+            form.controls.horaCierre.touched && form.controls.horaCierre.invalid
+              ? 'Formato HH:mm'
+              : null
+          "
         >
           <input type="time" class="form-control" formControlName="horaCierre" />
         </app-text-field>
@@ -58,7 +81,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

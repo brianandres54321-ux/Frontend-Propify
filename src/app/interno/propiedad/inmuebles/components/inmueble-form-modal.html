@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nuevo inmueble' : 'Editar inmueble' }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -9,7 +14,11 @@
       <div class="col-md-6">
         <app-text-field
           label="Nombre"
-          [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+          [error]="
+            form.controls.nombre.touched && form.controls.nombre.invalid
+              ? 'Ingresa un nombre'
+              : null
+          "
         >
           <input
             type="text"
@@ -53,14 +62,20 @@
 
         @if (modo === 'crear') {
           <p class="text-muted small">
-            Preseleccionado según tu plan — ajústalo si este inmueble en particular lo necesita distinto.
+            Preseleccionado según tu plan — ajústalo si este inmueble en particular lo necesita
+            distinto.
           </p>
         }
 
         <div class="row">
           @if (mostrarBandera('tieneTorres')) {
             <div class="col-md-6 form-check">
-              <input type="checkbox" class="form-check-input" id="tieneTorres" formControlName="tieneTorres" />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="tieneTorres"
+                formControlName="tieneTorres"
+              />
               <label class="form-check-label" for="tieneTorres">Torres</label>
             </div>
           }
@@ -88,13 +103,23 @@
           }
           @if (mostrarBandera('tieneCelador')) {
             <div class="col-md-6 form-check">
-              <input type="checkbox" class="form-check-input" id="tieneCelador" formControlName="tieneCelador" />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="tieneCelador"
+                formControlName="tieneCelador"
+              />
               <label class="form-check-label" for="tieneCelador">Portería / celador</label>
             </div>
           }
           @if (mostrarBandera('tieneCartelera')) {
             <div class="col-md-6 form-check">
-              <input type="checkbox" class="form-check-input" id="tieneCartelera" formControlName="tieneCartelera" />
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="tieneCartelera"
+                formControlName="tieneCartelera"
+              />
               <label class="form-check-label" for="tieneCartelera">Cartelera de avisos</label>
             </div>
           }
@@ -104,7 +129,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

@@ -1,13 +1,22 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nuevo gasto' : 'Editar gasto' }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
     <app-text-field
       label="Concepto"
-      [error]="form.controls.concepto.touched && form.controls.concepto.invalid ? 'Ingresa un concepto' : null"
+      [error]="
+        form.controls.concepto.touched && form.controls.concepto.invalid
+          ? 'Ingresa un concepto'
+          : null
+      "
     >
       <input
         type="text"
@@ -19,7 +28,11 @@
 
     <app-text-field
       label="Monto"
-      [error]="form.controls.monto.touched && form.controls.monto.invalid ? 'Ingresa un monto válido' : null"
+      [error]="
+        form.controls.monto.touched && form.controls.monto.invalid
+          ? 'Ingresa un monto válido'
+          : null
+      "
     >
       <input
         type="text"
@@ -46,7 +59,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

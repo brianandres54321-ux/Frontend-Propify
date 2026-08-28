@@ -8,8 +8,8 @@
       <span class="hero__resaltado">en un solo panel</span>
     </h1>
     <p class="hero__sub">
-      Cobranza, residentes, portería y zonas comunes de tu casa, edificio o
-      conjunto — sin hojas de cálculo.
+      Cobranza, residentes, portería y zonas comunes de tu casa, edificio o conjunto — sin hojas de
+      cálculo.
     </p>
     <div class="hero__botones">
       <a routerLink="/registro" class="hero__cta">
@@ -30,12 +30,12 @@
 <div class="barra-confianza-contenedor">
   <div class="barra-confianza">
     @for (capacidad of capacidades; track capacidad.titulo) {
-    <div class="item-confianza">
-      <span class="item-confianza__icono">
-        <i class="bi bi-{{ capacidad.icono }}"></i>
-      </span>
-      <span>{{ capacidad.titulo }}</span>
-    </div>
+      <div class="item-confianza">
+        <span class="item-confianza__icono">
+          <i class="bi bi-{{ capacidad.icono }}"></i>
+        </span>
+        <span>{{ capacidad.titulo }}</span>
+      </div>
     }
   </div>
 </div>
@@ -45,20 +45,19 @@
     <span class="eyebrow">Todo en un solo lugar</span>
     <h2>Menos hojas de cálculo, más administración</h2>
     <p class="subtitulo">
-      Los módulos que tu propiedad necesita — y ninguno que no. Cada inmueble
-      activa solo lo suyo.
+      Los módulos que tu propiedad necesita — y ninguno que no. Cada inmueble activa solo lo suyo.
     </p>
   </div>
 
   <div class="grid-modulos">
     @for (modulo of modulos; track modulo.titulo; let i = $index) {
-    <article class="tarjeta-modulo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
-      <span class="tarjeta-modulo__icono">
-        <i class="bi bi-{{ modulo.icono }}"></i>
-      </span>
-      <h3>{{ modulo.titulo }}</h3>
-      <p>{{ modulo.descripcion }}</p>
-    </article>
+      <article class="tarjeta-modulo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+        <span class="tarjeta-modulo__icono">
+          <i class="bi bi-{{ modulo.icono }}"></i>
+        </span>
+        <h3>{{ modulo.titulo }}</h3>
+        <p>{{ modulo.descripcion }}</p>
+      </article>
     }
   </div>
 </section>
@@ -71,19 +70,19 @@
 
   <div class="grid-tipos">
     @for (tipo of tiposPropiedad; track tipo.nombre; let i = $index) {
-    <article class="tarjeta-tipo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
-      <div class="tarjeta-tipo__foto">
-        <img [src]="tipo.foto" [alt]="tipo.nombre" />
-        <span class="tarjeta-tipo__num">{{ i + 1 }}</span>
-        <span class="tarjeta-tipo__icono">
-          <i class="bi bi-{{ tipo.icono }}"></i>
-        </span>
-      </div>
-      <div class="tarjeta-tipo__cuerpo">
-        <h3>{{ tipo.nombre }}</h3>
-        <p>{{ tipo.descripcion }}</p>
-      </div>
-    </article>
+      <article class="tarjeta-tipo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+        <div class="tarjeta-tipo__foto">
+          <img [src]="tipo.foto" [alt]="tipo.nombre" />
+          <span class="tarjeta-tipo__num">{{ i + 1 }}</span>
+          <span class="tarjeta-tipo__icono">
+            <i class="bi bi-{{ tipo.icono }}"></i>
+          </span>
+        </div>
+        <div class="tarjeta-tipo__cuerpo">
+          <h3>{{ tipo.nombre }}</h3>
+          <p>{{ tipo.descripcion }}</p>
+        </div>
+      </article>
     }
   </div>
 </section>
@@ -97,14 +96,14 @@
   <div class="linea-pasos">
     <div class="linea-pasos__conector"></div>
     @for (paso of pasos; track paso.numero; let i = $index) {
-    <div class="paso" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
-      <span class="paso__icono">
-        <i class="bi bi-{{ paso.icono }}"></i>
-        <span class="paso__numero">{{ paso.numero }}</span>
-      </span>
-      <h3>{{ paso.titulo }}</h3>
-      <p>{{ paso.descripcion }}</p>
-    </div>
+      <div class="paso" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+        <span class="paso__icono">
+          <i class="bi bi-{{ paso.icono }}"></i>
+          <span class="paso__numero">{{ paso.numero }}</span>
+        </span>
+        <h3>{{ paso.titulo }}</h3>
+        <p>{{ paso.descripcion }}</p>
+      </div>
     }
   </div>
 </section>
@@ -114,8 +113,8 @@
     <span class="eyebrow">¿Buscas dónde vivir o invertir?</span>
     <h2>Explora las unidades en arriendo y venta</h2>
     <p>
-      Apartamentos, casas y locales publicados por administradores que usan
-      Propify — con filtros por ciudad, barrio y departamento.
+      Apartamentos, casas y locales publicados por administradores que usan Propify — con filtros
+      por ciudad, barrio y departamento.
     </p>
   </div>
   <a routerLink="/arriendos" class="arriendos-cta__boton">
@@ -128,18 +127,18 @@
     <span class="eyebrow">Planes</span>
     <h2>Un plan por cada tipo de propiedad</h2>
     <p class="subtitulo">
-      Empieza gratis con el plan demo (1 inmueble, hasta 5 unidades) y actualiza
-      cuando lo necesites.
+      Empieza gratis con el plan demo (1 inmueble, hasta 5 unidades) y actualiza cuando lo
+      necesites.
     </p>
   </div>
 
   <div class="grid-planes-resumen">
     @for (plan of planesResumen; track plan.nombre; let i = $index) {
-    <article class="plan-resumen" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
-      <h3>{{ plan.nombre }}</h3>
-      <p class="plan-resumen__precio">{{ plan.precio }}</p>
-      <p class="plan-resumen__para">{{ plan.para }}</p>
-    </article>
+      <article class="plan-resumen" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+        <h3>{{ plan.nombre }}</h3>
+        <p class="plan-resumen__precio">{{ plan.precio }}</p>
+        <p class="plan-resumen__para">{{ plan.para }}</p>
+      </article>
     }
   </div>
 
@@ -165,16 +164,19 @@
 
     <div class="faq__lista">
       @for (item of faqs; track item.pregunta; let indice = $index) {
-      <div class="faq__item" [class.faq__item--abierto]="faqAbierta() === indice">
-        <button type="button" class="faq__pregunta" (click)="alternarFaq(indice)">
-          {{ item.pregunta }}
-          <i class="bi" [class.bi-chevron-down]="faqAbierta() !== indice"
-            [class.bi-chevron-up]="faqAbierta() === indice"></i>
-        </button>
-        @if (faqAbierta() === indice) {
-        <p class="faq__respuesta">{{ item.respuesta }}</p>
-        }
-      </div>
+        <div class="faq__item" [class.faq__item--abierto]="faqAbierta() === indice">
+          <button type="button" class="faq__pregunta" (click)="alternarFaq(indice)">
+            {{ item.pregunta }}
+            <i
+              class="bi"
+              [class.bi-chevron-down]="faqAbierta() !== indice"
+              [class.bi-chevron-up]="faqAbierta() === indice"
+            ></i>
+          </button>
+          @if (faqAbierta() === indice) {
+            <p class="faq__respuesta">{{ item.respuesta }}</p>
+          }
+        </div>
       }
     </div>
   </div>

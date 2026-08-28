@@ -1,11 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnDestroy,
-  output,
-  viewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, output, viewChild } from '@angular/core';
 
 // Pad de firma manuscrita: se dibuja con dedo, lápiz o mouse (Pointer
 // Events) sobre un <canvas>. Emite la firma como data URL PNG cada vez que
@@ -16,8 +9,7 @@ import {
   styleUrl: './firma-pad.scss',
 })
 export class FirmaPadComponent implements AfterViewInit, OnDestroy {
-  private readonly canvasRef =
-    viewChild.required<ElementRef<HTMLCanvasElement>>('lienzo');
+  private readonly canvasRef = viewChild.required<ElementRef<HTMLCanvasElement>>('lienzo');
 
   // data URL PNG mientras haya trazo, null cuando está vacío.
   public readonly firma = output<string | null>();
@@ -102,11 +94,7 @@ export class FirmaPadComponent implements AfterViewInit, OnDestroy {
     }
     this.dibujando = false;
     this.ultimo = null;
-    this.firma.emit(
-      this.hayTrazo
-        ? this.canvasRef().nativeElement.toDataURL('image/png')
-        : null,
-    );
+    this.firma.emit(this.hayTrazo ? this.canvasRef().nativeElement.toDataURL('image/png') : null);
   }
 
   protected limpiar(): void {

@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">Fotos — {{ identificadorUnidad }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <div class="modal-body">
@@ -9,7 +14,13 @@
   }
 
   <label class="btn btn-outline-primary mb-3">
-    <input type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="seleccionarArchivo($event)" [disabled]="subiendo()" />
+    <input
+      type="file"
+      accept="image/jpeg,image/png,image/webp"
+      hidden
+      (change)="seleccionarArchivo($event)"
+      [disabled]="subiendo()"
+    />
     {{ subiendo() ? 'Subiendo...' : '+ Agregar foto' }}
   </label>
 
@@ -22,7 +33,13 @@
       @for (item of fotos(); track item.foto.codFoto) {
         <div class="foto-item">
           <img [src]="item.url" alt="Foto de la unidad" />
-          <app-button variant="icon" color="danger" icono="trash" title="Eliminar foto" (click)="eliminar(item.foto)" />
+          <app-button
+            variant="icon"
+            color="danger"
+            icono="trash"
+            title="Eliminar foto"
+            (click)="eliminar(item.foto)"
+          />
         </div>
       }
     </div>
@@ -30,5 +47,7 @@
 </div>
 
 <div class="modal-footer">
-  <app-button variant="secondary" [fullWidth]="false" (click)="activeModal.dismiss()">Cerrar</app-button>
+  <app-button variant="secondary" [fullWidth]="false" (click)="activeModal.dismiss()"
+    >Cerrar</app-button
+  >
 </div>

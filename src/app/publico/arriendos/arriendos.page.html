@@ -68,17 +68,38 @@
           <div class="filtros__dos">
             <label>
               <span>Precio desde</span>
-              <input type="number" inputmode="numeric" min="0" step="50000" formControlName="precioMin" placeholder="$" />
+              <input
+                type="number"
+                inputmode="numeric"
+                min="0"
+                step="50000"
+                formControlName="precioMin"
+                placeholder="$"
+              />
             </label>
             <label>
               <span>Precio hasta</span>
-              <input type="number" inputmode="numeric" min="0" step="50000" formControlName="precioMax" placeholder="$" />
+              <input
+                type="number"
+                inputmode="numeric"
+                min="0"
+                step="50000"
+                formControlName="precioMax"
+                placeholder="$"
+              />
             </label>
           </div>
 
           <label>
             <span>Cuartos (mínimo)</span>
-            <input type="number" inputmode="numeric" min="1" step="1" formControlName="cuartos" placeholder="Cualquiera" />
+            <input
+              type="number"
+              inputmode="numeric"
+              min="1"
+              step="1"
+              formControlName="cuartos"
+              placeholder="Cualquiera"
+            />
           </label>
 
           <label class="filtros__check">
@@ -143,8 +164,8 @@
         <h1>{{ esVenta() ? 'Inmuebles en venta' : 'Unidades en arriendo' }}</h1>
         <p>
           Apartamentos, casas, locales y oficinas
-          {{ esVenta() ? 'a la venta' : 'en arriendo' }}, publicados por
-          administradores que usan Propify.
+          {{ esVenta() ? 'a la venta' : 'en arriendo' }}, publicados por administradores que usan
+          Propify.
         </p>
       </header>
 
@@ -180,7 +201,10 @@
                 <span [class]="claseTipo(item.tipo)">{{ etiquetasTipo[item.tipo] }}</span>
               </div>
               <div class="tarjeta-unidad__cuerpo">
-                <a class="tarjeta-unidad__titulo" [routerLink]="['/arriendo/unidad', item.codUnidad]">
+                <a
+                  class="tarjeta-unidad__titulo"
+                  [routerLink]="['/arriendo/unidad', item.codUnidad]"
+                >
                   {{ item.identificador }}
                 </a>
                 @if (item.nombreInmueble) {
@@ -206,10 +230,15 @@
                 <div class="tarjeta-unidad__pie">
                   @if (precioItem(item); as precio) {
                     <span class="tarjeta-unidad__precio">
-                      {{ precio }}@if (!esVenta()) {<small>/mes</small>}
+                      {{ precio }}
+                      @if (!esVenta()) {
+                        <small>/mes</small>
+                      }
                     </span>
                   } @else {
-                    <span class="tarjeta-unidad__precio tarjeta-unidad__precio--consultar">Precio a consultar</span>
+                    <span class="tarjeta-unidad__precio tarjeta-unidad__precio--consultar"
+                      >Precio a consultar</span
+                    >
                   }
                   @if (item.telefonoContacto) {
                     <a

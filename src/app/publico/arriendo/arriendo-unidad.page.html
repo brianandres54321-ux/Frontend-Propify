@@ -11,10 +11,7 @@
     <div class="detalle">
       <div class="detalle__galeria">
         @if (fotosUrls().length > 0) {
-          <app-galeria-fotos
-            [fotos]="fotosUrls()"
-            [alt]="'Foto de ' + titulo()"
-          />
+          <app-galeria-fotos [fotos]="fotosUrls()" [alt]="'Foto de ' + titulo()" />
         } @else {
           <div class="sin-fotos"><i class="bi bi-camera"></i> Sin fotos disponibles</div>
         }
@@ -34,15 +31,22 @@
 
         <p class="detalle__ubic">
           <i class="bi bi-geo-alt"></i>
-          @if (u.torre) {<strong>{{ u.torre }}</strong> · }{{ u.nombreInmueble }}
-          @if (ubicacion()) { <span class="detalle__ubic-sec">· {{ ubicacion() }}</span> }
+          @if (u.torre) {
+            <strong>{{ u.torre }}</strong> ·
+          }
+          {{ u.nombreInmueble }}
+          @if (ubicacion()) {
+            <span class="detalle__ubic-sec">· {{ ubicacion() }}</span>
+          }
         </p>
 
         <div class="detalle__precios">
           @if (u.enArriendo && u.precioArriendo) {
             <div class="precio">
               <span class="precio__label">Arriendo</span>
-              <span class="precio__valor">{{ formatoMonto(u.precioArriendo) }} <small>/ mes</small></span>
+              <span class="precio__valor"
+                >{{ formatoMonto(u.precioArriendo) }} <small>/ mes</small></span
+              >
             </div>
           }
           @if (u.enVenta && u.precioVenta) {
@@ -103,7 +107,9 @@
             <h2 class="bloque__titulo">El conjunto / edificio ofrece</h2>
             <div class="chips">
               @for (a of amenidades(); track a.texto) {
-                <span class="chip chip--amenidad"><i class="bi" [class]="a.icono"></i> {{ a.texto }}</span>
+                <span class="chip chip--amenidad"
+                  ><i class="bi" [class]="a.icono"></i> {{ a.texto }}</span
+                >
               }
             </div>
           </section>
@@ -113,7 +119,9 @@
           <section class="bloque">
             <h2 class="bloque__titulo">Ubicación</h2>
             <p class="bloque__texto">
-              @if (u.direccionInmueble) { {{ u.direccionInmueble }}<br /> }
+              @if (u.direccionInmueble) {
+                {{ u.direccionInmueble }}<br />
+              }
               {{ ubicacion() }}
             </p>
           </section>
@@ -129,14 +137,20 @@
             <a class="mini" [routerLink]="['/arriendo/unidad', rel.codUnidad]">
               <div class="mini__foto">
                 @if (urlPortada(rel); as src) {
-                  <img [src]="src" [alt]="etiquetasTipo[rel.tipo] + ' ' + rel.identificador" loading="lazy" />
+                  <img
+                    [src]="src"
+                    [alt]="etiquetasTipo[rel.tipo] + ' ' + rel.identificador"
+                    loading="lazy"
+                  />
                 } @else {
                   <div class="mini__sin-foto"><i class="bi bi-camera"></i></div>
                 }
                 <span class="mini__op">{{ etiquetaRel(rel) }}</span>
               </div>
               <div class="mini__cuerpo">
-                <span class="mini__titulo">{{ etiquetasTipo[rel.tipo] }} {{ rel.identificador }}</span>
+                <span class="mini__titulo"
+                  >{{ etiquetasTipo[rel.tipo] }} {{ rel.identificador }}</span
+                >
                 @if (rel.nombreInmueble) {
                   <span class="mini__inmueble">{{ rel.nombreInmueble }}</span>
                 }

@@ -42,7 +42,12 @@
       [attr.viewBox]="viewBox"
       class="trend-chart__svg"
       role="img"
-      [attr.aria-label]="'Tendencia mensual: ' + series().map(s => s.nombre).join(' vs ')"
+      [attr.aria-label]="
+        'Tendencia mensual: ' +
+        series()
+          .map((s) => s.nombre)
+          .join(' vs ')
+      "
     >
       @for (linea of gridlines(); track linea.y) {
         <line
@@ -52,7 +57,12 @@
           [attr.y1]="linea.y"
           [attr.y2]="linea.y"
         />
-        <text class="trend-chart__eje-texto" [attr.x]="ejeXInicio - 8" [attr.y]="linea.y + 4" text-anchor="end">
+        <text
+          class="trend-chart__eje-texto"
+          [attr.x]="ejeXInicio - 8"
+          [attr.y]="linea.y + 4"
+          text-anchor="end"
+        >
           {{ linea.etiqueta }}
         </text>
       }
@@ -62,7 +72,12 @@
           <path [attr.d]="barra.path" [attr.fill]="barra.color" class="trend-chart__barra" />
         }
 
-        <text class="trend-chart__eje-texto" [attr.x]="grupo.centroX" [attr.y]="ejeXTextoY" text-anchor="middle">
+        <text
+          class="trend-chart__eje-texto"
+          [attr.x]="grupo.centroX"
+          [attr.y]="ejeXTextoY"
+          text-anchor="middle"
+        >
           {{ grupo.etiqueta }}
         </text>
 
@@ -74,7 +89,11 @@
           [attr.height]="hitAlto"
           tabindex="0"
           role="button"
-          [attr.aria-label]="grupo.etiqueta + ': ' + grupo.barras.map(b => b.serie + ' ' + formatoValor()(b.valor)).join(', ')"
+          [attr.aria-label]="
+            grupo.etiqueta +
+            ': ' +
+            grupo.barras.map((b) => b.serie + ' ' + formatoValor()(b.valor)).join(', ')
+          "
           (pointerenter)="activar(i)"
           (pointerleave)="desactivar()"
           (focus)="activar(i)"
@@ -99,7 +118,12 @@
               [attr.y2]="30 + j * 18"
               [attr.stroke]="barra.color"
             />
-            <text class="trend-chart__tooltip-valor" [attr.x]="150" [attr.y]="34 + j * 18" text-anchor="end">
+            <text
+              class="trend-chart__tooltip-valor"
+              [attr.x]="150"
+              [attr.y]="34 + j * 18"
+              text-anchor="end"
+            >
               {{ formatoValor()(barra.valor) }}
             </text>
             <text class="trend-chart__tooltip-serie" x="28" [attr.y]="34 + j * 18">

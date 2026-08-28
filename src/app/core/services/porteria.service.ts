@@ -29,10 +29,7 @@ export class PorteriaService {
   }
 
   public marcarPaqueteNotificado(id: number): Observable<{ mensaje: string }> {
-    return this.http.patch<{ mensaje: string }>(
-      `${this.paquetesUrl}/${id}/notificado`,
-      {},
-    );
+    return this.http.patch<{ mensaje: string }>(`${this.paquetesUrl}/${id}/notificado`, {});
   }
 
   public consultarVisitas(unidadId: number): Observable<Visita[]> {

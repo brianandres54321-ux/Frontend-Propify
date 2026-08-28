@@ -11,10 +11,20 @@
   }
 
   @if (total() > 1) {
-    <button type="button" class="mc__nav mc__nav--prev" (click)="anterior($event)" aria-label="Foto anterior">
+    <button
+      type="button"
+      class="mc__nav mc__nav--prev"
+      (click)="anterior($event)"
+      aria-label="Foto anterior"
+    >
       <i class="bi bi-chevron-left"></i>
     </button>
-    <button type="button" class="mc__nav mc__nav--next" (click)="siguiente($event)" aria-label="Foto siguiente">
+    <button
+      type="button"
+      class="mc__nav mc__nav--next"
+      (click)="siguiente($event)"
+      aria-label="Foto siguiente"
+    >
       <i class="bi bi-chevron-right"></i>
     </button>
 

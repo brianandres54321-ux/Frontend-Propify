@@ -19,7 +19,9 @@
       <input
         type="text"
         class="form-control"
-        [class.is-invalid]="form.controls.nombreTenant.touched && form.controls.nombreTenant.invalid"
+        [class.is-invalid]="
+          form.controls.nombreTenant.touched && form.controls.nombreTenant.invalid
+        "
         formControlName="nombreTenant"
         autocomplete="organization"
       />
@@ -36,7 +38,9 @@
       <input
         type="email"
         class="form-control"
-        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
+        [class.is-invalid]="
+          form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+        "
         formControlName="correoUsuario"
         autocomplete="email"
       />
@@ -46,7 +50,10 @@
       <label class="form-label">¿Qué vas a administrar?</label>
       <div class="d-flex gap-2">
         @for (opcion of opcionesPlan; track opcion.valor) {
-          <label class="plan-opcion flex-fill" [class.plan-opcion--activa]="form.controls.plan.value === opcion.valor">
+          <label
+            class="plan-opcion flex-fill"
+            [class.plan-opcion--activa]="form.controls.plan.value === opcion.valor"
+          >
             <input
               type="radio"
               class="btn-check"
@@ -72,7 +79,9 @@
       <input
         type="text"
         class="form-control"
-        [class.is-invalid]="form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid"
+        [class.is-invalid]="
+          form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid
+        "
         formControlName="nombreUsuario"
         autocomplete="name"
       />
@@ -82,9 +91,7 @@
       label="Celular"
       [hint]="telefonoHint"
       [error]="
-        form.controls.telefono.touched && form.controls.telefono.invalid
-          ? telefonoHint
-          : null
+        form.controls.telefono.touched && form.controls.telefono.invalid ? telefonoHint : null
       "
     >
       <input
@@ -101,16 +108,16 @@
       label="Contraseña"
       [hint]="passwordHint"
       [error]="
-        form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid
-          ? passwordHint
-          : null
+        form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid ? passwordHint : null
       "
     >
       <div class="password-input">
         <input
           [type]="mostrarClave() ? 'text' : 'password'"
           class="form-control"
-          [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
+          [class.is-invalid]="
+            form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid
+          "
           formControlName="claveAcceso"
           autocomplete="new-password"
         />
@@ -137,7 +144,9 @@
         <input
           [type]="mostrarConfirmar() ? 'text' : 'password'"
           class="form-control"
-          [class.is-invalid]="form.controls.confirmarClave.touched && form.errors?.['passwordsNoCoinciden']"
+          [class.is-invalid]="
+            form.controls.confirmarClave.touched && form.errors?.['passwordsNoCoinciden']
+          "
           formControlName="confirmarClave"
           autocomplete="new-password"
         />
@@ -147,17 +156,24 @@
           (click)="mostrarConfirmar.set(!mostrarConfirmar())"
           [title]="mostrarConfirmar() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
         >
-          <i class="bi" [class.bi-eye]="!mostrarConfirmar()" [class.bi-eye-slash]="mostrarConfirmar()"></i>
+          <i
+            class="bi"
+            [class.bi-eye]="!mostrarConfirmar()"
+            [class.bi-eye-slash]="mostrarConfirmar()"
+          ></i>
         </button>
       </div>
     </app-text-field>
 
-    <app-button type="submit" [loading]="enviando()" [disabled]="form.invalid" class="registro-form__full">
+    <app-button
+      type="submit"
+      [loading]="enviando()"
+      [disabled]="form.invalid"
+      class="registro-form__full"
+    >
       Crear cuenta
     </app-button>
   </form>
 
-  <p class="text-muted small mt-3 mb-0">
-    ¿Ya tienes cuenta? <a routerLink="/login">Ingresar</a>
-  </p>
+  <p class="text-muted small mt-3 mb-0">¿Ya tienes cuenta? <a routerLink="/login">Ingresar</a></p>
 </div>

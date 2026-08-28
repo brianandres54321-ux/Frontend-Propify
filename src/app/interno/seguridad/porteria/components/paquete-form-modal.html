@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">Registrar llegada de paquete</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -9,7 +14,11 @@
       <div class="col-12 col-md-6">
         <app-text-field
           label="Unidad de destino"
-          [error]="form.controls.codUnidad.touched && form.controls.codUnidad.invalid ? 'Busca y elige la unidad del paquete' : null"
+          [error]="
+            form.controls.codUnidad.touched && form.controls.codUnidad.invalid
+              ? 'Busca y elige la unidad del paquete'
+              : null
+          "
         >
           <app-buscador-unidad
             [unidades]="unidades"
@@ -20,7 +29,10 @@
       </div>
 
       <div class="col-12 col-md-6">
-        <app-text-field label="Descripción (opcional)" hint="Ej: caja mediana de Mercado Libre, sobre, domicilio de comida…">
+        <app-text-field
+          label="Descripción (opcional)"
+          hint="Ej: caja mediana de Mercado Libre, sobre, domicilio de comida…"
+        >
           <input type="text" class="form-control" formControlName="descripcion" />
         </app-text-field>
       </div>
@@ -29,11 +41,15 @@
         <div class="col-12">
           <div class="contacto-unidad">
             @if (u.residentes.length === 0) {
-              <span class="text-muted">Esta unidad no tiene residentes registrados — no se podrá avisar.</span>
+              <span class="text-muted"
+                >Esta unidad no tiene residentes registrados — no se podrá avisar.</span
+              >
             } @else {
               <span class="contacto-unidad__titulo">Se podrá avisar a</span>
               @for (r of u.residentes; track r.nombre) {
-                <span class="contacto-unidad__item">{{ r.nombre }} · {{ r.telefono || 'sin teléfono' }}</span>
+                <span class="contacto-unidad__item"
+                  >{{ r.nombre }} · {{ r.telefono || 'sin teléfono' }}</span
+                >
               }
             }
           </div>
@@ -43,7 +59,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

@@ -1,7 +1,12 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Avisos</h1>
   @if (puedeGestionar()) {
-    <app-button icono="plus-lg" [fullWidth]="false" [disabled]="!inmuebleSeleccionado()" (click)="abrirCrear()">
+    <app-button
+      icono="plus-lg"
+      [fullWidth]="false"
+      [disabled]="!inmuebleSeleccionado()"
+      (click)="abrirCrear()"
+    >
       Nuevo aviso
     </app-button>
   }

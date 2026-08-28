@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">Generar unidades</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -10,13 +15,7 @@
     </p>
 
     <div class="btn-group w-100 mb-3" role="group" aria-label="Modo de generación">
-      <input
-        type="radio"
-        class="btn-check"
-        id="modo-pisos"
-        value="pisos"
-        formControlName="modo"
-      />
+      <input type="radio" class="btn-check" id="modo-pisos" value="pisos" formControlName="modo" />
       <label class="btn btn-outline-secondary" for="modo-pisos">Por pisos (edificio)</label>
 
       <input
@@ -26,7 +25,9 @@
         value="consecutivo"
         formControlName="modo"
       />
-      <label class="btn btn-outline-secondary" for="modo-consecutivo">Rango consecutivo (conjunto)</label>
+      <label class="btn btn-outline-secondary" for="modo-consecutivo"
+        >Rango consecutivo (conjunto)</label
+      >
     </div>
 
     @if (form.controls.modo.value === 'pisos') {
@@ -38,7 +39,13 @@
         </div>
         <div class="col-6">
           <app-text-field label="Unidades por piso">
-            <input type="number" min="1" max="50" class="form-control" formControlName="unidadesPorPiso" />
+            <input
+              type="number"
+              min="1"
+              max="50"
+              class="form-control"
+              formControlName="unidadesPorPiso"
+            />
           </app-text-field>
         </div>
       </div>
@@ -73,8 +80,9 @@
 
     @if (errorPrefijoPisos()) {
       <p class="text-danger small mb-2">
-        En el modo por pisos el prefijo no puede terminar en número (quedaría algo como
-        “{{ form.controls.prefijo.value }}101”). Quítalo o usa el modo consecutivo.
+        En el modo por pisos el prefijo no puede terminar en número (quedaría algo como “{{
+          form.controls.prefijo.value
+        }}101”). Quítalo o usa el modo consecutivo.
       </p>
     }
 
@@ -111,7 +119,9 @@
       </div>
 
       @if (total() === 0) {
-        <p class="text-muted small mb-0">Ajusta los valores para ver las unidades que se crearán.</p>
+        <p class="text-muted small mb-0">
+          Ajusta los valores para ver las unidades que se crearán.
+        </p>
       } @else {
         <div class="preview__lista">
           @for (grupo of gruposPreview(); track grupo.piso) {
@@ -122,7 +132,10 @@
               <div class="preview__chips">
                 @for (p of grupo.unidades; track p.id + '|' + p.piso) {
                   <span class="preview__chip" [class.preview__chip--existe]="p.existe">
-                    {{ p.id }}@if (p.existe) { <i class="bi bi-check2-circle"></i> }
+                    {{ p.id }}
+                    @if (p.existe) {
+                      <i class="bi bi-check2-circle"></i>
+                    }
                   </span>
                 }
               </div>
@@ -130,7 +143,9 @@
           }
         </div>
         @if (ocultas() > 0) {
-          <span class="preview__chip preview__chip--mas mt-2 d-inline-block">+{{ ocultas() }} más</span>
+          <span class="preview__chip preview__chip--mas mt-2 d-inline-block"
+            >+{{ ocultas() }} más</span
+          >
         }
         @if (duplicadas() > 0) {
           <p class="text-muted small mb-0 mt-2">
@@ -147,7 +162,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="!puedeGenerar()">

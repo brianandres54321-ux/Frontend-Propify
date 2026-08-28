@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nuevo inquilino' : 'Editar inquilino' }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -9,7 +14,11 @@
       <div class="col-md-6">
         <app-text-field
           label="Nombre"
-          [error]="form.controls.nombre.touched && form.controls.nombre.invalid ? 'Ingresa un nombre' : null"
+          [error]="
+            form.controls.nombre.touched && form.controls.nombre.invalid
+              ? 'Ingresa un nombre'
+              : null
+          "
         >
           <input
             type="text"
@@ -23,7 +32,11 @@
         <app-text-field
           label="Correo"
           hint="Obligatorio: por aquí le llegan los recordatorios de pago y avisos de mora"
-          [error]="form.controls.correo.touched && form.controls.correo.invalid ? 'Ingresa un correo válido' : null"
+          [error]="
+            form.controls.correo.touched && form.controls.correo.invalid
+              ? 'Ingresa un correo válido'
+              : null
+          "
         >
           <input
             type="email"
@@ -39,7 +52,11 @@
       <div class="col-md-6">
         <app-text-field
           label="Teléfono (celular)"
-          [error]="form.controls.telefono.touched && form.controls.telefono.invalid ? 'Debe tener 10 dígitos' : null"
+          [error]="
+            form.controls.telefono.touched && form.controls.telefono.invalid
+              ? 'Debe tener 10 dígitos'
+              : null
+          "
         >
           <input
             type="tel"
@@ -59,7 +76,12 @@
     </div>
 
     <div class="form-check mb-3">
-      <input type="checkbox" class="form-check-input" id="esPropietario" formControlName="esPropietario" />
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="esPropietario"
+        formControlName="esPropietario"
+      />
       <label class="form-check-label" for="esPropietario">Es propietario (no arrienda)</label>
     </div>
 
@@ -68,14 +90,20 @@
         <app-text-field
           label="Valor mensual"
           hint="Cuánto paga cada mes"
-          [error]="form.controls.valorMensual.touched && form.controls.valorMensual.invalid ? 'Ingresa un monto válido' : null"
+          [error]="
+            form.controls.valorMensual.touched && form.controls.valorMensual.invalid
+              ? 'Ingresa un monto válido'
+              : null
+          "
         >
           <input
             type="text"
             inputmode="numeric"
             appMoneda
             class="form-control"
-            [class.is-invalid]="form.controls.valorMensual.touched && form.controls.valorMensual.invalid"
+            [class.is-invalid]="
+              form.controls.valorMensual.touched && form.controls.valorMensual.invalid
+            "
             formControlName="valorMensual"
           />
         </app-text-field>
@@ -84,7 +112,11 @@
         <app-text-field
           label="Día de pago"
           hint="1 al 31"
-          [error]="form.controls.diaPago.touched && form.controls.diaPago.invalid ? 'Ingresa un día entre 1 y 31' : null"
+          [error]="
+            form.controls.diaPago.touched && form.controls.diaPago.invalid
+              ? 'Ingresa un día entre 1 y 31'
+              : null
+          "
         >
           <input
             type="number"
@@ -127,7 +159,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

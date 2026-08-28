@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">{{ modo === 'crear' ? 'Nueva unidad' : 'Editar unidad' }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -10,12 +15,18 @@
         <app-text-field
           label="Identificador"
           hint="Ej: Apto 101, Pieza 2, Local A"
-          [error]="form.controls.identificador.touched && form.controls.identificador.invalid ? 'Ingresa un identificador' : null"
+          [error]="
+            form.controls.identificador.touched && form.controls.identificador.invalid
+              ? 'Ingresa un identificador'
+              : null
+          "
         >
           <input
             type="text"
             class="form-control"
-            [class.is-invalid]="form.controls.identificador.touched && form.controls.identificador.invalid"
+            [class.is-invalid]="
+              form.controls.identificador.touched && form.controls.identificador.invalid
+            "
             formControlName="identificador"
           />
         </app-text-field>
@@ -75,9 +86,7 @@
       <div class="col-md-6">
         <div class="form-check mt-2">
           <input type="checkbox" class="form-check-input" id="enVenta" formControlName="enVenta" />
-          <label class="form-check-label" for="enVenta">
-            Publicar también en venta
-          </label>
+          <label class="form-check-label" for="enVenta"> Publicar también en venta </label>
         </div>
         <p class="form-text mt-0">
           Se puede vender esté ocupada o no; puede ir en arriendo y venta a la vez.
@@ -115,19 +124,39 @@
       <legend class="form-label fs-6">Características</legend>
       <div class="row">
         <div class="col-md-6 form-check">
-          <input type="checkbox" class="form-check-input" id="tieneComedor" formControlName="tieneComedor" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="tieneComedor"
+            formControlName="tieneComedor"
+          />
           <label class="form-check-label" for="tieneComedor">Comedor</label>
         </div>
         <div class="col-md-6 form-check">
-          <input type="checkbox" class="form-check-input" id="tieneSala" formControlName="tieneSala" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="tieneSala"
+            formControlName="tieneSala"
+          />
           <label class="form-check-label" for="tieneSala">Sala</label>
         </div>
         <div class="col-md-6 form-check">
-          <input type="checkbox" class="form-check-input" id="tieneCocina" formControlName="tieneCocina" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="tieneCocina"
+            formControlName="tieneCocina"
+          />
           <label class="form-check-label" for="tieneCocina">Cocina</label>
         </div>
         <div class="col-md-6 form-check">
-          <input type="checkbox" class="form-check-input" id="amoblado" formControlName="amoblado" />
+          <input
+            type="checkbox"
+            class="form-check-input"
+            id="amoblado"
+            formControlName="amoblado"
+          />
           <label class="form-check-label" for="amoblado">Amoblado</label>
         </div>
       </div>
@@ -135,7 +164,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

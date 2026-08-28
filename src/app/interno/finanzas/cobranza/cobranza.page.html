@@ -1,7 +1,10 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h1 class="h3 mb-0">Cobranza</h1>
-    <p class="text-muted small mb-0">Saldo pendiente total: {{ totalPendiente() > 0 ? ('$' + totalPendiente().toLocaleString('es-CO')) : '$0' }}</p>
+    <p class="text-muted small mb-0">
+      Saldo pendiente total:
+      {{ totalPendiente() > 0 ? '$' + totalPendiente().toLocaleString('es-CO') : '$0' }}
+    </p>
   </div>
   <app-button [fullWidth]="false" [loading]="generando()" (click)="generarCuentasDelMes()">
     Generar cuentas del mes
@@ -22,7 +25,9 @@
       @for (pendiente of pendientesNotificacion(); track pendiente.codCuenta + pendiente.tipo) {
         <li class="pendientes__item">
           <div>
-            <span class="badge-soft-{{ pendiente.tipo === 'MORA' ? 'danger' : 'warning' }} rounded-pill">
+            <span
+              class="badge-soft-{{ pendiente.tipo === 'MORA' ? 'danger' : 'warning' }} rounded-pill"
+            >
               {{ etiquetaTipoNotificacion[pendiente.tipo] }}
             </span>
             <strong class="ms-2">{{ pendiente.nombreResidente }}</strong>
@@ -72,7 +77,12 @@
   >
     <ng-template let-fila>
       @if (fila.estado !== EstadoCuenta.PAGADA) {
-        <app-button variant="secondary" icono="cash-stack" [fullWidth]="false" (click)="registrarPago(fila)">
+        <app-button
+          variant="secondary"
+          icono="cash-stack"
+          [fullWidth]="false"
+          (click)="registrarPago(fila)"
+        >
           Registrar pago
         </app-button>
       }

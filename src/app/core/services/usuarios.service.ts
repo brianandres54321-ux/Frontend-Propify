@@ -28,10 +28,7 @@ export class UsuariosService {
     return this.http.post<{ mensaje: string }>(this.baseUrl, datos);
   }
 
-  public actualizar(
-    id: number,
-    datos: ActualizarUsuarioRequest,
-  ): Observable<{ mensaje: string }> {
+  public actualizar(id: number, datos: ActualizarUsuarioRequest): Observable<{ mensaje: string }> {
     return this.http.put<{ mensaje: string }>(`${this.baseUrl}/${id}`, datos);
   }
 

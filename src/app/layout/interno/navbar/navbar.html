@@ -15,7 +15,11 @@
       [title]="layout.sidebarColapsado() ? 'Expandir menú' : 'Colapsar menú'"
       (click)="toggleSidebarColapsado()"
     >
-      <i class="bi" [class.bi-layout-sidebar-inset]="!layout.sidebarColapsado()" [class.bi-layout-sidebar]="layout.sidebarColapsado()"></i>
+      <i
+        class="bi"
+        [class.bi-layout-sidebar-inset]="!layout.sidebarColapsado()"
+        [class.bi-layout-sidebar]="layout.sidebarColapsado()"
+      ></i>
     </button>
 
     <span class="badge rounded-pill badge-soft-primary">{{ rolEtiqueta() }}</span>

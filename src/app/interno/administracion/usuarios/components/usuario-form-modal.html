@@ -1,30 +1,47 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">{{ modoEdicion ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
     <app-text-field
       label="Nombre"
-      [error]="form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid ? 'Ingresa un nombre' : null"
+      [error]="
+        form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid
+          ? 'Ingresa un nombre'
+          : null
+      "
     >
       <input
         type="text"
         class="form-control"
-        [class.is-invalid]="form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid"
+        [class.is-invalid]="
+          form.controls.nombreUsuario.touched && form.controls.nombreUsuario.invalid
+        "
         formControlName="nombreUsuario"
       />
     </app-text-field>
 
     <app-text-field
       label="Correo"
-      [error]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid ? 'Ingresa un correo válido' : null"
+      [error]="
+        form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+          ? 'Ingresa un correo válido'
+          : null
+      "
     >
       <input
         type="email"
         class="form-control"
-        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
+        [class.is-invalid]="
+          form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+        "
         formControlName="correoUsuario"
       />
     </app-text-field>
@@ -36,7 +53,11 @@
           ? 'Déjala vacía para no cambiarla. Si la cambias: mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial.'
           : 'Mínimo 8 caracteres, con mayúscula, minúscula, número y carácter especial.'
       "
-      [error]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid ? 'La contraseña no cumple el formato requerido' : null"
+      [error]="
+        form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid
+          ? 'La contraseña no cumple el formato requerido'
+          : null
+      "
     >
       <input
         type="password"
@@ -49,7 +70,9 @@
 
     <app-text-field
       label="Rol"
-      [error]="form.controls.codRol.touched && form.controls.codRol.invalid ? 'Selecciona un rol' : null"
+      [error]="
+        form.controls.codRol.touched && form.controls.codRol.invalid ? 'Selecciona un rol' : null
+      "
     >
       <select
         class="form-select"
@@ -65,7 +88,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

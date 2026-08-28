@@ -20,7 +20,12 @@ const PLANES: PlanVitrina[] = [
     precio: '$39.900',
     periodo: '/ mes',
     descripcion: 'Para una casa o casa de varios pisos con apartamentos independientes.',
-    incluye: ['1 inmueble', 'Hasta 12 unidades', 'Cobranza y gastos', 'Publicar en arriendo y venta'],
+    incluye: [
+      '1 inmueble',
+      'Hasta 12 unidades',
+      'Cobranza y gastos',
+      'Publicar en arriendo y venta',
+    ],
   },
   {
     nombre: 'Edificios',
@@ -58,14 +63,29 @@ interface FilaComparativa {
 
 const COMPARATIVA: FilaComparativa[] = [
   { caracteristica: 'Inmuebles', casas: '1', edificios: '1', conjuntos: 'Ilimitados' },
-  { caracteristica: 'Unidades', casas: 'Hasta 12', edificios: 'Hasta 120', conjuntos: 'Ilimitadas' },
+  {
+    caracteristica: 'Unidades',
+    casas: 'Hasta 12',
+    edificios: 'Hasta 120',
+    conjuntos: 'Ilimitadas',
+  },
   { caracteristica: 'Cobranza mensual y gastos', casas: true, edificios: true, conjuntos: true },
   { caracteristica: 'Residentes y contratos', casas: true, edificios: true, conjuntos: true },
-  { caracteristica: 'Publicar unidades en arriendo', casas: true, edificios: true, conjuntos: true },
+  {
+    caracteristica: 'Publicar unidades en arriendo',
+    casas: true,
+    edificios: true,
+    conjuntos: true,
+  },
   { caracteristica: 'Portal para residentes', casas: true, edificios: true, conjuntos: true },
   { caracteristica: 'Torres y parqueaderos', casas: false, edificios: true, conjuntos: true },
   { caracteristica: 'Cartelera digital de avisos', casas: false, edificios: true, conjuntos: true },
-  { caracteristica: 'Portería y control de visitantes', casas: false, edificios: false, conjuntos: true },
+  {
+    caracteristica: 'Portería y control de visitantes',
+    casas: false,
+    edificios: false,
+    conjuntos: true,
+  },
   { caracteristica: 'Zonas comunes y reservas', casas: false, edificios: false, conjuntos: true },
 ];
 

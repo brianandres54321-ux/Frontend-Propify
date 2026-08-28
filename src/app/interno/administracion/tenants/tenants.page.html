@@ -7,9 +7,13 @@
     </p>
   </div>
   @if (esPagados) {
-    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo cliente</app-button>
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()"
+      >Nuevo cliente</app-button
+    >
   } @else {
-    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo cliente demo</app-button>
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()"
+      >Nuevo cliente demo</app-button
+    >
   }
 </div>
 
@@ -39,7 +43,7 @@
   />
 
   <p class="text-muted small mt-3">
-    Haz clic en un cliente para ver su detalle, sus usuarios y editar plan, estado o límites.
-    "∞" = sin límite.
+    Haz clic en un cliente para ver su detalle, sus usuarios y editar plan, estado o límites. "∞" =
+    sin límite.
   </p>
 }

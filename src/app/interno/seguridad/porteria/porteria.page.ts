@@ -29,10 +29,7 @@ function formatoFechaHora(valor?: string): string {
 }
 
 function normalizar(texto: string): string {
-  return texto
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
+  return texto.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
 @Component({
@@ -72,17 +69,13 @@ export class PorteriaPage implements OnInit {
     this.auth.tieneRol(RoleNames.CELADOR, RoleNames.DUENO, RoleNames.ADMIN),
   );
 
-  protected readonly unidades = computed<UnidadPanorama[]>(
-    () => this.panorama()?.unidades ?? [],
-  );
+  protected readonly unidades = computed<UnidadPanorama[]>(() => this.panorama()?.unidades ?? []);
   private readonly mapaUnidades = computed(
     () => new Map(this.unidades().map((u) => [u.codUnidad, u])),
   );
 
   protected readonly nombreInmueble = computed(
-    () =>
-      this.inmuebles().find((i) => i.codInmueble === this.inmuebleSeleccionado())
-        ?.nombre ?? '',
+    () => this.inmuebles().find((i) => i.codInmueble === this.inmuebleSeleccionado())?.nombre ?? '',
   );
 
   protected readonly visitasActivas = computed<Visita[]>(() => {
@@ -226,9 +219,7 @@ export class PorteriaPage implements OnInit {
       error: (error: unknown) => {
         this.cargando.set(false);
         this.panorama.set(null);
-        this.errorMensaje.set(
-          mensajeErrorApi(error, 'No se pudo cargar la portería.'),
-        );
+        this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo cargar la portería.'));
       },
     });
   }

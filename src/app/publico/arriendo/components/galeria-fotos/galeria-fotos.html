@@ -75,10 +75,20 @@
       />
 
       @if (total() > 1) {
-        <button type="button" class="lb__nav lb__nav--prev" (click)="anterior()" aria-label="Foto anterior">
+        <button
+          type="button"
+          class="lb__nav lb__nav--prev"
+          (click)="anterior()"
+          aria-label="Foto anterior"
+        >
           <i class="bi bi-chevron-left"></i>
         </button>
-        <button type="button" class="lb__nav lb__nav--next" (click)="siguiente()" aria-label="Foto siguiente">
+        <button
+          type="button"
+          class="lb__nav lb__nav--next"
+          (click)="siguiente()"
+          aria-label="Foto siguiente"
+        >
           <i class="bi bi-chevron-right"></i>
         </button>
       }

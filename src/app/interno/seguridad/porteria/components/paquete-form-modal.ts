@@ -12,12 +12,7 @@ import { BuscadorUnidadComponent } from './buscador-unidad';
 // datos imperativamente vía componentInstance al abrir el modal.
 @Component({
   selector: 'app-paquete-form-modal',
-  imports: [
-    ReactiveFormsModule,
-    ButtonComponent,
-    TextFieldComponent,
-    BuscadorUnidadComponent,
-  ],
+  imports: [ReactiveFormsModule, ButtonComponent, TextFieldComponent, BuscadorUnidadComponent],
   templateUrl: './paquete-form-modal.html',
   styleUrl: './paquete-form-modal.scss',
 })

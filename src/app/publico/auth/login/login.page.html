@@ -18,7 +18,9 @@
       <input
         type="email"
         class="form-control"
-        [class.is-invalid]="form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid"
+        [class.is-invalid]="
+          form.controls.correoUsuario.touched && form.controls.correoUsuario.invalid
+        "
         formControlName="correoUsuario"
         autocomplete="email"
       />
@@ -36,7 +38,9 @@
         <input
           [type]="mostrarClave() ? 'text' : 'password'"
           class="form-control"
-          [class.is-invalid]="form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid"
+          [class.is-invalid]="
+            form.controls.claveAcceso.touched && form.controls.claveAcceso.invalid
+          "
           formControlName="claveAcceso"
           autocomplete="current-password"
         />

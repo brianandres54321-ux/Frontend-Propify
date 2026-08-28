@@ -94,9 +94,7 @@ export class ArriendosPage implements OnInit {
   // Solo aplica en móvil — en desktop el panel es una barra lateral fija.
   protected readonly filtrosAbiertos = signal(false);
 
-  protected readonly items = computed<ArriendoBusquedaItem[]>(
-    () => this.resultado()?.items ?? [],
-  );
+  protected readonly items = computed<ArriendoBusquedaItem[]>(() => this.resultado()?.items ?? []);
   protected readonly total = computed(() => this.resultado()?.total ?? 0);
   protected readonly sinResultados = computed(
     () => !this.cargando() && this.resultado() !== null && this.total() === 0,
@@ -137,7 +135,16 @@ export class ArriendosPage implements OnInit {
   protected readonly filtrosActivos = computed(() => {
     const v = this.valorForm();
     let n = 0;
-    for (const clave of ['q', 'ciudad', 'barrio', 'departamento', 'tipo', 'precioMin', 'precioMax', 'cuartos'] as const) {
+    for (const clave of [
+      'q',
+      'ciudad',
+      'barrio',
+      'departamento',
+      'tipo',
+      'precioMin',
+      'precioMax',
+      'cuartos',
+    ] as const) {
       if (v[clave]) {
         n++;
       }

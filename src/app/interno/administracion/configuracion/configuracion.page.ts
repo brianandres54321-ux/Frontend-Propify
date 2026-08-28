@@ -130,20 +130,18 @@ export class ConfiguracionPage implements OnInit {
 
     const { nombre } = this.empresaForm.getRawValue();
 
-    this.tenantsService
-      .actualizarContacto({ nombre })
-      .subscribe({
-        next: () => {
-          this.guardandoEmpresa.set(false);
-          this.exitoEmpresa.set(true);
-        },
-        error: (error: unknown) => {
-          this.guardandoEmpresa.set(false);
-          this.errorEmpresa.set(
-            mensajeErrorApi(error, 'No se pudo guardar la información de la empresa.'),
-          );
-        },
-      });
+    this.tenantsService.actualizarContacto({ nombre }).subscribe({
+      next: () => {
+        this.guardandoEmpresa.set(false);
+        this.exitoEmpresa.set(true);
+      },
+      error: (error: unknown) => {
+        this.guardandoEmpresa.set(false);
+        this.errorEmpresa.set(
+          mensajeErrorApi(error, 'No se pudo guardar la información de la empresa.'),
+        );
+      },
+    });
   }
 
   protected guardarContacto(): void {

@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">Registrar entrada de visitante</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -9,7 +14,11 @@
       <div class="col-12 col-md-6">
         <app-text-field
           label="Unidad de destino"
-          [error]="form.controls.codUnidad.touched && form.controls.codUnidad.invalid ? 'Busca y elige la unidad a la que va la visita' : null"
+          [error]="
+            form.controls.codUnidad.touched && form.controls.codUnidad.invalid
+              ? 'Busca y elige la unidad a la que va la visita'
+              : null
+          "
         >
           <app-buscador-unidad
             [unidades]="unidades"
@@ -27,7 +36,9 @@
             } @else {
               <span class="contacto-unidad__titulo">Residentes</span>
               @for (r of u.residentes; track r.nombre) {
-                <span class="contacto-unidad__item">{{ r.nombre }} · {{ r.telefono || 'sin teléfono' }}</span>
+                <span class="contacto-unidad__item"
+                  >{{ r.nombre }} · {{ r.telefono || 'sin teléfono' }}</span
+                >
               }
             }
           </div>
@@ -38,12 +49,18 @@
         <app-text-field
           label="Nombre del visitante"
           hint="La persona responsable del grupo."
-          [error]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid ? 'Ingresa un nombre' : null"
+          [error]="
+            form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid
+              ? 'Ingresa un nombre'
+              : null
+          "
         >
           <input
             type="text"
             class="form-control"
-            [class.is-invalid]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid"
+            [class.is-invalid]="
+              form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid
+            "
             formControlName="nombreVisitante"
           />
         </app-text-field>
@@ -59,7 +76,11 @@
         <app-text-field
           label="N.º de personas"
           hint="Incluye a quien firma."
-          [error]="form.controls.numeroPersonas.touched && form.controls.numeroPersonas.invalid ? 'Entre 1 y 50' : null"
+          [error]="
+            form.controls.numeroPersonas.touched && form.controls.numeroPersonas.invalid
+              ? 'Entre 1 y 50'
+              : null
+          "
         >
           <input
             type="number"
@@ -68,7 +89,9 @@
             max="50"
             step="1"
             class="form-control"
-            [class.is-invalid]="form.controls.numeroPersonas.touched && form.controls.numeroPersonas.invalid"
+            [class.is-invalid]="
+              form.controls.numeroPersonas.touched && form.controls.numeroPersonas.invalid
+            "
             formControlName="numeroPersonas"
           />
         </app-text-field>
@@ -87,7 +110,10 @@
 
       @if (esGrupo) {
         <div class="col-12">
-          <app-text-field label="Acompañantes (opcional)" hint="Nombres de las demás personas del grupo.">
+          <app-text-field
+            label="Acompañantes (opcional)"
+            hint="Nombres de las demás personas del grupo."
+          >
             <textarea
               class="form-control"
               rows="2"
@@ -99,7 +125,10 @@
       }
 
       <div class="col-12">
-        <app-text-field label="Firma del visitante" hint="Se firma en la pantalla (tablet, celular o mouse). Opcional si no hay dispositivo.">
+        <app-text-field
+          label="Firma del visitante"
+          hint="Se firma en la pantalla (tablet, celular o mouse). Opcional si no hay dispositivo."
+        >
           <app-firma-pad (firma)="form.controls.firma.setValue($event)" />
         </app-text-field>
       </div>
@@ -107,7 +136,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

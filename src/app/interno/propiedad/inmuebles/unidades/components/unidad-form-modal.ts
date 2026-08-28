@@ -84,15 +84,8 @@ export class UnidadFormModal {
       this.form.markAllAsTouched();
       return;
     }
-    const {
-      piso,
-      areaM2,
-      precioArriendo,
-      precioVenta,
-      numeroCuartos,
-      numeroBanos,
-      ...resto
-    } = this.form.getRawValue();
+    const { piso, areaM2, precioArriendo, precioVenta, numeroCuartos, numeroBanos, ...resto } =
+      this.form.getRawValue();
     this.activeModal.close({
       ...resto,
       piso: piso ?? undefined,

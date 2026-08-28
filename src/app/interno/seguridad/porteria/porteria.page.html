@@ -37,7 +37,9 @@
     <ng-container ngbNavItem="visitas">
       <a ngbNavLink>
         <i class="bi bi-people"></i> Visitas
-        <span class="badge rounded-pill badge-soft-neutral ms-1">{{ visitasActivas().length }}</span>
+        <span class="badge rounded-pill badge-soft-neutral ms-1">{{
+          visitasActivas().length
+        }}</span>
       </a>
       <ng-template ngbNavContent>
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
@@ -90,12 +92,18 @@
     <ng-container ngbNavItem="paquetes">
       <a ngbNavLink>
         <i class="bi bi-box-seam"></i> Paquetes
-        <span class="badge rounded-pill badge-soft-neutral ms-1">{{ paquetesPendientes().length }}</span>
+        <span class="badge rounded-pill badge-soft-neutral ms-1">{{
+          paquetesPendientes().length
+        }}</span>
       </a>
       <ng-template ngbNavContent>
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
           @if (paquetesEntregados().length > 0) {
-            <button type="button" class="btn btn-link btn-sm p-0" (click)="mostrarEntregados.set(!mostrarEntregados())">
+            <button
+              type="button"
+              class="btn btn-link btn-sm p-0"
+              (click)="mostrarEntregados.set(!mostrarEntregados())"
+            >
               {{ mostrarEntregados() ? 'Ocultar entregados' : 'Ver entregados' }}
             </button>
           } @else {
@@ -124,7 +132,11 @@
                 >
                   {{ fila.notificado ? 'Volver a avisar' : 'Avisar' }}
                 </app-button>
-                <app-button icono="check2-circle" [fullWidth]="false" (click)="registrarEntrega(fila)">
+                <app-button
+                  icono="check2-circle"
+                  [fullWidth]="false"
+                  (click)="registrarEntrega(fila)"
+                >
                   Entregado
                 </app-button>
               </div>
@@ -175,7 +187,9 @@
                         @if (residente.esPropietario) {
                           <span class="badge rounded-pill badge-soft-info ms-1">Propietario</span>
                         }
-                        <span class="directorio__tel">{{ residente.telefono || 'Sin teléfono' }}</span>
+                        <span class="directorio__tel">{{
+                          residente.telefono || 'Sin teléfono'
+                        }}</span>
                       </div>
                       @if (residente.telefono) {
                         <app-button

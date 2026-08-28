@@ -2,11 +2,7 @@ import { Location } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import {
-  ArriendoRelacionada,
-  ArriendoUnidadPublico,
-  TipoUnidad,
-} from '@core/models';
+import { ArriendoRelacionada, ArriendoUnidadPublico, TipoUnidad } from '@core/models';
 import { ArriendosService } from '@core/services/arriendos.service';
 import { mensajeErrorApi, urlWhatsapp } from '@core/utils';
 import { AlertComponent } from '@shared/components/alert/alert';
@@ -58,12 +54,7 @@ interface Chip {
 // publicada (VACANTE o enVenta), si no responde 404.
 @Component({
   selector: 'app-arriendo-unidad-page',
-  imports: [
-    RouterLink,
-    AlertComponent,
-    LoadingComponent,
-    GaleriaFotosComponent,
-  ],
+  imports: [RouterLink, AlertComponent, LoadingComponent, GaleriaFotosComponent],
   templateUrl: './arriendo-unidad.page.html',
   styleUrl: './arriendo-unidad.page.scss',
 })
@@ -86,9 +77,7 @@ export class ArriendoUnidadPage implements OnInit {
     if (!u) {
       return [];
     }
-    return u.fotos.map((foto) =>
-      this.arriendosService.urlFoto(u.codUnidad, foto.codFoto),
-    );
+    return u.fotos.map((foto) => this.arriendosService.urlFoto(u.codUnidad, foto.codFoto));
   });
 
   protected readonly titulo = computed(() => {
@@ -114,10 +103,18 @@ export class ArriendoUnidadPage implements OnInit {
       datos.push({ icono: 'bi-rulers', valor: `${u.areaM2}`, etiqueta: 'm²' });
     }
     if (u.numeroCuartos) {
-      datos.push({ icono: 'bi-door-open', valor: `${u.numeroCuartos}`, etiqueta: u.numeroCuartos === 1 ? 'cuarto' : 'cuartos' });
+      datos.push({
+        icono: 'bi-door-open',
+        valor: `${u.numeroCuartos}`,
+        etiqueta: u.numeroCuartos === 1 ? 'cuarto' : 'cuartos',
+      });
     }
     if (u.numeroBanos) {
-      datos.push({ icono: 'bi-droplet', valor: `${u.numeroBanos}`, etiqueta: u.numeroBanos === 1 ? 'baño' : 'baños' });
+      datos.push({
+        icono: 'bi-droplet',
+        valor: `${u.numeroBanos}`,
+        etiqueta: u.numeroBanos === 1 ? 'baño' : 'baños',
+      });
     }
     if (u.piso) {
       datos.push({ icono: 'bi-building', valor: `${u.piso}`, etiqueta: 'piso' });
@@ -173,9 +170,7 @@ export class ArriendoUnidadPage implements OnInit {
       },
       error: (error: unknown) => {
         this.cargando.set(false);
-        this.errorMensaje.set(
-          mensajeErrorApi(error, 'Este anuncio no está disponible.'),
-        );
+        this.errorMensaje.set(mensajeErrorApi(error, 'Este anuncio no está disponible.'));
       },
     });
   }

@@ -92,13 +92,11 @@ export class UsuariosPage implements OnInit {
 
     modalRef.result.then(
       (datos: UsuarioFormResultado) => {
-        this.usuariosService
-          .registrar({ ...datos, claveAcceso: datos.claveAcceso! })
-          .subscribe({
-            next: () => this.cargar(),
-            error: (error: unknown) =>
-              this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear el usuario.')),
-          });
+        this.usuariosService.registrar({ ...datos, claveAcceso: datos.claveAcceso! }).subscribe({
+          next: () => this.cargar(),
+          error: (error: unknown) =>
+            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear el usuario.')),
+        });
       },
       () => undefined,
     );

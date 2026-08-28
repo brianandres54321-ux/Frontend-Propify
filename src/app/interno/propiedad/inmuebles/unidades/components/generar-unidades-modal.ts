@@ -90,15 +90,11 @@ export class GenerarUnidadesModal {
     initialValue: this.form.getRawValue(),
   });
 
-  private readonly separado = computed(() =>
-    separarPrefijo(this.valores().prefijo ?? ''),
-  );
+  private readonly separado = computed(() => separarPrefijo(this.valores().prefijo ?? ''));
 
   // El prefijo termina en número (ej. "Apto 001"). En modo consecutivo se usa
   // como número inicial; en modo pisos no está permitido.
-  protected readonly prefijoConNumero = computed(
-    () => this.separado().inicio !== null,
-  );
+  protected readonly prefijoConNumero = computed(() => this.separado().inicio !== null);
   protected readonly numeroInicial = computed<string | null>(() => {
     const s = this.separado();
     return s.inicio !== null ? String(s.inicio).padStart(s.ancho, '0') : null;
@@ -170,35 +166,29 @@ export class GenerarUnidadesModal {
   }
 
   protected readonly total = computed(() => this.plantillas().length);
-  protected readonly nuevas = computed(
-    () => this.plantillas().filter((p) => !p.existe).length,
-  );
+  protected readonly nuevas = computed(() => this.plantillas().filter((p) => !p.existe).length);
   protected readonly duplicadas = computed(() => this.total() - this.nuevas());
-  protected readonly visibles = computed(() =>
-    this.plantillas().slice(0, PREVIEW_VISIBLE),
-  );
-  protected readonly ocultas = computed(() =>
-    Math.max(0, this.total() - PREVIEW_VISIBLE),
-  );
+  protected readonly visibles = computed(() => this.plantillas().slice(0, PREVIEW_VISIBLE));
+  protected readonly ocultas = computed(() => Math.max(0, this.total() - PREVIEW_VISIBLE));
 
   // Vista previa agrupada por piso (solo tiene sentido en modo pisos; en
   // consecutivo devuelve un único grupo sin etiqueta).
-  protected readonly gruposPreview = computed<
-    { piso: number | null; unidades: Plantilla[] }[]
-  >(() => {
-    const items = this.visibles();
-    if (this.valores().modo !== 'pisos') {
-      return [{ piso: null, unidades: items }];
-    }
-    const mapa = new Map<number, Plantilla[]>();
-    for (const p of items) {
-      const piso = p.piso ?? 0;
-      const lista = mapa.get(piso) ?? [];
-      lista.push(p);
-      mapa.set(piso, lista);
-    }
-    return [...mapa.entries()].map(([piso, unidades]) => ({ piso, unidades }));
-  });
+  protected readonly gruposPreview = computed<{ piso: number | null; unidades: Plantilla[] }[]>(
+    () => {
+      const items = this.visibles();
+      if (this.valores().modo !== 'pisos') {
+        return [{ piso: null, unidades: items }];
+      }
+      const mapa = new Map<number, Plantilla[]>();
+      for (const p of items) {
+        const piso = p.piso ?? 0;
+        const lista = mapa.get(piso) ?? [];
+        lista.push(p);
+        mapa.set(piso, lista);
+      }
+      return [...mapa.entries()].map(([piso, unidades]) => ({ piso, unidades }));
+    },
+  );
   protected readonly excede = computed(() => this.total() > MAX_LOTE);
   protected readonly puedeGenerar = computed(
     () => this.nuevas() > 0 && !this.excede() && !this.errorPrefijoPisos(),

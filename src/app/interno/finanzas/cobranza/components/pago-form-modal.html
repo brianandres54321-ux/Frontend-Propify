@@ -1,6 +1,11 @@
 <div class="modal-header">
   <h2 class="modal-title fs-5">Registrar pago</h2>
-  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
 </div>
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
@@ -28,7 +33,11 @@
 
     <app-text-field
       label="Monto"
-      [error]="form.controls.monto.touched && form.controls.monto.invalid ? 'Ingresa un monto válido' : null"
+      [error]="
+        form.controls.monto.touched && form.controls.monto.invalid
+          ? 'Ingresa un monto válido'
+          : null
+      "
     >
       <input
         type="text"
@@ -63,7 +72,12 @@
   </div>
 
   <div class="modal-footer">
-    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="form.invalid">

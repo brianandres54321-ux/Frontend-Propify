@@ -4,5 +4,9 @@
   (click)="alternar()"
   [title]="themeService.tema() === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
 >
-  <i class="bi" [class.bi-sun-fill]="themeService.tema() === 'dark'" [class.bi-moon-stars-fill]="themeService.tema() === 'light'"></i>
+  <i
+    class="bi"
+    [class.bi-sun-fill]="themeService.tema() === 'dark'"
+    [class.bi-moon-stars-fill]="themeService.tema() === 'light'"
+  ></i>
 </button>
