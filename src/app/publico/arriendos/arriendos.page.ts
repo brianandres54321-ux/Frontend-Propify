@@ -1,7 +1,8 @@
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { debounceTime } from 'rxjs';
+import { debounceTime, startWith } from 'rxjs';
 
 import {
   ArriendoBusquedaItem,
@@ -68,6 +69,8 @@ export class ArriendosPage implements OnInit {
   protected readonly errorMensaje = signal<string | null>(null);
   protected readonly resultado = signal<ArriendoBusquedaRespuesta | null>(null);
   protected readonly pagina = signal(1);
+  // Solo aplica en móvil — en desktop el panel es una barra lateral fija.
+  protected readonly filtrosAbiertos = signal(false);
 
   protected readonly items = computed<ArriendoBusquedaItem[]>(
     () => this.resultado()?.items ?? [],
@@ -88,6 +91,25 @@ export class ArriendosPage implements OnInit {
     cuartos: '',
     amoblado: false,
     orden: 'recientes' as OrdenArriendos,
+  });
+
+  private readonly valorForm = toSignal(
+    this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
+    { initialValue: this.form.getRawValue() },
+  );
+
+  protected readonly filtrosActivos = computed(() => {
+    const v = this.valorForm();
+    let n = 0;
+    for (const clave of ['q', 'ciudad', 'barrio', 'departamento', 'tipo', 'precioMin', 'precioMax', 'cuartos'] as const) {
+      if (v[clave]) {
+        n++;
+      }
+    }
+    if (v.amoblado) {
+      n++;
+    }
+    return n;
   });
 
   ngOnInit(): void {

@@ -1,5 +1,5 @@
 .arriendos {
-  max-width: 1140px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: var(--space-8) var(--space-5) var(--space-9);
 }
@@ -33,6 +33,70 @@
 }
 
 // ----------------------------------------------------------
+// Layout: barra lateral de filtros + resultados
+// ----------------------------------------------------------
+.arriendos__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+  align-items: start;
+}
+
+@media (min-width: 880px) {
+  .arriendos__layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+.arriendos__resultados {
+  min-width: 0;
+}
+
+// ----------------------------------------------------------
+// Toggle (solo móvil)
+// ----------------------------------------------------------
+.filtros__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+
+  .bi:last-child {
+    margin-left: auto;
+    color: var(--color-text-muted);
+  }
+}
+
+.filtros__toggle-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: var(--text-2xs);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 880px) {
+  .filtros__toggle {
+    display: none;
+  }
+}
+
+// ----------------------------------------------------------
 // Panel de filtros
 // ----------------------------------------------------------
 .filtros {
@@ -40,10 +104,31 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-5);
-  margin-bottom: var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 879.98px) {
+  .filtros {
+    display: none;
+  }
+  .filtros--abierta {
+    display: block;
+  }
+}
+
+@media (min-width: 880px) {
+  .filtros {
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-4));
+    max-height: calc(100vh - var(--nav-height) - var(--space-6));
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
 }
 
 .filtros__buscar {
@@ -56,58 +141,18 @@
     left: var(--space-3);
     color: var(--color-text-subtle);
     pointer-events: none;
+    font-size: 0.9rem;
   }
 
   input {
     width: 100%;
-    height: var(--control-h-lg);
-    padding: 0 var(--space-3) 0 calc(var(--space-3) * 2 + 1rem);
+    height: var(--control-h-md);
+    padding: 0 var(--space-3) 0 calc(var(--space-3) * 2 + 0.9rem);
     border: 1px solid var(--color-border-strong);
     border-radius: var(--radius-md);
     background: var(--color-bg);
     color: var(--color-text);
-    font-size: var(--text-base);
-
-    &:focus {
-      outline: none;
-      border-color: var(--color-primary);
-      box-shadow: var(--focus-ring);
-    }
-  }
-}
-
-.filtros__grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-3);
-
-  @media (min-width: 560px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media (min-width: 900px) {
-    grid-template-columns: repeat(4, 1fr);
-  }
-
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-semibold);
-    color: var(--color-text-muted);
-  }
-
-  input,
-  select {
-    height: var(--control-h-md);
-    padding: 0 var(--space-3);
-    border: 1px solid var(--color-border-strong);
-    border-radius: var(--radius-sm);
-    background: var(--color-bg);
-    color: var(--color-text);
     font-size: var(--text-sm);
-    font-weight: var(--weight-regular);
 
     &:focus {
       outline: none;
@@ -117,18 +162,49 @@
   }
 }
 
-.filtros__pie {
+.filtros__campos {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: var(--space-3);
-  padding-top: var(--space-2);
-  border-top: 1px solid var(--color-border);
 }
 
-.filtros__check {
+.filtros__dos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+.filtros label {
   display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.filtros input:not([type='checkbox']),
+.filtros select {
+  width: 100%;
+  min-width: 0;
+  height: var(--control-h-md);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: var(--focus-ring);
+  }
+}
+
+.filtros .filtros__check {
+  flex-direction: row;
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-sm);
@@ -147,6 +223,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  align-self: flex-start;
   background: none;
   border: none;
   padding: 0;
@@ -174,7 +251,7 @@
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--color-text-muted);
-  margin-bottom: var(--space-4);
+  margin: 0 0 var(--space-4);
   transition: opacity var(--duration-fast) ease;
 
   &--cargando {
@@ -184,7 +261,7 @@
 
 .grid-unidades {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: var(--space-4);
   margin-bottom: var(--space-6);
 }
@@ -367,5 +444,9 @@
   p {
     margin: 0 0 var(--space-4);
     font-size: var(--text-sm);
+  }
+
+  .filtros__limpiar {
+    align-self: center;
   }
 }
