@@ -31,7 +31,12 @@
       Editar
     </app-button>
     @if (hayInvitacionPendiente()) {
-      <app-button variant="secondary" icono="envelope" [fullWidth]="false" (click)="reenviarInvitacion()">
+      <app-button
+        variant="secondary"
+        icono="envelope"
+        [fullWidth]="false"
+        (click)="reenviarInvitacion()"
+      >
         Reenviar invitación
       </app-button>
     }
@@ -41,7 +46,7 @@
   </div>
 
   <div class="tenant-detalle__fila mb-4">
-    <app-card titulo="Uso y límites" icono="bar-chart" variante="primary" [autoAltura]="true">
+    <app-card titulo="Uso y límites" icono="bar-chart" variante="primary">
       <dl class="tenant-detalle__lista">
         <div>
           <dt>Inmuebles</dt>
@@ -57,14 +62,15 @@
             @if (t.limiteInmuebles == null && t.limiteUnidades == null) {
               <span class="text-muted">— (usa el del plan)</span>
             } @else {
-              {{ t.limiteInmuebles ?? 'plan' }} inmuebles · {{ t.limiteUnidades ?? 'plan' }} unidades
+              {{ t.limiteInmuebles ?? 'plan' }} inmuebles ·
+              {{ t.limiteUnidades ?? 'plan' }} unidades
             }
           </dd>
         </div>
       </dl>
     </app-card>
 
-    <app-card titulo="Datos" icono="info-circle" [autoAltura]="true">
+    <app-card titulo="Datos" icono="info-circle">
       <dl class="tenant-detalle__lista">
         <div>
           <dt>Creado</dt>
@@ -82,7 +88,7 @@
     </app-card>
   </div>
 
-  <app-card titulo="Usuarios del cliente" icono="people">
+  <app-card titulo="Usuarios del cliente" icono="people" [autoAltura]="true">
     <app-table
       [columnas]="columnas"
       [filas]="usuarios()"
