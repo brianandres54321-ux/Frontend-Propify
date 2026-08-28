@@ -1,0 +1,39 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">Clientes (tenants)</h1>
+    <p class="text-muted small mb-0">
+      {{ totales().tenants }} clientes · {{ totales().pagados }} pagados ·
+      {{ totales().inmuebles }} inmuebles · {{ totales().unidades }} unidades en total
+    </p>
+  </div>
+  <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo cliente</app-button>
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+@if (exitoMensaje()) {
+  <app-alert variant="success">{{ exitoMensaje() }}</app-alert>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else {
+  <app-table
+    [columnas]="columnas"
+    [filas]="tenants()"
+    textoVacio="No hay clientes registrados."
+  >
+    <ng-template let-fila>
+      <div class="d-flex justify-content-end gap-1">
+        <app-button variant="icon" icono="pencil" title="Editar" (click)="abrirEditar(fila)" />
+        <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
+      </div>
+    </ng-template>
+  </app-table>
+
+  <p class="text-muted small mt-3">
+    "∞" = sin límite. El plan Conjuntos y un cliente con "pagado" desactivado
+    (demo) tienen sus propias reglas — al editar puedes fijar un límite manual.
+  </p>
+}

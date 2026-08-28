@@ -109,10 +109,10 @@ export const NAV_ITEMS: NavItem[] = [
     implementado: true,
   },
   {
-    label: 'Tenants',
+    label: 'Clientes (tenants)',
     ruta: '/app/tenants',
     icono: 'diagram-3',
     roles: [RoleNames.SUPERADMIN],
-    implementado: false,
+    implementado: true,
   },
 ];

@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { RoleNames } from '@core/constants';
+import { rolesGuard } from '@core/guards';
 import { InternoLayout } from '@layout/interno/interno-layout';
 
 export const INTERNO_ROUTES: Routes = [
@@ -87,6 +89,13 @@ export const INTERNO_ROUTES: Routes = [
           import('./administracion/configuracion/configuracion.page').then(
             (m) => m.ConfiguracionPage,
           ),
+      },
+      {
+        path: 'tenants',
+        canActivate: [rolesGuard],
+        data: { roles: [RoleNames.SUPERADMIN] },
+        loadComponent: () =>
+          import('./administracion/tenants/tenants.page').then((m) => m.TenantsPage),
       },
       // Nuevos módulos: agregar como rutas hijas con loadComponent dentro de
       // su dominio (propiedad/finanzas/comunidad/seguridad/administracion),

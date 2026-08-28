@@ -20,7 +20,7 @@ const PLANES: PlanVitrina[] = [
     precio: '$39.900',
     periodo: '/ mes',
     descripcion: 'Para una casa o casa de varios pisos con apartamentos independientes.',
-    incluye: ['Hasta 3 pisos', 'Hasta 6 unidades', 'Cobranza y gastos', 'Publicar en arriendo'],
+    incluye: ['1 inmueble', 'Hasta 12 unidades', 'Cobranza y gastos', 'Publicar en arriendo y venta'],
   },
   {
     nombre: 'Edificios',
@@ -30,8 +30,8 @@ const PLANES: PlanVitrina[] = [
     incluye: [
       'Torres y parqueaderos',
       'Portería y cartelera',
-      'Hasta 60 unidades',
-      'Publicar en arriendo',
+      'Hasta 120 unidades',
+      'Publicar en arriendo y venta',
     ],
     destacado: true,
   },
@@ -43,8 +43,8 @@ const PLANES: PlanVitrina[] = [
     incluye: [
       'Zonas comunes y reservas',
       'Torres, parqueaderos y portería',
-      'Unidades ilimitadas',
-      'Publicar en arriendo',
+      'Inmuebles y unidades ilimitados',
+      'Publicar en arriendo y venta',
     ],
   },
 ];
@@ -57,7 +57,8 @@ interface FilaComparativa {
 }
 
 const COMPARATIVA: FilaComparativa[] = [
-  { caracteristica: 'Unidades incluidas', casas: 'Hasta 6', edificios: 'Hasta 60', conjuntos: 'Ilimitadas' },
+  { caracteristica: 'Inmuebles', casas: '1', edificios: '1', conjuntos: 'Ilimitados' },
+  { caracteristica: 'Unidades', casas: 'Hasta 12', edificios: 'Hasta 120', conjuntos: 'Ilimitadas' },
   { caracteristica: 'Cobranza mensual y gastos', casas: true, edificios: true, conjuntos: true },
   { caracteristica: 'Residentes y contratos', casas: true, edificios: true, conjuntos: true },
   { caracteristica: 'Publicar unidades en arriendo', casas: true, edificios: true, conjuntos: true },

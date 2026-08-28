@@ -3,7 +3,13 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
 import { environment } from '@env/environment';
-import { ActualizarContactoRequest, PlanTipo, Tenant } from '../models';
+import {
+  ActualizarContactoRequest,
+  ActualizarTenantRequest,
+  CrearTenantRequest,
+  PlanTipo,
+  Tenant,
+} from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class TenantsService {
@@ -31,11 +37,32 @@ export class TenantsService {
     );
   }
 
-  // Autoservicio: DUENO edita nombre/colores/logo/teléfono de contacto
-  // desde /app/configuracion (no puede tocar plan/activo/pagado por esta vía).
+  // Autoservicio: DUENO edita nombre/teléfono de contacto desde
+  // /app/configuracion (no puede tocar plan/activo/pagado por esta vía).
   public actualizarContacto(datos: ActualizarContactoRequest): Observable<{ mensaje: string }> {
     return this.http
       .put<{ mensaje: string }>(`${this.baseUrl}/mi-tenant`, datos)
       .pipe(tap(() => this.consultarPropio().subscribe()));
+  }
+
+  // ---------- Superadministrador ----------
+
+  public consultarTodos(): Observable<Tenant[]> {
+    return this.http.get<Tenant[]>(this.baseUrl);
+  }
+
+  public crear(datos: CrearTenantRequest): Observable<Tenant> {
+    return this.http.post<Tenant>(this.baseUrl, datos);
+  }
+
+  public actualizar(
+    id: number,
+    datos: ActualizarTenantRequest,
+  ): Observable<{ mensaje: string }> {
+    return this.http.put<{ mensaje: string }>(`${this.baseUrl}/${id}`, datos);
+  }
+
+  public eliminar(id: number): Observable<{ mensaje: string }> {
+    return this.http.delete<{ mensaje: string }>(`${this.baseUrl}/${id}`);
   }
 }

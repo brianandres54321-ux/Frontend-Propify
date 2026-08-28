@@ -9,13 +9,24 @@ export interface Tenant {
   nombre: string;
   plan: PlanTipo;
   activo: boolean;
-  // Plan demo (false) vs pagado (true) — controla los límites de uso (ver
-  // LIMITES_PLAN_DEMO en el backend). Sin pasarela de pago conectada
-  // todavía: lo activa manualmente el superadministrador.
+  // Plan demo (false) vs pagado (true) — controla los límites de uso.
+  // Sin pasarela de pago: lo activa manualmente el superadministrador.
   pagado: boolean;
+  // Ajuste manual de límites por cliente (solo superadmin). null = usar el
+  // límite del plan.
+  limiteInmuebles?: number | null;
+  limiteUnidades?: number | null;
   // Teléfono/WhatsApp que se muestra en los anuncios públicos de arriendo.
   telefonoContacto?: string;
   creadoEn: string;
+  // Uso actual + límite efectivo (lo agrega GET /privado/tenants[/:id] y
+  // /mi-tenant). Los límites en `null` = ilimitado.
+  uso?: {
+    inmuebles: number;
+    unidades: number;
+    limiteInmuebles: number | null;
+    limiteUnidades: number | null;
+  };
 }
 
 export interface CrearTenantRequest {
@@ -28,6 +39,8 @@ export interface ActualizarTenantRequest {
   plan?: PlanTipo;
   activo?: boolean;
   pagado?: boolean;
+  limiteInmuebles?: number | null;
+  limiteUnidades?: number | null;
   telefonoContacto?: string;
 }
 
