@@ -1,6 +1,6 @@
 <nav class="pnav">
   <div class="pnav__contenedor">
-    <a routerLink="/" class="pnav__marca">
+    <a routerLink="/" class="pnav__marca" (click)="menuAbierto.set(false)">
       <span class="pnav__insignia">
         <i class="bi bi-house-door-fill"></i>
       </span>
@@ -16,8 +16,38 @@
 
     <div class="pnav__acciones">
       <a routerLink="/login" class="pnav__link pnav__link--ingresar">Ingresar</a>
-      <a routerLink="/registro" class="pnav__cta">Crear cuenta</a>
+      <a routerLink="/registro" class="pnav__cta pnav__cta--desktop">Crear cuenta</a>
       <app-theme-toggle />
+      <button
+        type="button"
+        class="pnav__menu-btn"
+        (click)="menuAbierto.set(!menuAbierto())"
+        [attr.aria-expanded]="menuAbierto()"
+        aria-label="Abrir menú"
+      >
+        <i class="bi" [class.bi-list]="!menuAbierto()" [class.bi-x-lg]="menuAbierto()"></i>
+      </button>
     </div>
   </div>
+
+  @if (menuAbierto()) {
+    <div class="pnav__movil">
+      <a routerLink="/arriendos" routerLinkActive="pnav__movil-link--activo" class="pnav__movil-link">
+        Arriendos
+      </a>
+      <a routerLink="/planes" routerLinkActive="pnav__movil-link--activo" class="pnav__movil-link">
+        Planes
+      </a>
+      <a routerLink="/nosotros" routerLinkActive="pnav__movil-link--activo" class="pnav__movil-link">
+        Nosotros
+      </a>
+      <a routerLink="/contacto" routerLinkActive="pnav__movil-link--activo" class="pnav__movil-link">
+        Contacto
+      </a>
+      <div class="pnav__movil-acciones">
+        <a routerLink="/login" class="pnav__movil-ingresar">Ingresar</a>
+        <a routerLink="/registro" class="pnav__cta">Crear cuenta</a>
+      </div>
+    </div>
+  }
 </nav>

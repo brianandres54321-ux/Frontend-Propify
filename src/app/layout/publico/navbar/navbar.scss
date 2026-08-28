@@ -120,10 +120,116 @@
   }
 }
 
-@media (min-width: 480px) {
+@media (min-width: 768px) {
   .pnav__link--ingresar {
     display: inline-flex;
   }
+}
+
+// ----------------------------------------------------------
+// Botón de menú + panel móvil
+// ----------------------------------------------------------
+.pnav__menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: border-color var(--duration-base) ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+
+@media (min-width: 768px) {
+  .pnav__menu-btn {
+    display: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .pnav__acciones .pnav__cta--desktop {
+    display: none;
+  }
+}
+
+.pnav__movil {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-5) var(--space-5);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  animation: pnav-desplegar var(--duration-base) var(--ease-out);
+}
+
+@keyframes pnav-desplegar {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 768px) {
+  .pnav__movil {
+    display: none;
+  }
+}
+
+.pnav__movil-link {
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+
+  &:hover {
+    background: var(--color-surface-sunken);
+  }
+}
+
+.pnav__movil-link--activo {
+  color: var(--color-primary);
+}
+
+.pnav__movil-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.pnav__movil-ingresar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+}
+
+.pnav__movil-acciones .pnav__cta {
+  justify-content: center;
+  padding: var(--space-3);
 }
 
 .pnav__cta {
