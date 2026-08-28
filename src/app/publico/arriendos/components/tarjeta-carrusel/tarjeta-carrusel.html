@@ -1,0 +1,46 @@
+<a
+  class="mc"
+  [routerLink]="enlace()"
+  (touchstart)="touchInicio($event)"
+  (touchend)="touchFin($event)"
+>
+  @if (total() > 0) {
+    <img [src]="actual()" [alt]="alt()" loading="lazy" />
+  } @else {
+    <div class="mc__sin-foto"><i class="bi bi-image"></i></div>
+  }
+
+  @if (total() > 1) {
+    <button type="button" class="mc__nav mc__nav--prev" (click)="anterior($event)" aria-label="Foto anterior">
+      <i class="bi bi-chevron-left"></i>
+    </button>
+    <button type="button" class="mc__nav mc__nav--next" (click)="siguiente($event)" aria-label="Foto siguiente">
+      <i class="bi bi-chevron-right"></i>
+    </button>
+
+    @if (total() <= 6) {
+      <div class="mc__puntos">
+        @for (foto of fotos(); track $index; let i = $index) {
+          <button
+            type="button"
+            class="mc__punto"
+            [class.mc__punto--activo]="i === indice()"
+            (click)="irA($event, i)"
+            [attr.aria-label]="'Ver foto ' + (i + 1)"
+          ></button>
+        }
+      </div>
+    }
+  }
+
+  @if (total() > 0) {
+    <span class="mc__contador">
+      <i class="bi bi-images"></i>
+      @if (total() > 1) {
+        {{ indice() + 1 }} / {{ total() }}
+      } @else {
+        1 foto
+      }
+    </span>
+  }
+</a>

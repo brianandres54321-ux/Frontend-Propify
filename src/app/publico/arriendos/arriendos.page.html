@@ -147,14 +147,14 @@
         <div class="grid-unidades">
           @for (item of items(); track item.codUnidad) {
             <article class="tarjeta-unidad">
-              <a class="tarjeta-unidad__link" [routerLink]="['/arriendo/unidad', item.codUnidad]">
-                @if (urlFoto(item); as foto) {
-                  <img [src]="foto" [alt]="'Foto de ' + item.identificador" loading="lazy" />
-                } @else {
-                  <div class="tarjeta-unidad__sin-foto"><i class="bi bi-image"></i></div>
-                }
-                <span class="tarjeta-unidad__tipo">{{ etiquetasTipo[item.tipo] }}</span>
-              </a>
+              <div class="tarjeta-unidad__media">
+                <app-tarjeta-carrusel
+                  [fotos]="fotosUrls(item)"
+                  [alt]="'Foto de ' + etiquetasTipo[item.tipo] + ' ' + item.identificador"
+                  [enlace]="['/arriendo/unidad', item.codUnidad]"
+                />
+                <span [class]="claseTipo(item.tipo)">{{ etiquetasTipo[item.tipo] }}</span>
+              </div>
               <div class="tarjeta-unidad__cuerpo">
                 <a class="tarjeta-unidad__titulo" [routerLink]="['/arriendo/unidad', item.codUnidad]">
                   {{ item.identificador }}

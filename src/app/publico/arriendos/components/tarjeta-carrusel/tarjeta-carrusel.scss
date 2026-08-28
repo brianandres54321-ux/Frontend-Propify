@@ -1,0 +1,135 @@
+:host {
+  display: block;
+}
+
+.mc {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-sunken);
+
+  img,
+  .mc__sin-foto {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.mc__sin-foto {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-subtle);
+  font-size: var(--text-2xl);
+}
+
+.mc__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.9rem;
+  height: 1.9rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--color-text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--duration-fast) ease,
+    background var(--duration-fast) ease;
+
+  &:hover {
+    background: var(--color-bg);
+  }
+
+  &--prev {
+    left: var(--space-2);
+  }
+  &--next {
+    right: var(--space-2);
+  }
+}
+
+.mc:hover .mc__nav,
+.mc:focus-within .mc__nav {
+  opacity: 1;
+}
+
+// En táctil las flechas quedan siempre visibles (no hay hover).
+@media (hover: none) {
+  .mc__nav {
+    opacity: 1;
+    background: color-mix(in srgb, var(--color-bg) 78%, transparent);
+  }
+}
+
+.mc__puntos {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--space-2);
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+  opacity: 0;
+  transition: opacity var(--duration-fast) ease;
+}
+
+.mc:hover .mc__puntos {
+  opacity: 1;
+}
+
+.mc__punto {
+  width: 0.4rem;
+  height: 0.4rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, #fff 55%, transparent);
+  cursor: pointer;
+  transition:
+    background var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
+
+  &--activa,
+  &--activo {
+    background: #fff;
+    transform: scale(1.25);
+  }
+}
+
+.mc__contador {
+  position: absolute;
+  right: var(--space-2);
+  bottom: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, #000 55%, transparent);
+  color: #fff;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+
+  .bi {
+    font-size: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc__nav,
+  .mc__puntos,
+  .mc__punto {
+    transition: none;
+  }
+}

@@ -381,40 +381,47 @@
   }
 }
 
-.tarjeta-unidad__link {
+.tarjeta-unidad__media {
   position: relative;
-  display: block;
-
-  img,
-  .tarjeta-unidad__sin-foto {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    display: block;
-  }
-}
-
-.tarjeta-unidad__sin-foto {
-  display: grid;
-  place-items: center;
-  background: var(--color-surface-sunken);
-  color: var(--color-text-subtle);
-  font-size: var(--text-2xl);
 }
 
 .tarjeta-unidad__tipo {
   position: absolute;
   top: var(--space-2);
   left: var(--space-2);
-  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
-  backdrop-filter: blur(4px);
+  z-index: 1;
+  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--color-border);
   color: var(--color-text);
   font-size: var(--text-2xs);
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
-  padding: 0.25rem 0.55rem;
+  padding: 0.2rem 0.55rem;
   border-radius: var(--radius-pill);
+  pointer-events: none;
+
+  &--apartamento {
+    color: var(--color-primary);
+    border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  }
+  &--apartaestudio {
+    color: var(--color-info);
+    border-color: color-mix(in srgb, var(--color-info) 40%, transparent);
+  }
+  &--habitacion {
+    color: var(--color-warning);
+    border-color: color-mix(in srgb, var(--color-warning) 40%, transparent);
+  }
+  &--local {
+    color: var(--color-danger);
+    border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  }
+  &--oficina {
+    color: var(--color-success);
+    border-color: color-mix(in srgb, var(--color-success) 40%, transparent);
+  }
 }
 
 .tarjeta-unidad__cuerpo {

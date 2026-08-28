@@ -125,6 +125,8 @@ export interface ArriendoResumenUnidad extends CaracteristicasUnidad {
   piso?: number;
   areaM2?: number;
   codFotoPortada: number | null;
+  // IDs de todas las fotos, en orden.
+  fotos: number[];
 }
 
 export interface ArriendoInmueblePublico {
@@ -142,6 +144,7 @@ export interface ArriendoDestacada extends CaracteristicasUnidad {
   piso?: number;
   areaM2?: number;
   codFotoPortada: number | null;
+  fotos: number[];
   nombreInmueble?: string;
   telefonoContacto: string | null;
 }
@@ -173,6 +176,8 @@ export interface ArriendoBusquedaItem extends CaracteristicasUnidad {
   piso?: number;
   areaM2?: number;
   codFotoPortada: number | null;
+  // IDs de todas las fotos, en orden — para el mini-carrusel de la tarjeta.
+  fotos: number[];
   nombreInmueble: string | null;
   direccionInmueble: string | null;
   ciudad: string | null;

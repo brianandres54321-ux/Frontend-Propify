@@ -17,6 +17,8 @@ import { AlertComponent } from '@shared/components/alert/alert';
 import { LoadingComponent } from '@shared/components/loading/loading';
 import { PaginationComponent } from '@shared/components/pagination/pagination';
 
+import { TarjetaCarruselComponent } from './components/tarjeta-carrusel/tarjeta-carrusel';
+
 const ETIQUETAS_TIPO: Record<TipoUnidad, string> = {
   [TipoUnidad.APARTAMENTO]: 'Apartamento',
   [TipoUnidad.APARTAESTUDIO]: 'Apartaestudio',
@@ -50,6 +52,7 @@ function aNumero(valor: string | null): number | undefined {
     AlertComponent,
     LoadingComponent,
     PaginationComponent,
+    TarjetaCarruselComponent,
   ],
   templateUrl: './arriendos.page.html',
   styleUrl: './arriendos.page.scss',
@@ -183,10 +186,25 @@ export class ArriendosPage implements OnInit {
     );
   }
 
-  protected urlFoto(item: ArriendoBusquedaItem): string | null {
-    return item.codFotoPortada
-      ? this.arriendosService.urlFoto(item.codUnidad, item.codFotoPortada)
-      : null;
+  // Cache por unidad para devolver siempre la misma referencia de array —
+  // si no, cada ciclo de detección de cambios recrearía las URLs y el
+  // carrusel de la tarjeta perdería su posición.
+  private readonly cacheFotos = new Map<number, string[]>();
+
+  protected fotosUrls(item: ArriendoBusquedaItem): string[] {
+    const cacheada = this.cacheFotos.get(item.codUnidad);
+    if (cacheada && cacheada.length === item.fotos.length) {
+      return cacheada;
+    }
+    const urls = item.fotos.map((codFoto) =>
+      this.arriendosService.urlFoto(item.codUnidad, codFoto),
+    );
+    this.cacheFotos.set(item.codUnidad, urls);
+    return urls;
+  }
+
+  protected claseTipo(tipo: TipoUnidad): string {
+    return `tarjeta-unidad__tipo tarjeta-unidad__tipo--${tipo.toLowerCase()}`;
   }
 
   protected ubicacion(item: ArriendoBusquedaItem): string {
@@ -224,6 +242,7 @@ export class ArriendosPage implements OnInit {
   private buscar(): void {
     this.cargando.set(true);
     this.errorMensaje.set(null);
+    this.cacheFotos.clear();
     this.arriendosService
       .buscar({ ...this.construirFiltros(), tamanio: TAMANIO_PAGINA })
       .subscribe({
