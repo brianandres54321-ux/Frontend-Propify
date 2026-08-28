@@ -45,7 +45,10 @@
     } @else {
       <div class="row">
         <div class="col-6">
-          <app-text-field label="Desde el número">
+          <app-text-field
+            label="Desde el número"
+            [hint]="prefijoConNumero() ? 'Tomado del prefijo (' + numeroInicial() + ')' : null"
+          >
             <input type="number" min="1" class="form-control" formControlName="desde" />
           </app-text-field>
         </div>
@@ -59,10 +62,21 @@
 
     <app-text-field
       label="Prefijo (opcional)"
-      hint="Se antepone tal cual. Ej: “Apto ” → Apto 101 · “Casa ” → Casa 1 · “T1-” → T1-101"
+      [hint]="
+        form.controls.modo.value === 'consecutivo'
+          ? 'Ej: “Apto ” → Apto 1 · si le pones número (“Apto 001”) ese es el inicio y conserva los ceros.'
+          : 'Se antepone tal cual. Ej: “Apto ” → Apto 101 · “Casa ” → Casa 1 · “T1-” → T1-101'
+      "
     >
       <input type="text" class="form-control" formControlName="prefijo" placeholder="Apto " />
     </app-text-field>
+
+    @if (errorPrefijoPisos()) {
+      <p class="text-danger small mb-2">
+        En el modo por pisos el prefijo no puede terminar en número (quedaría algo como
+        “{{ form.controls.prefijo.value }}101”). Quítalo o usa el modo consecutivo.
+      </p>
+    }
 
     <div class="row">
       <div class="col-6">
@@ -88,7 +102,11 @@
       <div class="preview__cabecera">
         <span class="form-label fs-6 mb-0">Vista previa</span>
         <span class="preview__conteo" [class.preview__conteo--error]="excede()">
-          {{ total() }} {{ total() === 1 ? 'unidad' : 'unidades' }}
+          @if (duplicadas() > 0) {
+            {{ nuevas() }} nuevas · {{ duplicadas() }} ya existen
+          } @else {
+            {{ total() }} {{ total() === 1 ? 'unidad' : 'unidades' }}
+          }
         </span>
       </div>
 
@@ -96,13 +114,20 @@
         <p class="text-muted small mb-0">Ajusta los valores para ver las unidades que se crearán.</p>
       } @else {
         <div class="preview__chips">
-          @for (id of visibles(); track id) {
-            <span class="preview__chip">{{ id }}</span>
+          @for (p of visibles(); track p.id + '|' + p.piso) {
+            <span class="preview__chip" [class.preview__chip--existe]="p.existe">
+              {{ p.id }}@if (p.existe) { <i class="bi bi-check2-circle"></i> }
+            </span>
           }
           @if (ocultas() > 0) {
             <span class="preview__chip preview__chip--mas">+{{ ocultas() }} más</span>
           }
         </div>
+        @if (duplicadas() > 0) {
+          <p class="text-muted small mb-0 mt-2">
+            <i class="bi bi-check2-circle"></i> ya existe — se omitirá al generar.
+          </p>
+        }
         @if (excede()) {
           <p class="text-danger small mb-0 mt-2">
             Máximo {{ MAX_LOTE }} unidades por operación. Reduce el rango.
@@ -117,7 +142,7 @@
       Cancelar
     </app-button>
     <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="!puedeGenerar()">
-      Generar {{ total() > 0 && !excede() ? total() : '' }} unidades
+      Generar {{ puedeGenerar() ? nuevas() : '' }} unidades
     </app-button>
   </div>
 </form>

@@ -151,6 +151,9 @@ export class UnidadesPage implements OnInit {
 
   protected abrirGenerar(): void {
     const modalRef = this.modalService.open(GenerarUnidadesModal, { centered: true, size: 'lg' });
+    (modalRef.componentInstance as GenerarUnidadesModal).existentes = this.unidades().map(
+      (u) => ({ identificador: u.identificador, piso: u.piso ?? null }),
+    );
 
     modalRef.result.then(
       (datos: Omit<GenerarUnidadesRequest, 'codInmueble'>) => {

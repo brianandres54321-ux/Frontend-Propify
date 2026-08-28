@@ -48,4 +48,13 @@
     color: var(--color-primary);
     font-weight: var(--weight-semibold);
   }
+
+  // Ya existe en el inmueble: se omitirá al generar.
+  &--existe {
+    background: var(--color-warning-bg);
+    border-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
+    color: var(--color-warning);
+    text-decoration: line-through;
+    opacity: 0.8;
+  }
 }
