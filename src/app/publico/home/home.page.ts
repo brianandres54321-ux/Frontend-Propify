@@ -1,59 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { ArriendoDestacada } from '@core/models';
-import { ArriendosService } from '@core/services/arriendos.service';
-import { urlWhatsapp } from '@core/utils';
 import { RevelarAlScrollDirective } from '@shared/directives';
 
-function formatoMonto(valor: number): string {
-  return '$' + Number(valor).toLocaleString('es-CO');
-}
-
-// Precios de ejemplo — sin pasarela de pago conectada todavía, el plan
-// "pagado" lo activa manualmente el superadministrador (ver Tenant.pagado).
-// Ajustar cuando se definan precios reales.
-interface PlanVitrina {
-  nombre: string;
-  precio: string;
-  descripcion: string;
-  incluye: string[];
-  // Resalta visualmente una tarjeta (borde/badge "Más elegido") — puramente
-  // de presentación en la vitrina, no afecta qué banderas activa el plan.
-  destacado?: boolean;
-}
-
-const PLANES: PlanVitrina[] = [
-  {
-    nombre: 'Casas',
-    precio: '$39.900/mes',
-    descripcion: 'Para una casa o casa de varios pisos con apartamentos independientes.',
-    incluye: ['Hasta 3 pisos', 'Hasta 6 unidades', 'Cobranza y gastos', 'Publicar en arriendo'],
-  },
-  {
-    nombre: 'Edificios',
-    precio: '$89.900/mes',
-    descripcion: 'Para un edificio con torres, parqueaderos y portería.',
-    incluye: [
-      'Torres y parqueaderos',
-      'Portería y cartelera',
-      'Hasta 60 unidades',
-      'Publicar en arriendo',
-    ],
-    destacado: true,
-  },
-  {
-    nombre: 'Conjuntos',
-    precio: '$149.900/mes',
-    descripcion: 'Para conjuntos residenciales con zonas comunes y varios inmuebles.',
-    incluye: [
-      'Zonas comunes y reservas',
-      'Torres, parqueaderos y portería',
-      'Unidades ilimitadas',
-      'Publicar en arriendo',
-    ],
-  },
-];
+import { HeroPanelDemoComponent } from './components/hero-panel-demo/hero-panel-demo';
 
 interface TipoPropiedad {
   foto: string;
@@ -84,40 +34,18 @@ const TIPOS_PROPIEDAD: TipoPropiedad[] = [
     descripcion:
       'Varios inmuebles, zonas comunes con reservas, y todo el control de acceso en un solo panel.',
   },
-  {
-    foto: '/images/proyecto-edificio.jpg',
-    icono: 'shop',
-    nombre: 'Locales y oficinas',
-    descripcion:
-      'Unidades comerciales dentro de tu inmueble, con el mismo registro de arriendo y cobranza.',
-  },
 ];
 
-// Fotos ilustrativas del TIPO de propiedad — no son clientes ni casos de
-// éxito reales de Propify (el producto es nuevo), por eso el título de la
-// sección habla de "tipo de propiedad" y no de "proyectos reales".
-interface EjemploPropiedad {
-  foto: string;
-  titulo: string;
-  etiqueta: string;
+interface PlanResumen {
+  nombre: string;
+  precio: string;
+  para: string;
 }
 
-const EJEMPLOS_PROPIEDAD: EjemploPropiedad[] = [
-  {
-    foto: '/images/proyecto-casa.jpg',
-    titulo: 'Casa de varios pisos',
-    etiqueta: 'Plan Casas',
-  },
-  {
-    foto: '/images/proyecto-edificio.jpg',
-    titulo: 'Edificio residencial',
-    etiqueta: 'Plan Edificios',
-  },
-  {
-    foto: '/images/proyecto-conjunto.jpg',
-    titulo: 'Conjunto residencial',
-    etiqueta: 'Plan Conjuntos',
-  },
+const PLANES_RESUMEN: PlanResumen[] = [
+  { nombre: 'Casas', precio: '$39.900/mes', para: 'Una casa con apartamentos independientes' },
+  { nombre: 'Edificios', precio: '$89.900/mes', para: 'Torres, parqueaderos y portería' },
+  { nombre: 'Conjuntos', precio: '$149.900/mes', para: 'Zonas comunes y varios inmuebles' },
 ];
 
 interface PasoComoFunciona {
@@ -157,6 +85,38 @@ const PASOS: PasoComoFunciona[] = [
     icono: 'speedometer2',
     titulo: 'Administra todo',
     descripcion: 'Portería, avisos, zonas comunes y reportes de daño, desde un solo lugar.',
+  },
+];
+
+interface Modulo {
+  icono: string;
+  titulo: string;
+  descripcion: string;
+}
+
+const MODULOS: Modulo[] = [
+  {
+    icono: 'cash-coin',
+    titulo: 'Cobranza mensual',
+    descripcion:
+      'Genera las cuentas de cada mes, cobra en línea y avisa a tiempo sin perseguir a nadie.',
+  },
+  {
+    icono: 'people',
+    titulo: 'Residentes y unidades',
+    descripcion:
+      'Torres, apartamentos, propietarios y arrendatarios — con su historial de pagos a la mano.',
+  },
+  {
+    icono: 'shield-lock',
+    titulo: 'Portería y visitantes',
+    descripcion:
+      'Registro de visitas, paquetes y autorizaciones — el celador desde su propio acceso.',
+  },
+  {
+    icono: 'flower1',
+    titulo: 'Zonas comunes y avisos',
+    descripcion: 'Reservas del salón, cartelera digital y reportes de daño para toda la comunidad.',
   },
 ];
 
@@ -208,43 +168,21 @@ const FAQS: PreguntaFrecuente[] = [
 // Landing: qué es Propify y a quién va dirigido.
 @Component({
   selector: 'app-home-page',
-  imports: [RouterLink, RevelarAlScrollDirective],
+  imports: [RouterLink, RevelarAlScrollDirective, HeroPanelDemoComponent],
   templateUrl: './home.page.html',
   styleUrl: './home.page.scss',
 })
-export class HomePage implements OnInit {
-  private readonly arriendosService = inject(ArriendosService);
-
-  protected readonly planes = PLANES;
+export class HomePage {
+  protected readonly planesResumen = PLANES_RESUMEN;
+  protected readonly modulos = MODULOS;
   protected readonly tiposPropiedad = TIPOS_PROPIEDAD;
-  protected readonly ejemplosPropiedad = EJEMPLOS_PROPIEDAD;
   protected readonly pasos = PASOS;
   protected readonly capacidades = CAPACIDADES;
   protected readonly faqs = FAQS;
-  protected readonly destacadas = signal<ArriendoDestacada[]>([]);
-  protected readonly formatoMonto = formatoMonto;
 
   protected readonly faqAbierta = signal<number | null>(null);
 
   protected alternarFaq(indice: number): void {
     this.faqAbierta.update((actual) => (actual === indice ? null : indice));
-  }
-
-  ngOnInit(): void {
-    this.arriendosService.consultarDestacadas().subscribe({
-      next: (destacadas) => this.destacadas.set(destacadas),
-      error: () => this.destacadas.set([]),
-    });
-  }
-
-  protected urlFoto(unidadId: number, codFoto: number): string {
-    return this.arriendosService.urlFoto(unidadId, codFoto);
-  }
-
-  protected urlWhatsapp(unidad: ArriendoDestacada): string {
-    return urlWhatsapp(
-      unidad.telefonoContacto!,
-      `Hola, vi tu anuncio de ${unidad.identificador} en Propify y estoy interesado.`,
-    );
   }
 }

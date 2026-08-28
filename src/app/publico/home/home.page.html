@@ -1,22 +1,29 @@
 <section class="hero">
-  <div class="hero__fondo">
-    <img class="hero__foto hero__foto--1" src="/images/casa-3-pisos.jpg" alt="" aria-hidden="true" />
-    <img class="hero__foto hero__foto--2" src="/images/proyecto-edificio.jpg" alt="" aria-hidden="true" />
-    <img class="hero__foto hero__foto--3" src="/images/conjuntos1.jpg" alt="" aria-hidden="true" />
-    <div class="hero__degradado"></div>
-    <div class="hero__velo-nav"></div>
-  </div>
-
-  <div class="hero__contenido">
-    <h1>Administra tu propiedad<br /><span class="hero__resaltado">sin hojas de cálculo</span></h1>
-    <p>
-      Cobranza automática, residentes, portería y zonas comunes de tu casa,
-      edificio o conjunto — todo en un solo lugar.
+  <div class="hero__col hero__col--texto">
+    <span class="hero__eyebrow">
+      <i class="bi bi-diamond-fill"></i> Administración de propiedades
+    </span>
+    <h1>
+      La administración de tu propiedad,
+      <span class="hero__resaltado">en un solo panel</span>
+    </h1>
+    <p class="hero__sub">
+      Cobranza, residentes, portería y zonas comunes de tu casa, edificio o
+      conjunto — sin hojas de cálculo.
     </p>
     <div class="hero__botones">
-      <a routerLink="/registro" class="cta">Crear cuenta gratis <i class="bi bi-arrow-right"></i></a>
-      <a routerLink="/" fragment="planes" class="cta-secundaria">Ver planes</a>
+      <a routerLink="/registro" class="hero__cta">
+        Crear cuenta gratis <i class="bi bi-arrow-right"></i>
+      </a>
+      <a routerLink="/planes" class="hero__cta hero__cta--ghost">Ver planes</a>
     </div>
+    <p class="hero__nota">
+      <i class="bi bi-check-circle-fill"></i> Sin tarjeta de crédito. Plan demo para empezar hoy.
+    </p>
+  </div>
+
+  <div class="hero__col hero__col--panel">
+    <app-hero-panel-demo />
   </div>
 </section>
 
@@ -33,6 +40,29 @@
   </div>
 </div>
 
+<section class="modulos">
+  <div appRevelarAlScroll>
+    <span class="eyebrow">Todo en un solo lugar</span>
+    <h2>Menos hojas de cálculo, más administración</h2>
+    <p class="subtitulo">
+      Los módulos que tu propiedad necesita — y ninguno que no. Cada inmueble
+      activa solo lo suyo.
+    </p>
+  </div>
+
+  <div class="grid-modulos">
+    @for (modulo of modulos; track modulo.titulo; let i = $index) {
+    <article class="tarjeta-modulo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+      <span class="tarjeta-modulo__icono">
+        <i class="bi bi-{{ modulo.icono }}"></i>
+      </span>
+      <h3>{{ modulo.titulo }}</h3>
+      <p>{{ modulo.descripcion }}</p>
+    </article>
+    }
+  </div>
+</section>
+
 <section class="tipos-propiedad">
   <div appRevelarAlScroll>
     <span class="eyebrow">Para cada tipo de propiedad</span>
@@ -41,9 +71,10 @@
 
   <div class="grid-tipos">
     @for (tipo of tiposPropiedad; track tipo.nombre; let i = $index) {
-    <div class="tarjeta-tipo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
+    <article class="tarjeta-tipo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
       <div class="tarjeta-tipo__foto">
         <img [src]="tipo.foto" [alt]="tipo.nombre" />
+        <span class="tarjeta-tipo__num">{{ i + 1 }}</span>
         <span class="tarjeta-tipo__icono">
           <i class="bi bi-{{ tipo.icono }}"></i>
         </span>
@@ -52,7 +83,7 @@
         <h3>{{ tipo.nombre }}</h3>
         <p>{{ tipo.descripcion }}</p>
       </div>
-    </div>
+    </article>
     }
   </div>
 </section>
@@ -78,101 +109,44 @@
   </div>
 </section>
 
-<section class="ejemplos">
-  <div appRevelarAlScroll>
-    <span class="eyebrow">Para cada tipo de propiedad</span>
-    <h2>Así se ve en la práctica</h2>
-    <p class="subtitulo">Ejemplos del tipo de inmueble que puedes administrar — no son clientes de Propify.</p>
+<section class="arriendos-cta" appRevelarAlScroll>
+  <div class="arriendos-cta__texto">
+    <span class="eyebrow">¿Buscas dónde vivir?</span>
+    <h2>Explora las unidades en arriendo</h2>
+    <p>
+      Apartamentos, casas y locales publicados por administradores que usan
+      Propify — con filtros por ciudad, barrio y departamento.
+    </p>
   </div>
-
-  <div class="grid-ejemplos">
-    @for (ejemplo of ejemplosPropiedad; track ejemplo.titulo; let i = $index) {
-    <div class="tarjeta-ejemplo" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
-      <img [src]="ejemplo.foto" [alt]="ejemplo.titulo" />
-      <div class="tarjeta-ejemplo__info">
-        <span class="tarjeta-ejemplo__etiqueta">{{ ejemplo.etiqueta }}</span>
-        <h3>{{ ejemplo.titulo }}</h3>
-      </div>
-    </div>
-    }
-  </div>
+  <a routerLink="/arriendos" class="arriendos-cta__boton">
+    Ver unidades en arriendo <i class="bi bi-arrow-right"></i>
+  </a>
 </section>
-
-@if (destacadas().length > 0) {
-<section class="destacadas">
-  <div appRevelarAlScroll>
-    <span class="eyebrow">Publicaciones activas</span>
-    <h2>En arriendo ahora</h2>
-    <p class="subtitulo">Unidades publicadas por dueños que usan Propify.</p>
-  </div>
-
-  <div class="grid-destacadas">
-    @for (unidad of destacadas(); track unidad.codUnidad; let i = $index) {
-    <div class="tarjeta-destacada" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
-      <a class="tarjeta-destacada-link" [routerLink]="['/arriendo/unidad', unidad.codUnidad]">
-        @if (unidad.codFotoPortada) {
-        <img [src]="urlFoto(unidad.codUnidad, unidad.codFotoPortada)" alt="Foto de {{ unidad.identificador }}" />
-        } @else {
-        <div class="sin-foto">Sin foto</div>
-        }
-        <div class="info">
-          <span class="badge-en-arriendo">En arriendo</span>
-          <h3>{{ unidad.identificador }}</h3>
-          <p class="text-muted">{{ unidad.nombreInmueble }}</p>
-          @if (unidad.precioArriendo) {
-          <p class="precio">{{ formatoMonto(unidad.precioArriendo) }} / mes</p>
-          }
-        </div>
-      </a>
-      @if (unidad.telefonoContacto) {
-      <a class="tarjeta-destacada-whatsapp" [href]="urlWhatsapp(unidad)" target="_blank" rel="noopener"
-        (click)="$event.stopPropagation()">
-        Preguntar por WhatsApp
-      </a>
-      }
-    </div>
-    }
-  </div>
-</section>
-}
 
 <section class="planes" id="planes">
   <div appRevelarAlScroll>
     <span class="eyebrow">Planes</span>
     <h2>Un plan por cada tipo de propiedad</h2>
     <p class="subtitulo">
-      Elige el plan según tu tipo de propiedad. Empieza gratis con el plan demo
-      (1 inmueble, hasta 5 unidades) y actualiza cuando lo necesites.
+      Empieza gratis con el plan demo (1 inmueble, hasta 5 unidades) y actualiza
+      cuando lo necesites.
     </p>
   </div>
 
-  <div class="grid-planes">
-    @for (plan of planes; track plan.nombre; let i = $index) {
-    <div
-      class="tarjeta-plan"
-      [class.tarjeta-plan--destacada]="plan.destacado"
-      appRevelarAlScroll
-      [style.transition-delay.ms]="i * 90"
-    >
-      @if (plan.destacado) {
-      <span class="tarjeta-plan__badge">Más elegido</span>
-      }
+  <div class="grid-planes-resumen">
+    @for (plan of planesResumen; track plan.nombre; let i = $index) {
+    <article class="plan-resumen" appRevelarAlScroll [style.transition-delay.ms]="i * 90">
       <h3>{{ plan.nombre }}</h3>
-      <p class="precio">{{ plan.precio }}</p>
-      <p class="descripcion">{{ plan.descripcion }}</p>
-      <ul>
-        @for (item of plan.incluye; track item) {
-        <li>{{ item }}</li>
-        }
-      </ul>
-      <a routerLink="/registro" class="cta-plan">Empezar gratis</a>
-    </div>
+      <p class="plan-resumen__precio">{{ plan.precio }}</p>
+      <p class="plan-resumen__para">{{ plan.para }}</p>
+    </article>
     }
   </div>
 
-  <p class="nota-precios">
-    Precios de referencia. El plan demo es gratis y no requiere tarjeta.
-  </p>
+  <div class="planes__acciones">
+    <a routerLink="/planes" class="planes__ver">Ver planes y precios en detalle</a>
+    <p class="nota-precios">Precios de referencia. El plan demo es gratis y no requiere tarjeta.</p>
+  </div>
 </section>
 
 <section class="cta-faq" appRevelarAlScroll>
