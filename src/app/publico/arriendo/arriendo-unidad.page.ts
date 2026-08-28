@@ -1,5 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { ArriendoUnidadPublico, TipoUnidad } from '@core/models';
 import { ArriendosService } from '@core/services/arriendos.service';
@@ -32,6 +33,8 @@ function formatoMonto(valor: number): string {
 })
 export class ArriendoUnidadPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
   private readonly arriendosService = inject(ArriendosService);
 
   protected readonly unidad = signal<ArriendoUnidadPublico | null>(null);
@@ -61,6 +64,16 @@ export class ArriendoUnidadPage implements OnInit {
         this.errorMensaje.set(mensajeErrorApi(error, 'Este anuncio no está disponible.'));
       },
     });
+  }
+
+  protected volver(): void {
+    // Vuelve a la búsqueda conservando filtros/scroll si hay historial;
+    // si se entró directo al anuncio, va a la lista.
+    if (typeof history !== 'undefined' && history.length > 1) {
+      this.location.back();
+    } else {
+      void this.router.navigate(['/arriendos']);
+    }
   }
 
   protected urlWhatsapp(telefono: string): string {
