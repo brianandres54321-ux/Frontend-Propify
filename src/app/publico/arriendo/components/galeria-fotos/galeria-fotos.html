@@ -1,0 +1,103 @@
+<div class="gal">
+  @if (total() > 1) {
+    <div class="gal__rail">
+      @for (foto of fotos(); track foto; let i = $index) {
+        <button
+          type="button"
+          class="gal__thumb"
+          [class.gal__thumb--activa]="i === indice()"
+          (click)="seleccionar(i)"
+          (mouseenter)="seleccionar(i)"
+          [attr.aria-label]="'Ver foto ' + (i + 1) + ' de ' + total()"
+          [attr.aria-current]="i === indice()"
+        >
+          <img [src]="foto" [alt]="alt() + ' — miniatura ' + (i + 1)" loading="lazy" />
+        </button>
+      }
+    </div>
+  }
+
+  <div class="gal__principal">
+    <div
+      class="gal__visor"
+      (mouseenter)="hoverZoom.set(true)"
+      (mouseleave)="hoverZoom.set(false)"
+      (mousemove)="moverZoom($event)"
+      (click)="abrirLightbox()"
+    >
+      <img
+        [src]="fotoActual()"
+        [alt]="alt()"
+        class="gal__img"
+        [class.gal__img--zoom]="hoverZoom()"
+        [style.transform-origin]="zoomPos().x + '% ' + zoomPos().y + '%'"
+      />
+      <span class="gal__lupa"><i class="bi bi-arrows-fullscreen"></i></span>
+    </div>
+
+    @if (total() > 1) {
+      <button
+        type="button"
+        class="gal__nav gal__nav--prev"
+        (click)="anterior(); $event.stopPropagation()"
+        aria-label="Foto anterior"
+      >
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button
+        type="button"
+        class="gal__nav gal__nav--next"
+        (click)="siguiente(); $event.stopPropagation()"
+        aria-label="Foto siguiente"
+      >
+        <i class="bi bi-chevron-right"></i>
+      </button>
+      <span class="gal__contador">{{ indice() + 1 }} / {{ total() }}</span>
+    }
+  </div>
+</div>
+
+@if (lightbox()) {
+  <div class="lb" (click)="cerrarLightbox()">
+    <button type="button" class="lb__cerrar" (click)="cerrarLightbox()" aria-label="Cerrar">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <div class="lb__escenario" (click)="$event.stopPropagation()">
+      <img
+        [src]="fotoActual()"
+        [alt]="alt()"
+        class="lb__img"
+        [class.lb__img--zoom]="zoomLightbox()"
+        [style.transform-origin]="zoomPos().x + '% ' + zoomPos().y + '%'"
+        (mousemove)="moverZoom($event)"
+        (click)="zoomLightbox.set(!zoomLightbox())"
+      />
+
+      @if (total() > 1) {
+        <button type="button" class="lb__nav lb__nav--prev" (click)="anterior()" aria-label="Foto anterior">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button type="button" class="lb__nav lb__nav--next" (click)="siguiente()" aria-label="Foto siguiente">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      }
+    </div>
+
+    @if (total() > 1) {
+      <div class="lb__tiras" (click)="$event.stopPropagation()">
+        @for (foto of fotos(); track foto; let i = $index) {
+          <button
+            type="button"
+            class="lb__tira"
+            [class.lb__tira--activa]="i === indice()"
+            (click)="seleccionar(i)"
+            aria-label="Ver foto {{ i + 1 }}"
+          >
+            <img [src]="foto" alt="" loading="lazy" />
+          </button>
+        }
+      </div>
+    }
+  </div>
+}

@@ -6,12 +6,11 @@
   } @else if (unidad()) {
     <div class="row g-4">
       <div class="col-12 col-lg-7">
-        @if (unidad()!.fotos.length > 0) {
-          <div class="galeria">
-            @for (foto of unidad()!.fotos; track foto.codFoto) {
-              <img [src]="urlFoto(foto.codFoto)" alt="Foto de {{ unidad()!.identificador }}" />
-            }
-          </div>
+        @if (fotosUrls().length > 0) {
+          <app-galeria-fotos
+            [fotos]="fotosUrls()"
+            [alt]="'Foto de ' + etiquetasTipo[unidad()!.tipo] + ' ' + unidad()!.identificador"
+          />
         } @else {
           <div class="sin-fotos">Sin fotos disponibles</div>
         }

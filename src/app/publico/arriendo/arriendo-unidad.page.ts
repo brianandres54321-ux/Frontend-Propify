@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { ArriendoUnidadPublico, TipoUnidad } from '@core/models';
@@ -6,6 +6,8 @@ import { ArriendosService } from '@core/services/arriendos.service';
 import { mensajeErrorApi, urlWhatsapp } from '@core/utils';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { LoadingComponent } from '@shared/components/loading/loading';
+
+import { GaleriaFotosComponent } from './components/galeria-fotos/galeria-fotos';
 
 const ETIQUETAS_TIPO: Record<TipoUnidad, string> = {
   [TipoUnidad.APARTAMENTO]: 'Apartamento',
@@ -24,7 +26,7 @@ function formatoMonto(valor: number): string {
 // estadoOcupacion = VACANTE — si no, el backend responde 404.
 @Component({
   selector: 'app-arriendo-unidad-page',
-  imports: [AlertComponent, LoadingComponent],
+  imports: [AlertComponent, LoadingComponent, GaleriaFotosComponent],
   templateUrl: './arriendo-unidad.page.html',
   styleUrl: './arriendo-unidad.page.scss',
 })
@@ -39,6 +41,14 @@ export class ArriendoUnidadPage implements OnInit {
   protected readonly etiquetasTipo = ETIQUETAS_TIPO;
   protected readonly formatoMonto = formatoMonto;
 
+  protected readonly fotosUrls = computed<string[]>(() => {
+    const u = this.unidad();
+    if (!u) {
+      return [];
+    }
+    return u.fotos.map((foto) => this.arriendosService.urlFoto(u.codUnidad, foto.codFoto));
+  });
+
   ngOnInit(): void {
     const unidadId = Number(this.route.snapshot.paramMap.get('unidadId'));
     this.arriendosService.consultarUnidad(unidadId).subscribe({
@@ -51,10 +61,6 @@ export class ArriendoUnidadPage implements OnInit {
         this.errorMensaje.set(mensajeErrorApi(error, 'Este anuncio no está disponible.'));
       },
     });
-  }
-
-  protected urlFoto(codFoto: number): string {
-    return this.arriendosService.urlFoto(this.unidad()!.codUnidad, codFoto);
   }
 
   protected urlWhatsapp(telefono: string): string {

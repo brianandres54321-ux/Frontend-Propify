@@ -1,0 +1,324 @@
+:host {
+  display: block;
+}
+
+.gal {
+  display: flex;
+  gap: var(--space-3);
+}
+
+// ----------------------------------------------------------
+// Rail de miniaturas (vertical en desktop, horizontal en móvil)
+// ----------------------------------------------------------
+.gal__rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  max-height: 30rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.gal__thumb {
+  width: 4.25rem;
+  height: 4.25rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-sunken);
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.6;
+  transition:
+    opacity var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &--activa {
+    opacity: 1;
+    border-color: var(--color-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+  }
+}
+
+// ----------------------------------------------------------
+// Imagen principal + zoom al pasar el mouse
+// ----------------------------------------------------------
+.gal__principal {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.gal__visor {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface-sunken);
+  cursor: zoom-in;
+}
+
+.gal__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--duration-base) var(--ease-out);
+
+  &--zoom {
+    transform: scale(2);
+    transition: none;
+  }
+}
+
+.gal__lupa {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--color-text);
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.gal__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.4rem;
+  height: 2.4rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-bg) 86%, transparent);
+  backdrop-filter: blur(4px);
+  color: var(--color-text);
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--duration-fast) ease;
+
+  &:hover {
+    background: var(--color-bg);
+  }
+
+  &--prev {
+    left: var(--space-3);
+  }
+  &--next {
+    right: var(--space-3);
+  }
+}
+
+.gal__contador {
+  position: absolute;
+  left: var(--space-3);
+  bottom: var(--space-3);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+  backdrop-filter: blur(4px);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+// En pantallas táctiles el zoom por hover no aplica.
+@media (hover: none) {
+  .gal__img--zoom {
+    transform: none;
+  }
+  .gal__visor {
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 600px) {
+  .gal {
+    flex-direction: column-reverse;
+  }
+  .gal__rail {
+    flex-direction: row;
+    max-height: none;
+    width: 100%;
+    padding-right: 0;
+    padding-bottom: 2px;
+  }
+}
+
+// ----------------------------------------------------------
+// Lightbox
+// ----------------------------------------------------------
+.lb {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-5);
+  background: rgb(0 0 0 / 88%);
+}
+
+.lb__cerrar {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+
+  &:hover {
+    background: rgb(255 255 255 / 24%);
+  }
+}
+
+.lb__escenario {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: min(1100px, 92vw);
+  max-height: 76vh;
+}
+
+.lb__img {
+  max-width: 100%;
+  max-height: 76vh;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  cursor: zoom-in;
+  transition: transform var(--duration-base) var(--ease-out);
+
+  &--zoom {
+    transform: scale(1.9);
+    cursor: zoom-out;
+    transition: none;
+  }
+}
+
+.lb__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.8rem;
+  height: 2.8rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 12%);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background var(--duration-fast) ease;
+
+  &:hover {
+    background: rgb(255 255 255 / 24%);
+  }
+
+  &--prev {
+    left: -3.6rem;
+  }
+  &--next {
+    right: -3.6rem;
+  }
+
+  @media (max-width: 780px) {
+    background: rgb(0 0 0 / 45%);
+
+    &--prev {
+      left: var(--space-2);
+    }
+    &--next {
+      right: var(--space-2);
+    }
+  }
+}
+
+.lb__tiras {
+  display: flex;
+  gap: var(--space-2);
+  max-width: 92vw;
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+  scrollbar-width: thin;
+}
+
+.lb__tira {
+  width: 3.5rem;
+  height: 3.5rem;
+  flex-shrink: 0;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  background: none;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.5;
+  transition:
+    opacity var(--duration-fast) ease,
+    border-color var(--duration-fast) ease;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &--activa {
+    opacity: 1;
+    border-color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gal__img,
+  .lb__img {
+    transition: none;
+  }
+}
