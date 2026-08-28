@@ -1,4 +1,4 @@
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -111,6 +111,19 @@ export class ArriendosPage implements OnInit {
     }
     return n;
   });
+
+  constructor() {
+    // El panel de filtros en móvil es un drawer a pantalla completa: bloquea
+    // el scroll del fondo mientras está abierto.
+    effect((onCleanup) => {
+      if (this.filtrosAbiertos()) {
+        document.body.style.overflow = 'hidden';
+        onCleanup(() => {
+          document.body.style.overflow = '';
+        });
+      }
+    });
+  }
 
   ngOnInit(): void {
     const qp = this.route.snapshot.queryParamMap;

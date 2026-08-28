@@ -1,29 +1,31 @@
 <section class="arriendos">
-  <header class="arriendos__intro">
-    <span class="eyebrow">Publicaciones activas</span>
-    <h1>Unidades en arriendo</h1>
-    <p>
-      Apartamentos, casas, locales y oficinas publicados por administradores que
-      usan Propify. Filtra por ciudad, barrio o departamento.
-    </p>
-  </header>
-
   <button
     type="button"
     class="filtros__toggle"
-    (click)="filtrosAbiertos.set(!filtrosAbiertos())"
-    [attr.aria-expanded]="filtrosAbiertos()"
+    (click)="filtrosAbiertos.set(true)"
+    aria-label="Abrir filtros"
   >
     <i class="bi bi-sliders"></i>
     Filtros
     @if (filtrosActivos() > 0) {
       <span class="filtros__toggle-badge">{{ filtrosActivos() }}</span>
     }
-    <i class="bi" [class.bi-chevron-down]="!filtrosAbiertos()" [class.bi-chevron-up]="filtrosAbiertos()"></i>
   </button>
 
   <div class="arriendos__layout">
     <aside class="filtros" [class.filtros--abierta]="filtrosAbiertos()">
+      <div class="filtros__cabecera">
+        <span class="filtros__titulo">Filtrar resultados</span>
+        <button
+          type="button"
+          class="filtros__cerrar"
+          (click)="filtrosAbiertos.set(false)"
+          aria-label="Cerrar filtros"
+        >
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
       <form [formGroup]="form">
         <div class="filtros__buscar">
           <i class="bi bi-search"></i>
@@ -35,7 +37,8 @@
           />
         </div>
 
-        <div class="filtros__campos">
+        <div class="filtros__grupo">
+          <span class="filtros__grupo-titulo">Ubicación</span>
           <label>
             <span>Ciudad</span>
             <input type="text" formControlName="ciudad" placeholder="Ej. Medellín" />
@@ -48,8 +51,12 @@
             <span>Departamento</span>
             <input type="text" formControlName="departamento" placeholder="Ej. Antioquia" />
           </label>
+        </div>
+
+        <div class="filtros__grupo">
+          <span class="filtros__grupo-titulo">Características</span>
           <label>
-            <span>Tipo</span>
+            <span>Tipo de unidad</span>
             <select formControlName="tipo">
               <option value="">Todos</option>
               @for (tipo of tiposUnidad; track tipo) {
@@ -70,16 +77,8 @@
           </div>
 
           <label>
-            <span>Cuartos (mín.)</span>
-            <input type="number" inputmode="numeric" min="1" step="1" formControlName="cuartos" placeholder="1" />
-          </label>
-          <label>
-            <span>Ordenar por</span>
-            <select formControlName="orden">
-              <option value="recientes">Más recientes</option>
-              <option value="precio-asc">Precio: menor a mayor</option>
-              <option value="precio-desc">Precio: mayor a menor</option>
-            </select>
+            <span>Cuartos (mínimo)</span>
+            <input type="number" inputmode="numeric" min="1" step="1" formControlName="cuartos" placeholder="Cualquiera" />
           </label>
 
           <label class="filtros__check">
@@ -88,13 +87,43 @@
           </label>
         </div>
 
+        <div class="filtros__grupo">
+          <span class="filtros__grupo-titulo">Orden</span>
+          <label>
+            <span>Ordenar por</span>
+            <select formControlName="orden">
+              <option value="recientes">Más recientes</option>
+              <option value="precio-asc">Precio: menor a mayor</option>
+              <option value="precio-desc">Precio: mayor a menor</option>
+            </select>
+          </label>
+        </div>
+      </form>
+
+      <div class="filtros__pie">
         <button type="button" class="filtros__limpiar" (click)="limpiarFiltros()">
           <i class="bi bi-arrow-counterclockwise"></i> Limpiar filtros
         </button>
-      </form>
+        <button type="button" class="filtros__aplicar" (click)="filtrosAbiertos.set(false)">
+          Ver {{ total() }} {{ total() === 1 ? 'resultado' : 'resultados' }}
+        </button>
+      </div>
     </aside>
 
-    <div class="arriendos__resultados">
+    @if (filtrosAbiertos()) {
+      <div class="filtros__velo" (click)="filtrosAbiertos.set(false)"></div>
+    }
+
+    <div class="arriendos__contenido">
+      <header class="arriendos__intro">
+        <span class="eyebrow">Publicaciones activas</span>
+        <h1>Unidades en arriendo</h1>
+        <p>
+          Apartamentos, casas, locales y oficinas publicados por administradores
+          que usan Propify.
+        </p>
+      </header>
+
       @if (errorMensaje()) {
         <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
       }
