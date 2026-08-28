@@ -1,9 +1,13 @@
 <nav aria-label="breadcrumb" class="mb-2">
   <ol class="breadcrumb small">
     <li class="breadcrumb-item"><a routerLink="/app/inmuebles">Inmuebles</a></li>
-    <li class="breadcrumb-item"><a [routerLink]="['/app/inmuebles', inmuebleId, 'unidades']">Unidades</a></li>
     <li class="breadcrumb-item">
-      <a [routerLink]="['/app/inmuebles', inmuebleId, 'unidades', unidadId, 'residentes']">Inquilinos</a>
+      <a [routerLink]="['/app/inmuebles', inmuebleId, 'unidades']">Unidades</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a [routerLink]="['/app/inmuebles', inmuebleId, 'unidades', unidadId, 'residentes']"
+        >Inquilinos</a
+      >
     </li>
     <li class="breadcrumb-item active">{{ residente()?.nombre ?? 'Detalle' }}</li>
   </ol>
@@ -18,7 +22,9 @@
 } @else {
   <div class="d-flex align-items-center gap-2 mb-4 flex-wrap">
     <h1 class="h3 mb-0">{{ residente()!.nombre }}</h1>
-    <span class="badge rounded-pill badge-soft-{{ residente()!.esPropietario ? 'success' : 'info' }}">
+    <span
+      class="badge rounded-pill badge-soft-{{ residente()!.esPropietario ? 'success' : 'info' }}"
+    >
       {{ residente()!.esPropietario ? 'Propietario' : 'Arrendatario' }}
     </span>
     <span class="badge rounded-pill badge-soft-{{ residente()!.activo ? 'success' : 'danger' }}">
@@ -59,7 +65,11 @@
             <dd>
               {{ residente()!.fechaFin | date: 'dd/MM/yyyy' }}
               @if (diasRestantesContrato() !== null) {
-                <span class="badge rounded-pill badge-soft-{{ diasRestantesContrato()! <= 7 ? 'danger' : 'info' }} ms-1">
+                <span
+                  class="badge rounded-pill badge-soft-{{
+                    diasRestantesContrato()! <= 7 ? 'danger' : 'info'
+                  }} ms-1"
+                >
                   {{ diasRestantesContrato() }} día(s)
                 </span>
               }
@@ -73,23 +83,47 @@
       @if (residente()!.archivoContrato) {
         <p class="text-muted small">Ya hay un contrato cargado para este inquilino.</p>
         <div class="d-flex gap-2 flex-wrap">
-          <app-button variant="secondary" icono="file-earmark-text" [fullWidth]="false" (click)="descargarContrato()">
+          <app-button
+            variant="secondary"
+            icono="file-earmark-text"
+            [fullWidth]="false"
+            (click)="descargarContrato()"
+          >
             Ver contrato
           </app-button>
-          <input type="file" accept=".pdf,.doc,.docx" hidden #inputContrato (change)="subirContrato(inputContrato)" />
-          <app-button variant="secondary" icono="cloud-upload" [fullWidth]="false" (click)="inputContrato.click()">
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            hidden
+            #inputContrato
+            (change)="subirContrato(inputContrato)"
+          />
+          <app-button
+            variant="secondary"
+            icono="cloud-upload"
+            [fullWidth]="false"
+            (click)="inputContrato.click()"
+          >
             Reemplazar contrato
           </app-button>
         </div>
       } @else {
         <p class="text-muted small">Todavía no se ha subido el contrato de este inquilino.</p>
-        <input type="file" accept=".pdf,.doc,.docx" hidden #inputContratoNuevo (change)="subirContrato(inputContratoNuevo)" />
-        <app-button icono="cloud-upload" [fullWidth]="false" (click)="inputContratoNuevo.click()">Subir contrato</app-button>
+        <input
+          type="file"
+          accept=".pdf,.doc,.docx"
+          hidden
+          #inputContratoNuevo
+          (change)="subirContrato(inputContratoNuevo)"
+        />
+        <app-button icono="cloud-upload" [fullWidth]="false" (click)="inputContratoNuevo.click()"
+          >Subir contrato</app-button
+        >
       }
     </app-card>
   </div>
 
-  <app-card titulo="Historial de cuentas" icono="receipt">
+  <app-card titulo="Historial de cuentas" icono="receipt" [autoAltura]="true">
     @if (cargando()) {
       <app-loading />
     } @else {
@@ -100,7 +134,13 @@
       >
         <ng-template let-fila>
           <div class="d-flex justify-content-end">
-            <app-button variant="icon" color="info" icono="eye" title="Ver detalle" (click)="verDetalleCuenta(fila)" />
+            <app-button
+              variant="icon"
+              color="info"
+              icono="eye"
+              title="Ver detalle"
+              (click)="verDetalleCuenta(fila)"
+            />
           </div>
         </ng-template>
       </app-table>
