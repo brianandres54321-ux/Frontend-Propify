@@ -1,0 +1,135 @@
+// ============================================================
+// PROPIFY · UTILIDADES GLOBALES
+// ============================================================
+// Clases que varios componentes comparten y que el encapsulamiento
+// de estilos de Angular no dejaría alcanzar entre componentes.
+
+// ------------------------------------------------------------
+// Badges "soft": fondo pastel + texto de color, para estados sin
+// el contraste duro de los badges sólidos de Bootstrap.
+// ------------------------------------------------------------
+@each $nombre, $color, $fondo
+  in (
+    (primary, var(--color-primary), var(--color-primary-bg)),
+    (success, var(--color-success), var(--color-success-bg)),
+    (warning, var(--color-warning), var(--color-warning-bg)),
+    (danger, var(--color-danger), var(--color-danger-bg)),
+    (info, var(--color-info), var(--color-info-bg))
+  )
+{
+  .badge-soft-#{$nombre} {
+    background: $fondo;
+    color: $color;
+    font-weight: var(--weight-semibold);
+  }
+}
+
+.badge-soft-neutral {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+}
+
+// ------------------------------------------------------------
+// Botón/enlace redondo de solo ícono — usado por <app-button>
+// (variant="icon") y por anclas sueltas que necesitan el mismo look.
+// ------------------------------------------------------------
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-h-md);
+  height: var(--control-h-md);
+  border-radius: 50%;
+  border: none;
+  padding: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: filter var(--duration-fast) ease;
+
+  &:hover {
+    filter: brightness(0.94);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+}
+
+@each $nombre in (primary, warning, danger, success, info) {
+  .btn-icon--#{$nombre} {
+    background: var(--color-#{$nombre}-bg);
+    color: var(--color-#{$nombre});
+  }
+}
+
+// ------------------------------------------------------------
+// Campo de contraseña con botón mostrar/ocultar (ojo).
+// ------------------------------------------------------------
+.password-input {
+  position: relative;
+}
+
+.password-input .form-control {
+  padding-right: 2.5rem;
+}
+
+.password-input__toggle {
+  position: absolute;
+  inset: 0 0 0 auto;
+  width: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text);
+  }
+}
+
+// ------------------------------------------------------------
+// Feedback táctil en enlaces de login/registro.
+// ------------------------------------------------------------
+.auth-card a {
+  transition: opacity var(--duration-fast) ease;
+}
+
+.auth-card a:active {
+  opacity: 0.6;
+}
+
+// ------------------------------------------------------------
+// Helpers de layout — repartir con gap, no con márgenes.
+// ------------------------------------------------------------
+.u-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.u-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.u-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+// Contenedor con scroll horizontal propio (tablas, código) — el body
+// de la página nunca debe scrollear en horizontal.
+.u-scroll-x {
+  overflow-x: auto;
+}

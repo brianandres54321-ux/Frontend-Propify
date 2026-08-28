@@ -9,17 +9,15 @@ button {
   gap: var(--space-2);
 }
 
-// El radio de píldora ya es global (ver .btn en styles.scss) — esto solo
-// agrega el padding extra que queremos específicamente en app-button.
+// El radio (radius-md) y el peso ya son globales (ver _bootstrap-overrides).
+// Aquí solo el padding horizontal algo mayor propio de <app-button>.
 button.btn-primary,
 button.btn-outline-secondary {
-  padding-inline: 1.25rem;
+  padding-inline: var(--space-5);
 }
 
-// .btn-icon / .btn-icon--{color} viven en styles.scss (utilidad global) —
-// así los puede usar cualquier elemento (ej. un <a> suelto en otra página
-// para un enlace externo), no solo el <button> que renderiza este
-// componente. Aquí solo el estado :disabled, propio de <button>.
+// .btn-icon / .btn-icon--{color} viven en _utilities.scss (utilidad global)
+// para que cualquier elemento pueda usarlas. Aquí solo el estado :disabled.
 button.btn-icon:disabled {
   opacity: 0.5;
   cursor: not-allowed;

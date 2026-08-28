@@ -21,7 +21,7 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 16 / 9;
-  background: var(--color-bg);
+  background: var(--color-surface-sunken);
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
 }
@@ -31,14 +31,14 @@
   background: var(--color-success);
   color: white;
   padding: 0.25rem 0.75rem;
-  border-radius: var(--radius-sm);
-  font-size: 0.85rem;
-  font-weight: 600;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
 }
 
 .precio {
-  font-size: 1.75rem;
-  font-weight: 700;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
   margin: var(--space-3) 0;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .lista-caracteristicas li {
-  background: var(--color-bg);
+  background: var(--color-surface-sunken);
   padding: 0.25rem 0.75rem;
   border-radius: var(--radius-sm);
 }
@@ -62,11 +62,16 @@
   align-items: center;
   justify-content: center;
   margin-top: var(--space-4);
-  background: #25d366;
+  background: var(--color-whatsapp);
   color: white;
   text-decoration: none;
   padding: 0.75rem 1.5rem;
   border-radius: var(--radius-sm);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   width: 100%;
+
+  &:hover {
+    background: var(--color-whatsapp-hover);
+    color: #fff;
+  }
 }

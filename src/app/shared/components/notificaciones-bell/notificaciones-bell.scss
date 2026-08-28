@@ -7,17 +7,23 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--control-h-md);
+  height: var(--control-h-md);
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-text);
   font-size: 1.2rem;
   cursor: pointer;
+  transition: background-color var(--duration-fast) ease;
 
   &:hover {
-    background: var(--color-bg);
+    background: var(--color-surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
 }
 
@@ -28,13 +34,14 @@
   min-width: 1.05rem;
   height: 1.05rem;
   padding: 0 0.25rem;
-  border-radius: 50rem;
+  border-radius: var(--radius-pill);
   background: var(--color-danger);
-  color: white;
-  font-size: 0.65rem;
-  font-weight: 700;
+  color: #fff;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
   line-height: 1.05rem;
   text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 .bell__panel {
@@ -45,12 +52,13 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
   overflow: hidden;
+  background: var(--color-surface);
 }
 
 .bell__encabezado {
   padding: var(--space-3) var(--space-4);
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
   border-bottom: 1px solid var(--color-border);
 }
 
@@ -60,7 +68,7 @@
   gap: var(--space-2);
   padding: var(--space-4);
   color: var(--color-text-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
 }
 
 .bell__vacio .bi {
@@ -83,32 +91,30 @@
   color: var(--color-text);
   text-decoration: none;
   cursor: default;
-
-  &:hover {
-    background: none;
-  }
 }
 
 a.bell__item {
   cursor: pointer;
 
   &:hover {
-    background: var(--color-bg);
+    background: var(--color-surface-sunken);
   }
 }
 
+// El color de fondo/texto lo aporta la clase badge-soft-{color} del HTML,
+// según el tipo de alerta.
 .bell__icono {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   font-size: 0.85rem;
   flex-shrink: 0;
 }
 
 .bell__texto {
-  font-size: 0.85rem;
-  line-height: 1.3;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
 }

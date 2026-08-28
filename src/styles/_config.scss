@@ -1,0 +1,70 @@
+// ============================================================
+// PROPIFY · CONFIG  (compile-time)
+// ============================================================
+// Única capa que conoce Sass/Bootstrap. La fuente de verdad del
+// runtime son las custom properties de _tokens.scss — estos $vars
+// existen solo para lo que Bootstrap necesita resolver en compilación
+// (mapas de color, border-radius, tipografía).
+//
+// "Modern Natural SaaS": verde pino profundo sobre papel beige.
+
+$brand-900: #24413a;
+$brand-800: #2c4f45; // primary-hover
+$brand-700: #355e52; // primary
+$brand-100: #dce7e1; // primary-soft
+
+$sand-bg:      #f6f3ec; // lienzo de la app
+$sand-surface: #ffffff; // contenido (cards, inputs)
+$sand-border:  #e5e1d8;
+
+$ink:       #252525;
+$ink-muted: #6a6960;
+
+$state-success: #4f8a5b;
+$state-warning: #b5843f;
+$state-danger:  #bc564e;
+$state-info:    #5c7086;
+
+$font-sans:
+  'Plus Jakarta Sans',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  Helvetica,
+  Arial,
+  sans-serif;
+
+// ------------------------------------------------------------
+// Breakpoints — alineados con Bootstrap 5. Disponibles para media
+// queries en cualquier .scss de componente (las media queries no
+// aceptan custom properties CSS).
+// ------------------------------------------------------------
+$bp-sm: 576px;
+$bp-md: 768px;
+$bp-lg: 992px;
+$bp-xl: 1200px;
+$bp-xxl: 1400px;
+
+// ------------------------------------------------------------
+// Bootstrap 5.3.8 — API moderna de Sass.
+// ------------------------------------------------------------
+@use 'bootstrap/scss/bootstrap' with (
+  $primary: $brand-700,
+  $secondary: $ink-muted,
+  $success: $state-success,
+  $warning: $state-warning,
+  $danger: $state-danger,
+  $info: $state-info,
+  $body-bg: $sand-bg,
+  $body-color: $ink,
+  $border-color: $sand-border,
+  $border-radius: 0.5rem,
+  $border-radius-sm: 0.375rem,
+  $border-radius-lg: 0.75rem,
+  $font-family-sans-serif: $font-sans,
+  $link-color: $brand-700,
+  $link-hover-color: $brand-800
+);
+
+@use 'bootstrap-icons/font/bootstrap-icons' as bi;

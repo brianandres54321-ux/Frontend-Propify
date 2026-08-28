@@ -3,18 +3,10 @@ $ancho-colapsado: 72px;
 $punto-quiebre-movil: 992px;
 
 // ----------------------------------------------------------
-// Paleta oscura, solo para el sidebar — le da al chrome persistente
-// de la app más presencia frente al resto de la interfaz. A propósito
-// NO seguimos el toggle claro/oscuro aquí (patrón "chrome siempre
-// oscuro" tipo GitHub/Linear) — no toca los tokens globales --color-*.
+// El sidebar es "chrome" verde pino permanente: NO sigue el toggle
+// claro/oscuro (patrón GitHub/Linear). Sus colores viven en los tokens
+// --sidebar-* de _tokens.scss, no en los --color-* globales.
 // ----------------------------------------------------------
-$sidebar-bg: #11182a;
-$sidebar-bg-elevado: #1a2440;
-$sidebar-border: rgb(255 255 255 / 8%);
-$sidebar-text: #e6e9f2;
-$sidebar-text-muted: #8891a8;
-$sidebar-accent: #a78bfa;
-$sidebar-accent-bg: rgb(167 139 250 / 16%);
 
 .sidebar {
   display: flex;
@@ -23,15 +15,15 @@ $sidebar-accent-bg: rgb(167 139 250 / 16%);
   width: $ancho-expandido;
   flex-shrink: 0;
   padding: var(--space-5) var(--space-4);
-  background: $sidebar-bg;
-  border-right: 1px solid $sidebar-border;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
   height: 100dvh;
   position: sticky;
   top: 0;
   overflow-x: hidden;
   overflow-y: auto;
-  transition: width 0.2s ease;
-  z-index: 1030;
+  transition: width var(--duration-base) var(--ease-out);
+  z-index: var(--z-fixed);
 }
 
 .sidebar--colapsado {
@@ -43,15 +35,16 @@ $sidebar-accent-bg: rgb(167 139 250 / 16%);
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-weight: 700;
-  font-size: 1.15rem;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
+  letter-spacing: var(--tracking-tight);
   text-decoration: none;
-  color: $sidebar-text;
+  color: var(--sidebar-text);
   white-space: nowrap;
 }
 
 .sidebar__marca-icono {
-  color: $sidebar-accent;
+  color: var(--sidebar-accent);
   font-size: 1.35rem;
   flex-shrink: 0;
 }
@@ -64,11 +57,11 @@ $sidebar-accent-bg: rgb(167 139 250 / 16%);
 
 .sidebar__seccion {
   padding-inline: var(--space-3);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-size: var(--text-2xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: $sidebar-text-muted;
+  color: var(--sidebar-text-muted);
 }
 
 nav {
@@ -81,14 +74,17 @@ nav {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: 0.6rem var(--space-3);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm);
   border-left: 3px solid transparent;
   text-decoration: none;
-  color: $sidebar-text;
-  font-size: 0.9rem;
-  font-weight: 500;
+  color: var(--sidebar-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
   white-space: nowrap;
+  transition:
+    background-color var(--duration-fast) ease,
+    color var(--duration-fast) ease;
 }
 
 .sidebar__item-icono {
@@ -99,18 +95,23 @@ nav {
 }
 
 a.sidebar__item:hover {
-  background: $sidebar-bg-elevado;
+  background: var(--sidebar-bg-elevado);
+}
+
+a.sidebar__item:focus-visible {
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--sidebar-accent);
 }
 
 a.sidebar__item.activo {
-  background: $sidebar-accent-bg;
-  border-left-color: $sidebar-accent;
-  color: $sidebar-accent;
-  font-weight: 700;
+  background: var(--sidebar-accent-bg);
+  border-left-color: var(--sidebar-accent);
+  color: var(--sidebar-accent);
+  font-weight: var(--weight-bold);
 }
 
 .sidebar__item--pendiente {
-  color: $sidebar-text-muted;
+  color: var(--sidebar-text-muted);
   cursor: default;
 }
 
@@ -137,9 +138,7 @@ a.sidebar__item.activo {
 }
 
 // ----------------------------------------------------------
-// Móvil: el sidebar se convierte en un panel off-canvas fijo,
-// oculto por defecto e independiente del estado "colapsado"
-// (ese solo aplica al modo icon-rail de escritorio).
+// Móvil: panel off-canvas fijo, oculto por defecto.
 // ----------------------------------------------------------
 @media (max-width: #{$punto-quiebre-movil - 1px}) {
   .sidebar {
@@ -147,8 +146,8 @@ a.sidebar__item.activo {
     left: 0;
     width: $ancho-expandido;
     transform: translateX(-100%);
-    box-shadow: var(--shadow-md);
-    transition: transform 0.25s ease;
+    box-shadow: var(--shadow-lg);
+    transition: transform var(--duration-slow) var(--ease-out);
   }
 
   .sidebar--colapsado {
@@ -176,7 +175,7 @@ a.sidebar__item.activo {
     display: block;
     position: fixed;
     inset: 0;
-    background: rgb(0 0 0 / 40%);
-    z-index: 1020;
+    background: var(--color-overlay);
+    z-index: var(--z-sticky);
   }
 }

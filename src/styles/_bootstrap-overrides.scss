@@ -1,0 +1,380 @@
+// ============================================================
+// PROPIFY · AJUSTES SOBRE BOOTSTRAP
+// ============================================================
+// Se conecta Bootstrap 5.3 a los tokens de Propify. Estrategia:
+//   1. remapear las variables --bs-* a nuestros --color-*/--radius-*
+//      (así ambos temas siguen a los tokens, que ya conmutan solos)
+//   2. reglas puntuales para forma, foco y densidad
+//
+// El selector triple (:root, [data-bs-theme='light'/'dark']) iguala la
+// especificidad del bloque oscuro de Bootstrap y, al cargarse después,
+// gana la cascada en los dos temas.
+
+:root,
+[data-bs-theme='light'],
+[data-bs-theme='dark'] {
+  --bs-body-bg: var(--color-bg);
+  --bs-body-color: var(--color-text);
+  --bs-emphasis-color: var(--color-text);
+  --bs-secondary-color: var(--color-text-muted);
+  --bs-tertiary-color: var(--color-text-subtle);
+  --bs-border-color: var(--color-border);
+  --bs-secondary-bg: var(--color-surface-sunken);
+  --bs-tertiary-bg: var(--color-surface-alt);
+  --bs-heading-color: var(--color-text);
+
+  --bs-link-color: var(--color-primary);
+  --bs-link-hover-color: var(--color-primary-hover);
+  --bs-link-color-rgb: 53, 94, 82;
+
+  --bs-border-radius: var(--radius-md);
+  --bs-border-radius-sm: var(--radius-sm);
+  --bs-border-radius-lg: var(--radius-lg);
+  --bs-border-radius-xl: var(--radius-xl);
+  --bs-border-radius-pill: var(--radius-pill);
+
+  --bs-focus-ring-color: rgb(53 94 82 / 24%);
+  --bs-focus-ring-width: 3px;
+}
+
+// ------------------------------------------------------------
+// Botones — se retira la píldora global; ahora radius-md, look SaaS.
+// La píldora queda para badges, chips y toggles.
+// ------------------------------------------------------------
+.btn:not(.btn-link):not(.btn-icon) {
+  border-radius: var(--radius-md);
+  font-weight: var(--weight-semibold);
+  padding-inline: var(--space-4);
+}
+
+.btn:focus-visible {
+  box-shadow: var(--focus-ring);
+}
+
+// "secondary" de <app-button> = .btn-outline-secondary. Hover a verde,
+// no al gris de relleno por defecto de Bootstrap.
+.btn-outline-secondary {
+  --bs-btn-color: var(--color-text);
+  --bs-btn-border-color: var(--color-border-strong);
+  --bs-btn-hover-color: var(--color-primary);
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-hover-border-color: var(--color-primary);
+  --bs-btn-active-color: var(--color-primary);
+  --bs-btn-active-bg: var(--color-primary-bg);
+  --bs-btn-active-border-color: var(--color-primary);
+}
+
+// ------------------------------------------------------------
+// Cards — planas: solo borde, sin sombra. La sombra se reserva para
+// capas flotantes (dropdown, modal, toast).
+// ------------------------------------------------------------
+.card {
+  box-shadow: none;
+  --bs-card-bg: var(--color-surface);
+  --bs-card-border-color: var(--color-border);
+  --bs-card-border-radius: var(--radius-lg);
+  --bs-card-cap-bg: var(--color-surface);
+  --bs-card-cap-color: var(--color-text);
+  --bs-card-color: var(--color-text);
+}
+
+// ------------------------------------------------------------
+// Tablas — thead hundido, hover suave, filas cómodas.
+// ------------------------------------------------------------
+.table {
+  --bs-table-bg: var(--color-surface);
+  --bs-table-color: var(--color-text);
+  --bs-table-border-color: var(--color-border);
+  --bs-table-hover-bg: var(--color-primary-bg);
+  --bs-table-hover-color: var(--color-text);
+  margin-bottom: 0;
+}
+
+.table > thead th {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  border-bottom: 1px solid var(--color-border-strong);
+  padding-block: var(--space-3);
+  white-space: nowrap;
+}
+
+.table > tbody td {
+  padding-block: var(--space-3);
+  vertical-align: middle;
+}
+
+.table > :not(caption) > * > * {
+  border-bottom-color: var(--color-border);
+}
+
+// ------------------------------------------------------------
+// Formularios
+// ------------------------------------------------------------
+.form-control,
+.form-select {
+  background-color: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  min-height: var(--control-h-md);
+  font-size: var(--text-base);
+}
+
+.form-control::placeholder {
+  color: var(--color-text-subtle);
+  opacity: 1;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+  color: var(--color-text);
+}
+
+.form-control:disabled,
+.form-select:disabled {
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-subtle);
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid,
+.form-select.is-invalid {
+  border-color: var(--color-danger);
+}
+
+.form-control.is-invalid:focus,
+.form-select.is-invalid:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger) 22%, transparent);
+}
+
+.form-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+.form-text {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+}
+
+.invalid-feedback {
+  color: var(--color-danger-text);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+// Checkbox / radio / switch — el color "checked" ya es verde vía
+// $primary (compile-time); aquí solo borde y foco.
+.form-check-input {
+  border-color: var(--color-border-strong);
+}
+
+.form-check-input:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.form-check-label {
+  font-size: var(--text-base);
+}
+
+.form-switch .form-check-input {
+  width: 2.25rem;
+  height: 1.25rem;
+}
+
+// ------------------------------------------------------------
+// Modales (ng-bootstrap)
+// ------------------------------------------------------------
+.modal-content {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header,
+.modal-footer {
+  border-color: var(--color-border);
+  padding: var(--space-4) var(--space-5);
+}
+
+.modal-body {
+  padding: var(--space-5);
+}
+
+.modal-title {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+}
+
+.modal-backdrop {
+  --bs-backdrop-bg: #252525;
+  --bs-backdrop-opacity: 0.45;
+}
+
+// ------------------------------------------------------------
+// Dropdowns / menús (ng-bootstrap)
+// ------------------------------------------------------------
+.dropdown-menu {
+  --bs-dropdown-bg: var(--color-surface);
+  --bs-dropdown-border-color: var(--color-border);
+  --bs-dropdown-border-radius: var(--radius-md);
+  --bs-dropdown-link-color: var(--color-text);
+  --bs-dropdown-link-hover-bg: var(--color-surface-sunken);
+  --bs-dropdown-link-hover-color: var(--color-text);
+  --bs-dropdown-link-active-bg: var(--color-primary-bg);
+  --bs-dropdown-link-active-color: var(--color-primary);
+  --bs-dropdown-padding-y: var(--space-1);
+  box-shadow: var(--shadow-md);
+}
+
+.dropdown-item {
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.dropdown-divider {
+  border-top-color: var(--color-border);
+}
+
+// ------------------------------------------------------------
+// Breadcrumbs
+// ------------------------------------------------------------
+.breadcrumb {
+  --bs-breadcrumb-divider-color: var(--color-text-subtle);
+  --bs-breadcrumb-item-active-color: var(--color-text);
+  font-size: var(--text-sm);
+  margin-bottom: 0;
+}
+
+.breadcrumb-item,
+.breadcrumb-item a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--color-primary);
+}
+
+.breadcrumb-item.active {
+  font-weight: var(--weight-semibold);
+}
+
+// ------------------------------------------------------------
+// Paginación
+// ------------------------------------------------------------
+.pagination {
+  --bs-pagination-color: var(--color-text);
+  --bs-pagination-bg: var(--color-surface);
+  --bs-pagination-border-color: var(--color-border-strong);
+  --bs-pagination-border-radius: var(--radius-sm);
+  --bs-pagination-hover-bg: var(--color-surface-sunken);
+  --bs-pagination-hover-color: var(--color-text);
+  --bs-pagination-hover-border-color: var(--color-border-strong);
+  --bs-pagination-focus-box-shadow: var(--focus-ring);
+  --bs-pagination-focus-bg: var(--color-surface-sunken);
+  --bs-pagination-active-bg: var(--color-primary);
+  --bs-pagination-active-border-color: var(--color-primary);
+  --bs-pagination-active-color: var(--color-on-primary);
+  --bs-pagination-disabled-color: var(--color-text-subtle);
+  --bs-pagination-disabled-bg: var(--color-surface);
+}
+
+.page-link {
+  font-size: var(--text-sm);
+}
+
+// ------------------------------------------------------------
+// Nav (pills / tabs) — la navegación de primer nivel vive en el
+// sidebar; esto es para secciones de un mismo registro.
+// ------------------------------------------------------------
+.nav-pills {
+  --bs-nav-pills-link-active-bg: var(--color-primary);
+  --bs-nav-pills-link-active-color: var(--color-on-primary);
+  --bs-nav-pills-border-radius: var(--radius-sm);
+}
+
+.nav-link {
+  --bs-nav-link-color: var(--color-text-muted);
+  --bs-nav-link-hover-color: var(--color-text);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+}
+
+.nav-tabs {
+  --bs-nav-tabs-border-color: var(--color-border);
+  --bs-nav-tabs-link-active-color: var(--color-primary);
+  --bs-nav-tabs-link-active-border-color: transparent transparent var(--color-primary);
+  --bs-nav-tabs-link-hover-border-color: transparent;
+}
+
+// ------------------------------------------------------------
+// List group
+// ------------------------------------------------------------
+.list-group {
+  --bs-list-group-bg: var(--color-surface);
+  --bs-list-group-color: var(--color-text);
+  --bs-list-group-border-color: var(--color-border);
+  --bs-list-group-border-radius: var(--radius-md);
+  --bs-list-group-action-hover-bg: var(--color-surface-sunken);
+  --bs-list-group-action-hover-color: var(--color-text);
+  --bs-list-group-active-bg: var(--color-primary);
+  --bs-list-group-active-border-color: var(--color-primary);
+}
+
+// ------------------------------------------------------------
+// Alerts nativos de Bootstrap → estilo "soft".
+// (<app-alert> tiene su propio componente; esto cubre .alert-* sueltos.)
+// ------------------------------------------------------------
+.alert {
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  border-width: 1px;
+}
+
+@each $nombre in (success, warning, danger, info) {
+  .alert-#{$nombre} {
+    --bs-alert-bg: var(--color-#{$nombre}-bg);
+    --bs-alert-color: var(--color-#{$nombre}-text);
+    --bs-alert-border-color: color-mix(in srgb, var(--color-#{$nombre}) 28%, transparent);
+    --bs-alert-link-color: var(--color-#{$nombre}-text);
+  }
+}
+
+// ------------------------------------------------------------
+// Varios
+// ------------------------------------------------------------
+.spinner-border,
+.spinner-grow {
+  color: var(--color-primary);
+}
+
+.badge {
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-xs);
+  padding: 0.32em 0.68em;
+  border-radius: var(--radius-pill);
+}
+
+.form-control-color {
+  min-height: var(--control-h-md);
+  border-radius: var(--radius-sm);
+}

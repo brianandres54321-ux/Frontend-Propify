@@ -1,11 +1,7 @@
-h1 {
-  font-size: 1.5rem;
-}
-
 .pendientes {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: var(--space-4);
 }
 
@@ -33,13 +29,14 @@ h1 {
 }
 
 .boton-whatsapp-pendiente {
-  background: #25d366;
-  color: white;
+  background: var(--color-whatsapp);
+  color: #fff;
   text-decoration: none;
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   flex-shrink: 0;
 
   &:hover {
-    color: white;
+    background: var(--color-whatsapp-hover);
+    color: #fff;
   }
 }

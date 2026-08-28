@@ -9,10 +9,8 @@
 
 .card {
   height: 100%;
-  // El default queda plano (sin acento de color) para el look minimalista;
-  // solo las variantes semánticas (warning/danger/...) usan un borde de
-  // 3px para llamar la atención sobre alertas o estados.
-  border-top: 1px solid var(--color-border);
+  // Default plana: solo el borde de Bootstrap. Las variantes semánticas
+  // añaden un acento superior de 2px para señalar alertas o estados.
 }
 
 .card--auto {
@@ -24,7 +22,8 @@
   align-items: center;
   gap: var(--space-3);
   background: var(--color-surface);
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
 }
 
 .card-header__titulo {
@@ -40,42 +39,17 @@
   border-radius: var(--radius-sm);
   font-size: 1.05rem;
   flex-shrink: 0;
-  background: var(--color-bg);
+  background: var(--color-surface-sunken);
   color: var(--color-text-muted);
 }
 
-.card--primary {
-  border-top-color: var(--color-primary);
+@each $nombre in (primary, warning, danger, success) {
+  .card--#{$nombre} {
+    border-top: 2px solid var(--color-#{$nombre});
 
-  .card__icono {
-    background: var(--color-primary-bg);
-    color: var(--color-primary);
-  }
-}
-
-.card--warning {
-  border-top-color: var(--color-warning);
-
-  .card__icono {
-    background: var(--color-warning-bg);
-    color: var(--color-warning);
-  }
-}
-
-.card--danger {
-  border-top-color: var(--color-danger);
-
-  .card__icono {
-    background: var(--color-danger-bg);
-    color: var(--color-danger);
-  }
-}
-
-.card--success {
-  border-top-color: var(--color-success);
-
-  .card__icono {
-    background: var(--color-success-bg);
-    color: var(--color-success);
+    .card__icono {
+      background: var(--color-#{$nombre}-bg);
+      color: var(--color-#{$nombre});
+    }
   }
 }

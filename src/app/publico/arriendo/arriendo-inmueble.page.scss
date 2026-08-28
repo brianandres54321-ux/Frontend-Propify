@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -22,7 +22,7 @@
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    background: var(--color-bg);
+    background: var(--color-surface-sunken);
   }
 
   .tarjeta-body {
@@ -34,17 +34,22 @@
 
   .precio {
     color: var(--color-success);
-    font-weight: 600;
+    font-weight: var(--weight-semibold);
   }
 }
 
 .tarjeta-whatsapp {
   display: block;
   text-align: center;
-  background: #25d366;
+  background: var(--color-whatsapp);
   color: white;
   text-decoration: none;
   padding: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+
+  &:hover {
+    background: var(--color-whatsapp-hover);
+    color: #fff;
+  }
 }

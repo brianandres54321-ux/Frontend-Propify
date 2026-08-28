@@ -1,0 +1,264 @@
+// ============================================================
+// PROPIFY · DESIGN TOKENS  (runtime — única fuente de verdad)
+// ============================================================
+// Los componentes SIEMPRE consumen var(--token). Nunca un hex o px
+// suelto. El modo oscuro (más abajo) solo redefine estos mismos
+// nombres; ningún componente necesita saber qué tema está activo.
+//
+// Nombres heredados que NO cambian (para no romper componentes
+// existentes): --color-text-muted, --color-primary-bg,
+// --color-{estado}-bg, --space-1..8, --radius-{sm,md,lg},
+// --shadow-{sm,md}, --nav-height.
+
+:root {
+  color-scheme: light;
+
+  // ----------------------------------------------------------
+  // Marca — pino / eucalipto, profundo y desaturado
+  // ----------------------------------------------------------
+  --color-primary: #355e52;
+  --color-primary-hover: #2c4f45;
+  --color-primary-active: #24413a;
+  --color-primary-bg: #dce7e1; // "soft" — fondo de badge/hover de fila
+  --color-primary-soft: var(--color-primary-bg); // alias nuevo
+  --color-on-primary: #ffffff;
+  --color-secondary: #74736c;
+
+  // ----------------------------------------------------------
+  // Fondo y superficies — beige = lienzo, blanco = contenido
+  // ----------------------------------------------------------
+  --color-bg: #f6f3ec;
+  --color-surface: #ffffff;
+  --color-surface-alt: #fbfaf6; // filas alternas, zonas sutiles
+  --color-surface-sunken: #f1ede3; // thead, wells, campos "hundidos"
+  --color-border: #e5e1d8;
+  --color-border-strong: #d6d0c1; // contorno de controles interactivos
+  --color-overlay: rgb(37 37 37 / 45%);
+
+  // ----------------------------------------------------------
+  // Texto
+  // ----------------------------------------------------------
+  --color-text: #252525;
+  --color-text-muted: #6a6960; // texto de apoyo, labels de tabla (AA sobre bg y surface)
+  --color-text-secondary: var(--color-text-muted); // alias nuevo
+  --color-text-subtle: #7d7b69; // placeholder, deshabilitado (~4.3:1 sobre surface)
+
+  // ----------------------------------------------------------
+  // Estados — sobrios y terrosos. Cada uno: sólido, -bg (soft), -text
+  // ----------------------------------------------------------
+  --color-danger: #bc564e;
+  --color-danger-bg: #f5e2e0;
+  --color-danger-text: #8e3f39;
+
+  --color-success: #4f8a5b;
+  --color-success-bg: #e5efe5;
+  --color-success-text: #356041;
+
+  --color-warning: #b5843f;
+  --color-warning-bg: #f4ead9;
+  --color-warning-text: #87602c;
+
+  --color-info: #5c7086;
+  --color-info-bg: #e6eaef;
+  --color-info-text: #45566a;
+
+  --color-neutral-bg: var(--color-surface-sunken);
+  --color-neutral-text: var(--color-text-muted);
+
+  // Marca de terceros — WhatsApp (botones "contactar por WhatsApp").
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #1ebe5d;
+
+  // ----------------------------------------------------------
+  // Foco — nunca solo color; halo verde a baja opacidad
+  // ----------------------------------------------------------
+  --focus-ring: 0 0 0 3px rgb(53 94 82 / 24%);
+
+  // ----------------------------------------------------------
+  // Gráficos — ramp categórico natural (6) + par ingresos/gastos.
+  // primary vs danger: ΔE > 27 en deutan/protan/tritan (validado).
+  // ----------------------------------------------------------
+  --chart-1: var(--color-primary);
+  --chart-2: #b5843f;
+  --chart-3: #5c7086;
+  --chart-4: #c0776a;
+  --chart-5: #7e6a86;
+  --chart-6: #6e9e77;
+  --chart-ingresos: var(--color-primary);
+  --chart-gastos: #bc564e;
+
+  // ----------------------------------------------------------
+  // "Chrome" — sidebar verde pino permanente (no sigue el toggle
+  // claro/oscuro, patrón GitHub/Linear). Solo lo usa el sidebar.
+  // ----------------------------------------------------------
+  --sidebar-bg: #26362f;
+  --sidebar-bg-elevado: #31463d;
+  --sidebar-border: rgb(255 255 255 / 9%);
+  --sidebar-text: #e7ede9;
+  --sidebar-text-muted: #9db0a7;
+  --sidebar-accent: #8fc7b3;
+  --sidebar-accent-bg: rgb(143 199 179 / 16%);
+
+  // ----------------------------------------------------------
+  // Tipografía
+  // ----------------------------------------------------------
+  --font-sans:
+    'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-2xs: 0.6875rem; // 11
+  --text-xs: 0.75rem; // 12
+  --text-sm: 0.8125rem; // 13
+  --text-base: 0.875rem; // 14 · base de UI
+  --text-md: 1rem; // 16
+  --text-lg: 1.125rem; // 18
+  --text-xl: 1.375rem; // 22
+  --text-2xl: 1.75rem; // 28
+  --text-3xl: 2.25rem; // 36
+  --text-4xl: 2.875rem; // 46
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.55;
+  --leading-relaxed: 1.7;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.012em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.045em;
+
+  // ----------------------------------------------------------
+  // Espaciado — base 4px. --space-1..8 conservan su valor actual.
+  // ----------------------------------------------------------
+  --space-0: 0;
+  --space-px: 1px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 48px;
+  --space-9: 64px;
+  --space-10: 80px;
+
+  // ----------------------------------------------------------
+  // Radios — suave pero contenido
+  // ----------------------------------------------------------
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  // ----------------------------------------------------------
+  // Elevación — reservada para capas flotantes. Tono #252525.
+  // ----------------------------------------------------------
+  --shadow-xs: 0 1px 2px rgb(37 37 37 / 5%);
+  --shadow-sm: 0 1px 3px rgb(37 37 37 / 7%), 0 1px 2px rgb(37 37 37 / 4%);
+  --shadow-md: 0 4px 12px rgb(37 37 37 / 9%), 0 2px 4px rgb(37 37 37 / 5%);
+  --shadow-lg: 0 14px 36px rgb(37 37 37 / 13%), 0 4px 10px rgb(37 37 37 / 6%);
+
+  // ----------------------------------------------------------
+  // Alturas de control — inputs, botones, selects
+  // ----------------------------------------------------------
+  --control-h-sm: 1.75rem; // 28
+  --control-h-md: 2.25rem; // 36
+  --control-h-lg: 2.75rem; // 44
+
+  // ----------------------------------------------------------
+  // Layout
+  // ----------------------------------------------------------
+  --nav-height: 4rem;
+  --sidebar-w: 15rem;
+  --sidebar-w-collapsed: 4.25rem;
+  --container-max: 1200px;
+
+  // ----------------------------------------------------------
+  // Movimiento
+  // ----------------------------------------------------------
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 260ms;
+
+  // ----------------------------------------------------------
+  // Z-index — alineado con Bootstrap
+  // ----------------------------------------------------------
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+}
+
+// ============================================================
+// MODO OSCURO — cálido (casi-negro tierra, no azul).
+// ThemeService pone data-theme="dark" + data-bs-theme="dark" en
+// <html>; un script inline en index.html lo aplica antes de Angular.
+// ============================================================
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-primary: #82ae9f; // sage claro — contraste sobre fondo oscuro
+  --color-primary-hover: #93bcae;
+  --color-primary-active: #a6c9bd;
+  --color-primary-bg: rgb(130 174 159 / 15%);
+  --color-on-primary: #15201c;
+  --color-secondary: #a8a599;
+
+  --color-bg: #191815;
+  --color-surface: #211f1c;
+  --color-surface-alt: #262420;
+  --color-surface-sunken: #151412;
+  --color-border: #37342e;
+  --color-border-strong: #48443b;
+  --color-overlay: rgb(0 0 0 / 60%);
+
+  --color-text: #eceae2;
+  --color-text-muted: #a8a599;
+  --color-text-subtle: #7c7a70;
+
+  --color-danger: #d97b72;
+  --color-danger-bg: rgb(217 123 114 / 16%);
+  --color-danger-text: #eda69e;
+
+  --color-success: #6fb07e;
+  --color-success-bg: rgb(111 176 126 / 16%);
+  --color-success-text: #9ad0a5;
+
+  --color-warning: #d0a45e;
+  --color-warning-bg: rgb(208 164 94 / 16%);
+  --color-warning-text: #e4c089;
+
+  --color-info: #8598ae;
+  --color-info-bg: rgb(133 152 174 / 16%);
+  --color-info-text: #aebecf;
+
+  --focus-ring: 0 0 0 3px rgb(130 174 159 / 35%);
+
+  --chart-gastos: #d97b72;
+
+  --sidebar-bg: #151c19;
+  --sidebar-bg-elevado: #1f2a25;
+  --sidebar-text: #e7ede9;
+  --sidebar-text-muted: #8fa298;
+  --sidebar-accent: #8fc7b3;
+  --sidebar-accent-bg: rgb(143 199 179 / 14%);
+
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 45%), 0 1px 2px rgb(0 0 0 / 30%);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 50%), 0 2px 4px rgb(0 0 0 / 35%);
+  --shadow-lg: 0 14px 36px rgb(0 0 0 / 60%), 0 4px 10px rgb(0 0 0 / 40%);
+}

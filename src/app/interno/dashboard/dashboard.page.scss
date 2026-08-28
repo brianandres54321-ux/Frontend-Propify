@@ -7,13 +7,15 @@
 }
 
 .dashboard__titulo {
-  font-size: 1.5rem;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
   margin-bottom: var(--space-1);
 }
 
 .dashboard__subtitulo {
   color: var(--color-text-muted);
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
 }
 
 .dashboard__stats {
@@ -45,22 +47,28 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 1.75rem;
-  height: 1.75rem;
+  width: var(--control-h-sm);
+  height: var(--control-h-sm);
   border: none;
-  border-radius: 50%;
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-text-muted);
   font-size: 1rem;
   cursor: pointer;
+  transition: background-color var(--duration-fast) ease;
 
   &:hover {
-    background: var(--color-bg);
+    background: var(--color-surface-sunken);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
   }
 }
 
 .contratos-leyenda {
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   color: var(--color-text-muted);
 }
 
@@ -90,19 +98,21 @@
 }
 
 .cuenta-actual__periodo {
-  font-weight: 600;
+  font-weight: var(--weight-semibold);
   margin-bottom: var(--space-1);
 }
 
 .cuenta-actual__vence {
   color: var(--color-text-muted);
-  font-size: 0.85rem;
+  font-size: var(--text-sm);
   margin-bottom: 0;
 }
 
 .cuenta-actual__total {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-tight);
+  font-variant-numeric: tabular-nums;
   margin-bottom: 0;
 }
 
