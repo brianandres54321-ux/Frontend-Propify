@@ -19,6 +19,14 @@ export interface Tenant {
   // Teléfono/WhatsApp que se muestra en los anuncios públicos de arriendo.
   telefonoContacto?: string;
   creadoEn: string;
+  // Registro manual del último pago (lo llena el modal "Registrar pago" de la
+  // consola del superadmin). Sin pasarela de pago.
+  fechaPago?: string | null;
+  montoPago?: number | string | null;
+  metodoPago?: string | null;
+  referenciaPago?: string | null;
+  // Lo agrega GET /privado/tenants[/:id]: false = el dueño no activó su cuenta.
+  duenoActivado?: boolean;
   // Uso actual + límite efectivo (lo agrega GET /privado/tenants[/:id] y
   // /mi-tenant). Los límites en `null` = ilimitado.
   uso?: {
@@ -64,6 +72,11 @@ export interface ActualizarTenantRequest {
   limiteInmuebles?: number | null;
   limiteUnidades?: number | null;
   telefonoContacto?: string;
+  // Registro de pago (modal "Registrar pago", siempre junto con pagado: true).
+  fechaPago?: string;
+  montoPago?: number;
+  metodoPago?: string;
+  referenciaPago?: string;
 }
 
 // Autoservicio (PUT /privado/tenants/mi-tenant) — lo que un DUEÑO puede

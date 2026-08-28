@@ -127,6 +127,15 @@ export const INTERNO_ROUTES: Routes = [
             (m) => m.MensajesContactoPage,
           ),
       },
+      {
+        path: 'solicitudes-plan',
+        canActivate: [rolesGuard],
+        data: { roles: [RoleNames.SUPERADMIN] },
+        loadComponent: () =>
+          import('./administracion/solicitudes-upgrade/solicitudes-upgrade.page').then(
+            (m) => m.SolicitudesUpgradePage,
+          ),
+      },
       // Nuevos módulos: agregar como rutas hijas con loadComponent dentro de
       // su dominio (propiedad/finanzas/comunidad/seguridad/administracion),
       // usando rolesGuard + data:{ roles: [...] } cuando aplique.

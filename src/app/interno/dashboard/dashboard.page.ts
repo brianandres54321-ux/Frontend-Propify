@@ -7,11 +7,13 @@ import { RoleNames } from '@core/constants';
 import {
   CuentaMensual,
   EstadoCuenta,
+  PlanTipo,
   Residente,
   ResumenFinanciero,
   ResumenGastosMes,
   ResumenOcupacion,
   ResumenPorteria,
+  Tenant,
 } from '@core/models';
 import { AuthService } from '@core/services/auth.service';
 import { mensajeErrorApi } from '@core/utils';
@@ -21,6 +23,8 @@ import { GastosService } from '@core/services/gastos.service';
 import { InmueblesService } from '@core/services/inmuebles.service';
 import { PorteriaService } from '@core/services/porteria.service';
 import { ResidentesService } from '@core/services/residentes.service';
+import { SolicitudesUpgradeService } from '@core/services/solicitudes-upgrade.service';
+import { TenantsService } from '@core/services/tenants.service';
 import { UnidadesService } from '@core/services/unidades.service';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { ButtonComponent } from '@shared/components/button/button';
@@ -60,6 +64,22 @@ const ETIQUETA_ESTADO_CUENTA: Record<EstadoCuenta, string> = {
   [EstadoCuenta.PAGADA]: 'Pagada',
 };
 
+const ETIQUETAS_PLAN: Record<PlanTipo, string> = {
+  [PlanTipo.CASAS]: 'Casas',
+  [PlanTipo.EDIFICIOS]: 'Edificios',
+  [PlanTipo.CONJUNTOS]: 'Conjuntos',
+};
+
+function diasDesde(fecha: string): number {
+  return Math.floor((Date.now() - new Date(fecha).getTime()) / 86_400_000);
+}
+
+// Porcentaje de uso frente al límite (unidades o inmuebles). null = ilimitado.
+function pctUso(usados: number, limite: number | null | undefined): number | null {
+  if (limite == null || limite === 0) return null;
+  return Math.round((usados / limite) * 100);
+}
+
 // Panel de inicio, distinto por rol (ver propify_especificacion.md §3):
 // - DUEÑO/ADMIN: "Caja Fuerte" (ingresos, gastos, ganancia neta, cartera
 //   vencida), ocupación y contratos por vencer.
@@ -92,15 +112,19 @@ export class DashboardPage implements OnInit {
   private readonly gastosService = inject(GastosService);
   private readonly porteriaService = inject(PorteriaService);
   private readonly cuentasMensualesService = inject(CuentasMensualesService);
+  private readonly tenantsService = inject(TenantsService);
+  private readonly solicitudesUpgradeService = inject(SolicitudesUpgradeService);
 
   protected readonly formatoMonto = formatoMonto;
   protected readonly EstadoCuenta = EstadoCuenta;
+  protected readonly etiquetasPlan = ETIQUETAS_PLAN;
 
   protected readonly esDuenoAdmin = computed(() =>
     this.auth.tieneRol(RoleNames.DUENO, RoleNames.ADMIN),
   );
   protected readonly esResidente = computed(() => this.auth.tieneRol(RoleNames.RESIDENTE));
   protected readonly esCelador = computed(() => this.auth.tieneRol(RoleNames.CELADOR));
+  protected readonly esSuperAdmin = computed(() => this.auth.tieneRol(RoleNames.SUPERADMIN));
 
   // ---------- DUEÑO / ADMIN ----------
 
@@ -183,6 +207,41 @@ export class DashboardPage implements OnInit {
   protected readonly resumenPorteria = signal<ResumenPorteria | null>(null);
   protected readonly cargandoPorteria = signal(true);
 
+  // ---------- SUPERADMINISTRADOR ----------
+
+  protected readonly tenants = signal<Tenant[]>([]);
+  protected readonly cargandoSuper = signal(true);
+  protected readonly solicitudesPendientes = signal(0);
+
+  protected readonly totalesPlataforma = computed(() => {
+    const lista = this.tenants();
+    return {
+      clientes: lista.length,
+      pagados: lista.filter((t) => t.pagado).length,
+      demo: lista.filter((t) => !t.pagado).length,
+      inmuebles: lista.reduce((n, t) => n + (t.uso?.inmuebles ?? 0), 0),
+      unidades: lista.reduce((n, t) => n + (t.uso?.unidades ?? 0), 0),
+      altas30: lista.filter((t) => diasDesde(t.creadoEn) <= 30).length,
+    };
+  });
+
+  // Clientes al 80% o más de su límite de UNIDADES — candidatos a ofrecerles
+  // un plan mayor. (El límite de inmuebles no sirve de señal: es 1 para
+  // Casas/Edificios e ilimitado para Conjuntos, nunca "va creciendo".)
+  protected readonly clientesCercaLimite = computed(() =>
+    this.tenants()
+      .map((t) => ({
+        tenant: t,
+        pctUnidades: pctUso(t.uso?.unidades ?? 0, t.uso?.limiteUnidades),
+      }))
+      .filter((x) => (x.pctUnidades ?? 0) >= 80)
+      .sort((a, b) => (b.pctUnidades ?? 0) - (a.pctUnidades ?? 0)),
+  );
+
+  protected readonly invitacionesPendientes = computed(() =>
+    this.tenants().filter((t) => t.duenoActivado === false),
+  );
+
   ngOnInit(): void {
     if (this.esDuenoAdmin()) {
       this.cargarDuenoAdmin();
@@ -193,6 +252,31 @@ export class DashboardPage implements OnInit {
     if (this.esCelador()) {
       this.cargarCelador();
     }
+    if (this.esSuperAdmin()) {
+      this.cargarSuperAdmin();
+    }
+  }
+
+  private cargarSuperAdmin(): void {
+    this.tenantsService.consultarTodos().subscribe({
+      next: (tenants) => {
+        this.tenants.set(tenants);
+        this.cargandoSuper.set(false);
+      },
+      error: (error: unknown) => {
+        this.cargandoSuper.set(false);
+        this.errorMensaje.set(mensajeErrorApi(error, 'No se pudieron cargar los clientes.'));
+      },
+    });
+
+    this.solicitudesUpgradeService.consultar().subscribe({
+      next: (s) => this.solicitudesPendientes.set(s.filter((x) => !x.atendida).length),
+      error: () => undefined,
+    });
+  }
+
+  protected fraccionUso(usados: number | undefined, limite: number | null | undefined): string {
+    return `${usados ?? 0} / ${limite ?? '∞'}`;
   }
 
   private cargarDuenoAdmin(): void {

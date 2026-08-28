@@ -6,6 +6,7 @@ import { TableBadgeVariant } from '@shared/interfaces';
 import { AuthService } from './auth.service';
 import { CobranzaService } from './cobranza.service';
 import { MensajesContactoService } from './mensajes-contacto.service';
+import { SolicitudesUpgradeService } from './solicitudes-upgrade.service';
 import { ReportesDanoService } from './reportes-dano.service';
 import { ResidentesService } from './residentes.service';
 import { UnidadesService } from './unidades.service';
@@ -37,6 +38,7 @@ export class AlertasService {
   private readonly reportesDanoService = inject(ReportesDanoService);
   private readonly unidadesService = inject(UnidadesService);
   private readonly mensajesContactoService = inject(MensajesContactoService);
+  private readonly solicitudesUpgradeService = inject(SolicitudesUpgradeService);
 
   private readonly cargado = signal(false);
   private readonly cargandoFinanciero = signal(true);
@@ -50,6 +52,8 @@ export class AlertasService {
   private readonly vaciasProlongadas = signal(0);
   // Solo superadmin: mensajes del formulario de contacto sin atender.
   private readonly mensajesContactoSinAtender = signal(0);
+  // Solo superadmin: solicitudes de plan pagado sin atender.
+  private readonly solicitudesUpgradePendientes = signal(0);
 
   public readonly cargando = computed(
     () =>
@@ -113,6 +117,16 @@ export class AlertasService {
       });
     }
 
+    const solicitudes = this.solicitudesUpgradePendientes();
+    if (solicitudes > 0) {
+      lista.push({
+        color: 'warning',
+        icono: 'arrow-up-circle',
+        texto: `${solicitudes} solicitud${solicitudes === 1 ? '' : 'es'} de plan sin atender`,
+        link: '/app/solicitudes-plan',
+      });
+    }
+
     return lista;
   });
 
@@ -135,6 +149,7 @@ export class AlertasService {
       this.cargandoOcupacion.set(false);
 
       this.refrescarMensajesContacto();
+      this.refrescarSolicitudesUpgrade();
       return;
     }
 
@@ -185,6 +200,19 @@ export class AlertasService {
     this.mensajesContactoService.consultar().subscribe({
       next: (mensajes) =>
         this.mensajesContactoSinAtender.set(mensajes.filter((m) => !m.atendido).length),
+      error: () => undefined,
+    });
+  }
+
+  // Igual que refrescarMensajesContacto pero para la bandeja de solicitudes
+  // de plan — la llama la página tras marcar/reabrir una solicitud.
+  public refrescarSolicitudesUpgrade(): void {
+    if (!this.auth.tieneRol(RoleNames.SUPERADMIN)) {
+      return;
+    }
+    this.solicitudesUpgradeService.consultar().subscribe({
+      next: (solicitudes) =>
+        this.solicitudesUpgradePendientes.set(solicitudes.filter((s) => !s.atendida).length),
       error: () => undefined,
     });
   }

@@ -1,0 +1,15 @@
+:host {
+  display: block;
+}
+
+.solicitudes__fila {
+  cursor: pointer;
+}
+
+.solicitudes__detalle td {
+  background: var(--color-surface-muted, rgba(0, 0, 0, 0.03));
+}
+
+.solicitudes__texto {
+  white-space: pre-wrap;
+}

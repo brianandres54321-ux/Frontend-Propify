@@ -16,6 +16,7 @@ import { TableComponent } from '@shared/components/table/table';
 import { TableColumn } from '@shared/interfaces';
 
 import { TenantFormModal } from './components/tenant-form-modal';
+import { RegistrarPagoModal } from './components/registrar-pago-modal';
 
 const ETIQUETAS_PLAN: Record<PlanTipo, string> = {
   [PlanTipo.CASAS]: 'Casas',
@@ -90,6 +91,10 @@ export class TenantDetallePage implements OnInit {
     return `${uso ?? 0} / ${limite ?? '∞'}`;
   }
 
+  protected formatoMonto(valor: number | string | null | undefined): string {
+    return '$' + Number(valor ?? 0).toLocaleString('es-CO');
+  }
+
   private cargar(): void {
     this.cargando.set(true);
     this.tenantsService.consultarUno(this.id).subscribe({
@@ -122,6 +127,30 @@ export class TenantDetallePage implements OnInit {
           },
           error: (error: unknown) =>
             this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo actualizar el cliente.')),
+        });
+      },
+      () => undefined,
+    );
+  }
+
+  protected abrirRegistrarPago(): void {
+    const actual = this.tenant();
+    if (!actual) {
+      return;
+    }
+    const modalRef = this.modalService.open(RegistrarPagoModal, { centered: true });
+    (modalRef.componentInstance as RegistrarPagoModal).tenant = actual;
+
+    modalRef.result.then(
+      (datos) => {
+        this.tenantsService.actualizar(this.id, datos).subscribe({
+          next: () => {
+            this.exitoMensaje.set('Pago registrado. El cliente quedó en plan pagado.');
+            this.errorMensaje.set(null);
+            this.cargar();
+          },
+          error: (error: unknown) =>
+            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo registrar el pago.')),
         });
       },
       () => undefined,

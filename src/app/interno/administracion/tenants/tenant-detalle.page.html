@@ -30,6 +30,9 @@
     <app-button variant="secondary" icono="pencil" [fullWidth]="false" (click)="abrirEditar()">
       Editar
     </app-button>
+    <app-button icono="cash-coin" [fullWidth]="false" (click)="abrirRegistrarPago()">
+      {{ t.pagado ? 'Registrar otro pago' : 'Registrar pago' }}
+    </app-button>
     @if (hayInvitacionPendiente()) {
       <app-button
         variant="secondary"
@@ -70,7 +73,7 @@
       </dl>
     </app-card>
 
-    <app-card titulo="Datos" icono="info-circle">
+    <app-card titulo="Datos y pago" icono="info-circle">
       <dl class="tenant-detalle__lista">
         <div>
           <dt>Creado</dt>
@@ -84,6 +87,32 @@
           <dt>ID interno</dt>
           <dd>{{ t.codTenant }}</dd>
         </div>
+        <div>
+          <dt>Último pago</dt>
+          <dd>
+            @if (t.fechaPago) {
+              {{ t.fechaPago | date: 'dd/MM/yyyy' }}
+            } @else {
+              <span class="text-muted">— (sin registro)</span>
+            }
+          </dd>
+        </div>
+        @if (t.fechaPago) {
+          <div>
+            <dt>Monto</dt>
+            <dd>{{ formatoMonto(t.montoPago) }}</dd>
+          </div>
+          <div>
+            <dt>Método</dt>
+            <dd>{{ t.metodoPago ?? '—' }}</dd>
+          </div>
+          @if (t.referenciaPago) {
+            <div>
+              <dt>Referencia</dt>
+              <dd>{{ t.referenciaPago }}</dd>
+            </div>
+          }
+        }
       </dl>
     </app-card>
   </div>

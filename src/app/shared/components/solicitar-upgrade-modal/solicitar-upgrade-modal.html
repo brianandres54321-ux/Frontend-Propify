@@ -1,0 +1,67 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Solicitar plan pagado</h2>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Cerrar"
+    (click)="activeModal.dismiss()"
+  ></button>
+</div>
+
+<div class="modal-body">
+  @if (exito()) {
+    <app-alert variant="success">{{ exito() }}</app-alert>
+  } @else {
+    <p class="text-muted small">
+      Cuéntanos a qué plan quieres pasar y te contactamos para coordinar el pago y activarlo. No se
+      cobra nada desde aquí.
+    </p>
+
+    @if (errorMensaje()) {
+      <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+    }
+
+    <form [formGroup]="form">
+      <app-text-field
+        label="Plan que te interesa"
+        hint="Opcional — si no estás seguro, déjalo en blanco"
+      >
+        <select class="form-select" formControlName="planSolicitado">
+          <option value="">No estoy seguro / quiero asesoría</option>
+          <option [value]="PlanTipo.CASAS">Casas</option>
+          <option [value]="PlanTipo.EDIFICIOS">Edificios</option>
+          <option [value]="PlanTipo.CONJUNTOS">Conjuntos</option>
+        </select>
+      </app-text-field>
+
+      <app-text-field label="Mensaje (opcional)">
+        <textarea
+          class="form-control"
+          rows="3"
+          formControlName="mensaje"
+          placeholder="Cuántas unidades administras, dudas, horario para llamarte…"
+        ></textarea>
+      </app-text-field>
+    </form>
+  }
+</div>
+
+<div class="modal-footer">
+  @if (exito()) {
+    <app-button variant="primary" [fullWidth]="false" (click)="activeModal.close()"
+      >Listo</app-button
+    >
+  } @else {
+    <app-button
+      variant="secondary"
+      [fullWidth]="false"
+      type="button"
+      (click)="activeModal.dismiss()"
+    >
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" [loading]="enviando()" (click)="enviar()">
+      Enviar solicitud
+    </app-button>
+  }
+</div>

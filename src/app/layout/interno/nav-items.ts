@@ -129,4 +129,11 @@ export const NAV_ITEMS: NavItem[] = [
     roles: [RoleNames.SUPERADMIN],
     implementado: true,
   },
+  {
+    label: 'Solicitudes de plan',
+    ruta: '/app/solicitudes-plan',
+    icono: 'arrow-up-circle',
+    roles: [RoleNames.SUPERADMIN],
+    implementado: true,
+  },
 ];

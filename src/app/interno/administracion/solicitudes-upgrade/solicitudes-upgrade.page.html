@@ -1,0 +1,97 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <div>
+    <h1 class="h3 mb-1">Solicitudes de plan</h1>
+    <p class="text-muted small mb-0">
+      {{ solicitudes().length }} en total · {{ pendientes() }} sin atender
+    </p>
+  </div>
+  <app-button
+    variant="secondary"
+    [fullWidth]="false"
+    [icono]="soloPendientes() ? 'funnel-fill' : 'funnel'"
+    (click)="alternarFiltro()"
+  >
+    {{ soloPendientes() ? 'Ver todas' : 'Ver solo sin atender' }}
+  </app-button>
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
+
+@if (cargando()) {
+  <app-loading />
+} @else if (filtradas().length === 0) {
+  <p class="text-muted text-center py-4 mb-0">No hay solicitudes para mostrar.</p>
+} @else {
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Cliente</th>
+          <th>Plan actual</th>
+          <th>Plan solicitado</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (s of paginaActual(); track s.codSolicitud) {
+          <tr class="solicitudes__fila" (click)="alternarExpandido(s.codSolicitud)">
+            <td>{{ s.creadoEn | date: 'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ s.tenantNombre }}</td>
+            <td>{{ etiquetasPlan[s.planActual] }}</td>
+            <td>
+              @if (s.planSolicitado) {
+                {{ etiquetasPlan[s.planSolicitado] }}
+              } @else {
+                <span class="text-muted">Quiere asesoría</span>
+              }
+            </td>
+            <td>
+              <span class="badge rounded-pill badge-soft-{{ s.atendida ? 'success' : 'warning' }}">
+                {{ s.atendida ? 'Atendida' : 'Pendiente' }}
+              </span>
+            </td>
+            <td class="text-end" (click)="$event.stopPropagation()">
+              <div class="d-flex justify-content-end gap-1 align-items-center">
+                <a
+                  [routerLink]="['/app/tenants', s.codTenant]"
+                  class="btn btn-sm btn-outline-secondary"
+                >
+                  Ver cliente
+                </a>
+                <app-button
+                  variant="icon"
+                  [color]="s.atendida ? 'warning' : 'success'"
+                  [icono]="s.atendida ? 'arrow-counterclockwise' : 'check-lg'"
+                  [title]="s.atendida ? 'Reabrir' : 'Marcar como atendida'"
+                  (click)="marcarAtendida(s)"
+                />
+              </div>
+            </td>
+          </tr>
+          @if (expandido() === s.codSolicitud) {
+            <tr class="solicitudes__detalle">
+              <td colspan="6">
+                @if (s.mensaje) {
+                  <p class="solicitudes__texto mb-0">{{ s.mensaje }}</p>
+                } @else {
+                  <span class="text-muted">El cliente no dejó mensaje.</span>
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination
+    [totalItems]="filtradas().length"
+    [paginaActual]="pagina()"
+    [tamanioPagina]="tamanioPagina"
+    (paginaCambio)="cambiarPagina($event)"
+  />
+}

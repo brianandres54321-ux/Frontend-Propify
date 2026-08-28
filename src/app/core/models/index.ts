@@ -1,5 +1,6 @@
 export * from './auth.model';
 export * from './tenant.model';
+export * from './solicitud-upgrade.model';
 export * from './rol.model';
 export * from './usuario.model';
 export * from './inmueble.model';

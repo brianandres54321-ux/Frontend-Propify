@@ -3,18 +3,15 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { RoleNames } from '@core/constants';
-import {
-  EstadoOcupacionUnidad,
-  GenerarUnidadesRequest,
-  TipoUnidad,
-  Unidad,
-} from '@core/models';
+import { EstadoOcupacionUnidad, GenerarUnidadesRequest, TipoUnidad, Unidad } from '@core/models';
 import { AuthService } from '@core/services/auth.service';
 import { esLimitePlan, mensajeErrorApi } from '@core/utils';
 import { UnidadesService } from '@core/services/unidades.service';
+import { TenantsService } from '@core/services/tenants.service';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { ButtonComponent } from '@shared/components/button/button';
 import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-dialog.service';
+import { SolicitarUpgradeDialogService } from '@shared/components/solicitar-upgrade-modal/solicitar-upgrade-dialog.service';
 import { LoadingComponent } from '@shared/components/loading/loading';
 import { PaginationComponent } from '@shared/components/pagination/pagination';
 import { TableComponent } from '@shared/components/table/table';
@@ -69,6 +66,8 @@ export class UnidadesPage implements OnInit {
   private readonly unidadesService = inject(UnidadesService);
   private readonly modalService = inject(NgbModal);
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly solicitarUpgradeDialog = inject(SolicitarUpgradeDialogService);
+  private readonly tenantsService = inject(TenantsService);
   private readonly auth = inject(AuthService);
 
   protected readonly TAMANIO_PAGINA = TAMANIO_PAGINA;
@@ -84,6 +83,12 @@ export class UnidadesPage implements OnInit {
   protected readonly puedeGestionar = computed(() =>
     this.auth.tieneRol(RoleNames.DUENO, RoleNames.ADMIN),
   );
+
+  protected readonly puedeSolicitarPlan = computed(() => this.auth.tieneRol(RoleNames.DUENO));
+
+  protected solicitarUpgrade(): void {
+    this.solicitarUpgradeDialog.abrir(this.tenantsService.plan());
+  }
 
   protected readonly filasPagina = computed(() => {
     const inicio = (this.paginaActual() - 1) * TAMANIO_PAGINA;
@@ -151,34 +156,31 @@ export class UnidadesPage implements OnInit {
 
   protected abrirGenerar(): void {
     const modalRef = this.modalService.open(GenerarUnidadesModal, { centered: true, size: 'lg' });
-    (modalRef.componentInstance as GenerarUnidadesModal).existentes = this.unidades().map(
-      (u) => ({ identificador: u.identificador, piso: u.piso ?? null }),
-    );
+    (modalRef.componentInstance as GenerarUnidadesModal).existentes = this.unidades().map((u) => ({
+      identificador: u.identificador,
+      piso: u.piso ?? null,
+    }));
 
     modalRef.result.then(
       (datos: Omit<GenerarUnidadesRequest, 'codInmueble'>) => {
         this.errorMensaje.set(null);
         this.exitoMensaje.set(null);
         this.limiteAlcanzado.set(false);
-        this.unidadesService
-          .generarLote({ ...datos, codInmueble: this.inmuebleId })
-          .subscribe({
-            next: (resultado) => {
-              const partes = [`${resultado.creadas} unidad(es) creada(s)`];
-              if (resultado.omitidas > 0) {
-                partes.push(`${resultado.omitidas} ya existía(n) y se omitió(eron)`);
-              }
-              this.exitoMensaje.set(partes.join(' · '));
-              this.paginaActual.set(1);
-              this.cargar();
-            },
-            error: (error: unknown) => {
-              this.limiteAlcanzado.set(esLimitePlan(error));
-              this.errorMensaje.set(
-                mensajeErrorApi(error, 'No se pudieron generar las unidades.'),
-              );
-            },
-          });
+        this.unidadesService.generarLote({ ...datos, codInmueble: this.inmuebleId }).subscribe({
+          next: (resultado) => {
+            const partes = [`${resultado.creadas} unidad(es) creada(s)`];
+            if (resultado.omitidas > 0) {
+              partes.push(`${resultado.omitidas} ya existía(n) y se omitió(eron)`);
+            }
+            this.exitoMensaje.set(partes.join(' · '));
+            this.paginaActual.set(1);
+            this.cargar();
+          },
+          error: (error: unknown) => {
+            this.limiteAlcanzado.set(esLimitePlan(error));
+            this.errorMensaje.set(mensajeErrorApi(error, 'No se pudieron generar las unidades.'));
+          },
+        });
       },
       () => undefined,
     );

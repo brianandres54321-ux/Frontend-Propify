@@ -11,6 +11,7 @@ import { Inmueble } from '@core/models';
 import { AlertComponent } from '@shared/components/alert/alert';
 import { ButtonComponent } from '@shared/components/button/button';
 import { ConfirmDialogService } from '@shared/components/confirm-dialog/confirm-dialog.service';
+import { SolicitarUpgradeDialogService } from '@shared/components/solicitar-upgrade-modal/solicitar-upgrade-dialog.service';
 import { LoadingComponent } from '@shared/components/loading/loading';
 import { PaginationComponent } from '@shared/components/pagination/pagination';
 import { TableComponent } from '@shared/components/table/table';
@@ -37,6 +38,7 @@ export class InmueblesPage implements OnInit {
   private readonly tenantsService = inject(TenantsService);
   private readonly modalService = inject(NgbModal);
   private readonly confirmDialog = inject(ConfirmDialogService);
+  private readonly solicitarUpgradeDialog = inject(SolicitarUpgradeDialogService);
   private readonly auth = inject(AuthService);
 
   // Cargado por InternoLayout al entrar a /app — ver TenantsService.plan.
@@ -52,6 +54,13 @@ export class InmueblesPage implements OnInit {
   protected readonly puedeGestionar = computed(() =>
     this.auth.tieneRol(RoleNames.DUENO, RoleNames.ADMIN),
   );
+
+  // Solo el dueño puede pedir el cambio de plan (facturación).
+  protected readonly puedeSolicitarPlan = computed(() => this.auth.tieneRol(RoleNames.DUENO));
+
+  protected solicitarUpgrade(): void {
+    this.solicitarUpgradeDialog.abrir(this.planTenant());
+  }
 
   protected readonly filasPagina = computed(() => {
     const inicio = (this.paginaActual() - 1) * TAMANIO_PAGINA;

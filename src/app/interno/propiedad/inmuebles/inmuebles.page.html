@@ -1,7 +1,9 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Inmuebles</h1>
   @if (puedeGestionar()) {
-    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nuevo inmueble</app-button>
+    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()"
+      >Nuevo inmueble</app-button
+    >
   }
 </div>
 
@@ -9,7 +11,14 @@
   <app-alert variant="danger">
     {{ errorMensaje() }}
     @if (limiteAlcanzado()) {
-      <a routerLink="/planes" class="alert-link ms-2">Actualizar plan →</a>
+      <span class="d-block mt-2">
+        @if (puedeSolicitarPlan()) {
+          <button type="button" class="btn btn-sm btn-primary" (click)="solicitarUpgrade()">
+            Solicitar plan pagado
+          </button>
+        }
+        <a routerLink="/planes" class="alert-link ms-2">Ver planes y precios →</a>
+      </span>
     }
   </app-alert>
 }
@@ -24,12 +33,28 @@
   >
     <ng-template let-fila>
       <div class="d-flex gap-2 justify-content-end">
-        <app-button variant="secondary" [fullWidth]="false" [routerLink]="['/app/inmuebles', fila.codInmueble, 'unidades']">
+        <app-button
+          variant="secondary"
+          [fullWidth]="false"
+          [routerLink]="['/app/inmuebles', fila.codInmueble, 'unidades']"
+        >
           Unidades
         </app-button>
         @if (puedeGestionar()) {
-          <app-button variant="icon" color="primary" icono="pencil-square" title="Editar" (click)="abrirEditar(fila)" />
-          <app-button variant="icon" color="danger" icono="trash" title="Eliminar" (click)="eliminar(fila)" />
+          <app-button
+            variant="icon"
+            color="primary"
+            icono="pencil-square"
+            title="Editar"
+            (click)="abrirEditar(fila)"
+          />
+          <app-button
+            variant="icon"
+            color="danger"
+            icono="trash"
+            title="Eliminar"
+            (click)="eliminar(fila)"
+          />
         }
       </div>
     </ng-template>

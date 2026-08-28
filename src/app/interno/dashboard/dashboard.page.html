@@ -37,7 +37,9 @@
       icono="exclamation-triangle"
       color="warning"
       variante="soft"
-      [tendenciaTexto]="resumenFinanciero() ? (resumenFinanciero()!.cuentasVencidas + ' cuenta(s) vencida(s)') : null"
+      [tendenciaTexto]="
+        resumenFinanciero() ? resumenFinanciero()!.cuentasVencidas + ' cuenta(s) vencida(s)' : null
+      "
       tendenciaIcono="clock-history"
     />
   </div>
@@ -53,7 +55,11 @@
 
     <app-stat-card
       titulo="Unidades vacantes"
-      [valor]="resumenOcupacion() ? (resumenOcupacion()!.vacantes + ' / ' + resumenOcupacion()!.totalUnidades) : '—'"
+      [valor]="
+        resumenOcupacion()
+          ? resumenOcupacion()!.vacantes + ' / ' + resumenOcupacion()!.totalUnidades
+          : '—'
+      "
       icono="door-open"
       color="info"
       variante="soft"
@@ -88,7 +94,13 @@
     />
   </div>
 
-  <app-card variante="warning" icono="calendar-event" titulo="Contratos por vencer" [autoAltura]="true" class="mb-4">
+  <app-card
+    variante="warning"
+    icono="calendar-event"
+    titulo="Contratos por vencer"
+    [autoAltura]="true"
+    class="mb-4"
+  >
     <div card-header-accion class="contratos-header">
       @if (!cargando() && contratosPorVencer().length > 0) {
         <span class="badge rounded-pill badge-soft-warning">{{ contratosPorVencer().length }}</span>
@@ -100,7 +112,11 @@
         [attr.aria-expanded]="contratosExpandido()"
         title="Mostrar/ocultar detalle"
       >
-        <i class="bi" [class.bi-chevron-down]="!contratosExpandido()" [class.bi-chevron-up]="contratosExpandido()"></i>
+        <i
+          class="bi"
+          [class.bi-chevron-down]="!contratosExpandido()"
+          [class.bi-chevron-up]="contratosExpandido()"
+        ></i>
       </button>
     </div>
 
@@ -144,7 +160,11 @@
               </p>
             </div>
             <p class="cuenta-actual__total">{{ formatoMonto(cuentaActual()!.total) }}</p>
-            <span class="badge rounded-pill badge-soft-{{ varianteEstadoCuenta(cuentaActual()!.estado) }}">
+            <span
+              class="badge rounded-pill badge-soft-{{
+                varianteEstadoCuenta(cuentaActual()!.estado)
+              }}"
+            >
               {{ etiquetaEstadoCuenta(cuentaActual()!.estado) }}
             </span>
           </div>
@@ -157,13 +177,19 @@
 
       <app-card titulo="Tu contrato" icono="file-earmark-text" class="dashboard__donut">
         @if (residente()) {
-          <p class="mb-1"><strong>Valor mensual:</strong> {{ formatoMonto(residente()!.valorMensual) }}</p>
+          <p class="mb-1">
+            <strong>Valor mensual:</strong> {{ formatoMonto(residente()!.valorMensual) }}
+          </p>
           @if (residente()!.fechaFin) {
             <p class="mb-0">
               <strong>Contrato vence:</strong>
               {{ residente()!.fechaFin | date: 'dd/MM/yyyy' }}
               @if (diasContratoResidente() !== null) {
-                <span class="badge rounded-pill badge-soft-{{ diasContratoResidente()! <= 7 ? 'danger' : 'info' }} ms-1">
+                <span
+                  class="badge rounded-pill badge-soft-{{
+                    diasContratoResidente()! <= 7 ? 'danger' : 'info'
+                  }} ms-1"
+                >
                   {{ diasContratoResidente() }} día(s)
                 </span>
               }
@@ -182,6 +208,114 @@
       <app-button variant="secondary" [fullWidth]="false" routerLink="/app/avisos">
         Ver avisos
       </app-button>
+    </div>
+  }
+}
+
+@if (esSuperAdmin()) {
+  @if (cargandoSuper()) {
+    <app-loading />
+  } @else {
+    <div class="dashboard__stats mb-4">
+      <app-stat-card
+        titulo="Clientes"
+        [valor]="totalesPlataforma().clientes"
+        icono="people"
+        color="primary"
+        variante="soft"
+        [tendenciaTexto]="
+          totalesPlataforma().pagados + ' pagados · ' + totalesPlataforma().demo + ' demo'
+        "
+        tendenciaIcono="pie-chart"
+      />
+      <app-stat-card
+        titulo="Altas (30 días)"
+        [valor]="totalesPlataforma().altas30"
+        icono="person-plus"
+        color="success"
+        variante="soft"
+      />
+      <app-stat-card
+        titulo="Inmuebles en la plataforma"
+        [valor]="totalesPlataforma().inmuebles"
+        icono="building"
+        color="primary"
+        variante="soft"
+        [tendenciaTexto]="totalesPlataforma().unidades + ' unidades en total'"
+        tendenciaIcono="grid-3x3-gap"
+      />
+      <app-stat-card
+        titulo="Solicitudes de plan"
+        [valor]="solicitudesPendientes()"
+        icono="arrow-up-circle"
+        [color]="solicitudesPendientes() > 0 ? 'warning' : 'primary'"
+        variante="soft"
+        tendenciaTexto="Sin atender"
+        tendenciaIcono="clock-history"
+      />
+    </div>
+
+    <div class="dashboard__fila mb-4">
+      <app-card
+        titulo="Clientes cerca de su límite"
+        icono="graph-up-arrow"
+        variante="warning"
+        [autoAltura]="true"
+        class="dashboard__tabla"
+      >
+        @if (clientesCercaLimite().length === 0) {
+          <p class="text-muted mb-0">Ningún cliente está cerca de su límite de plan.</p>
+        } @else {
+          <p class="text-muted small mb-2">Candidatos a ofrecerles un plan mayor.</p>
+          <ul class="dashboard__lista">
+            @for (x of clientesCercaLimite(); track x.tenant.codTenant) {
+              <li>
+                <a [routerLink]="['/app/tenants', x.tenant.codTenant]">{{ x.tenant.nombre }}</a>
+                <span class="text-muted">
+                  {{ etiquetasPlan[x.tenant.plan] }} · {{ x.tenant.pagado ? 'pagado' : 'demo' }} ·
+                  unidades {{ fraccionUso(x.tenant.uso?.unidades, x.tenant.uso?.limiteUnidades) }}
+                </span>
+              </li>
+            }
+          </ul>
+        }
+      </app-card>
+
+      <app-card
+        titulo="Invitaciones pendientes"
+        icono="envelope-exclamation"
+        [autoAltura]="true"
+        class="dashboard__donut"
+      >
+        @if (invitacionesPendientes().length === 0) {
+          <p class="text-muted mb-0">Todos los dueños activaron su cuenta.</p>
+        } @else {
+          <p class="text-muted small mb-2">Dueños que aún no definieron su contraseña.</p>
+          <ul class="dashboard__lista">
+            @for (t of invitacionesPendientes(); track t.codTenant) {
+              <li>
+                <a [routerLink]="['/app/tenants', t.codTenant]">{{ t.nombre }}</a>
+                <span class="text-muted">creado el {{ t.creadoEn | date: 'dd/MM/yyyy' }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </app-card>
+    </div>
+
+    <div class="dashboard__accesos">
+      <app-button variant="secondary" [fullWidth]="false" routerLink="/app/tenants/pagados"
+        >Clientes pagados</app-button
+      >
+      <app-button variant="secondary" [fullWidth]="false" routerLink="/app/tenants/demo"
+        >Clientes demo</app-button
+      >
+      <app-button variant="secondary" [fullWidth]="false" routerLink="/app/solicitudes-plan"
+        >Solicitudes de plan</app-button
+      >
+      <app-button variant="secondary" [fullWidth]="false" routerLink="/app/mensajes-contacto"
+        >Mensajes de contacto</app-button
+      >
     </div>
   }
 }
