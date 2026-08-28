@@ -1,10 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
+import { PlanTipo } from '@core/models';
+import { precioPlanFormateado } from '@core/constants';
 import { RevelarAlScrollDirective } from '@shared/directives';
 
 // Precios de ejemplo — sin pasarela de pago conectada todavía, el plan
 // "pagado" lo activa manualmente el superadministrador (ver Tenant.pagado).
+// El precio viene de PRECIO_PLAN_MENSUAL (@core/constants), misma fuente que
+// el modal "Registrar pago" de la consola.
 interface PlanVitrina {
   nombre: string;
   precio: string;
@@ -17,7 +21,7 @@ interface PlanVitrina {
 const PLANES: PlanVitrina[] = [
   {
     nombre: 'Casas',
-    precio: '$39.900',
+    precio: precioPlanFormateado(PlanTipo.CASAS),
     periodo: '/ mes',
     descripcion: 'Para una casa o casa de varios pisos con apartamentos independientes.',
     incluye: [
@@ -29,7 +33,7 @@ const PLANES: PlanVitrina[] = [
   },
   {
     nombre: 'Edificios',
-    precio: '$89.900',
+    precio: precioPlanFormateado(PlanTipo.EDIFICIOS),
     periodo: '/ mes',
     descripcion: 'Para un edificio con torres, parqueaderos y portería.',
     incluye: [
@@ -42,7 +46,7 @@ const PLANES: PlanVitrina[] = [
   },
   {
     nombre: 'Conjuntos',
-    precio: '$149.900',
+    precio: precioPlanFormateado(PlanTipo.CONJUNTOS),
     periodo: '/ mes',
     descripcion: 'Para conjuntos residenciales con zonas comunes y varios inmuebles.',
     incluye: [

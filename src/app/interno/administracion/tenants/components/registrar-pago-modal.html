@@ -16,7 +16,12 @@
       elegido.
     </p>
 
-    <app-text-field label="Plan contratado">
+    <app-text-field
+      label="Plan contratado"
+      [hint]="
+        'Precio de lista: $' + precios[form.controls.plan.value].toLocaleString('es-CO') + ' / mes'
+      "
+    >
       <select class="form-select" formControlName="plan">
         <option [value]="PlanTipo.CASAS">Casas</option>
         <option [value]="PlanTipo.EDIFICIOS">Edificios</option>
@@ -38,6 +43,7 @@
       <div class="col-6">
         <app-text-field
           label="Monto (COP)"
+          hint="Editable — descuento, pago anual…"
           [error]="
             form.controls.montoPago.touched && form.controls.montoPago.invalid
               ? 'Ingresa un monto'
