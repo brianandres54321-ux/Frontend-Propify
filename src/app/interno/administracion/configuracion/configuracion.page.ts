@@ -2,7 +2,7 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { RoleNames } from '@core/constants';
+import { RoleNames, etiquetaRol } from '@core/constants';
 import { PerfilUsuario } from '@core/models';
 import { mensajeErrorApi } from '@core/utils';
 import { AuthService } from '@core/services/auth.service';
@@ -47,6 +47,7 @@ export class ConfiguracionPage implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
 
   protected readonly esDueno = computed(() => this.auth.tieneRol(RoleNames.DUENO));
+  protected readonly etiquetaRol = etiquetaRol;
   protected readonly pestanaActiva = signal(1);
   protected readonly passwordHint = PASSWORD_REGEX_MESSAGE;
 
@@ -61,9 +62,6 @@ export class ConfiguracionPage implements OnInit {
   protected readonly exitoEmpresa = signal(false);
   protected readonly empresaForm = this.fb.group({
     nombre: this.fb.control('', [Validators.required, Validators.minLength(2)]),
-    colorPrimario: this.fb.control(''),
-    colorSecundario: this.fb.control(''),
-    logoUrl: this.fb.control(''),
   });
 
   // ---------- Información de contacto ----------
@@ -115,12 +113,7 @@ export class ConfiguracionPage implements OnInit {
     if (!datosTenant) {
       return;
     }
-    this.empresaForm.patchValue({
-      nombre: datosTenant.nombre,
-      colorPrimario: datosTenant.colorPrimario ?? '',
-      colorSecundario: datosTenant.colorSecundario ?? '',
-      logoUrl: datosTenant.logoUrl ?? '',
-    });
+    this.empresaForm.patchValue({ nombre: datosTenant.nombre });
     this.contactoForm.patchValue({
       telefonoContacto: datosTenant.telefonoContacto ?? '',
     });
@@ -135,15 +128,10 @@ export class ConfiguracionPage implements OnInit {
     this.errorEmpresa.set(null);
     this.exitoEmpresa.set(false);
 
-    const { nombre, colorPrimario, colorSecundario, logoUrl } = this.empresaForm.getRawValue();
+    const { nombre } = this.empresaForm.getRawValue();
 
     this.tenantsService
-      .actualizarContacto({
-        nombre,
-        colorPrimario: colorPrimario || undefined,
-        colorSecundario: colorSecundario || undefined,
-        logoUrl: logoUrl || undefined,
-      })
+      .actualizarContacto({ nombre })
       .subscribe({
         next: () => {
           this.guardandoEmpresa.set(false);

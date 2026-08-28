@@ -29,7 +29,7 @@
             <dt>Correo</dt>
             <dd>{{ perfil()!.correoUsuario }}</dd>
             <dt>Rol</dt>
-            <dd class="text-uppercase">{{ perfil()!.nombreRol }}</dd>
+            <dd>{{ etiquetaRol(perfil()!.nombreRol) }}</dd>
           </dl>
           <p class="text-muted small mb-0">
             Por ahora estos datos son de solo lectura. Si necesitas cambiar tu nombre o correo,
@@ -67,23 +67,6 @@
                 [class.is-invalid]="empresaForm.controls.nombre.touched && empresaForm.controls.nombre.invalid"
                 formControlName="nombre"
               />
-            </app-text-field>
-
-            <div class="row">
-              <div class="col-sm-6">
-                <app-text-field label="Color primario">
-                  <input type="color" class="form-control form-control-color" formControlName="colorPrimario" />
-                </app-text-field>
-              </div>
-              <div class="col-sm-6">
-                <app-text-field label="Color secundario">
-                  <input type="color" class="form-control form-control-color" formControlName="colorSecundario" />
-                </app-text-field>
-              </div>
-            </div>
-
-            <app-text-field label="URL del logo" hint="Pega el enlace a una imagen ya subida a otro lugar (no hay subida de archivos todavía).">
-              <input type="text" class="form-control" formControlName="logoUrl" placeholder="https://..." />
             </app-text-field>
 
             <dl class="config-datos config-datos--inline mb-4">
