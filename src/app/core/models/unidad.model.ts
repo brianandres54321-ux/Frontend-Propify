@@ -59,6 +59,31 @@ export interface ActualizarUnidadRequest extends Partial<CaracteristicasUnidad> 
   estadoOcupacion?: EstadoOcupacionUnidad;
 }
 
+// Alta masiva de unidades — POST /privado/unidades/lote.
+export type ModoGeneracionUnidades = 'pisos' | 'consecutivo';
+
+export interface GenerarUnidadesRequest {
+  codInmueble: number;
+  codTorre?: number;
+  modo: ModoGeneracionUnidades;
+  prefijo?: string;
+  tipo?: TipoUnidad;
+  estadoOcupacion?: EstadoOcupacionUnidad;
+  // modo 'pisos'
+  pisos?: number;
+  unidadesPorPiso?: number;
+  // modo 'consecutivo'
+  desde?: number;
+  hasta?: number;
+}
+
+export interface GenerarUnidadesResultado {
+  solicitadas: number;
+  creadas: number;
+  omitidas: number;
+  identificadores: string[];
+}
+
 // Ocupación del dashboard — ver GET /privado/unidades/resumen-ocupacion.
 export interface ResumenOcupacion {
   totalUnidades: number;

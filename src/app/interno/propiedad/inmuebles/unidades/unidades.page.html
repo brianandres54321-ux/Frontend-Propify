@@ -8,7 +8,17 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0">Unidades</h1>
   @if (puedeGestionar()) {
-    <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nueva unidad</app-button>
+    <div class="d-flex gap-2">
+      <app-button
+        variant="secondary"
+        icono="grid-3x3-gap"
+        [fullWidth]="false"
+        (click)="abrirGenerar()"
+      >
+        Generar unidades
+      </app-button>
+      <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirCrear()">Nueva unidad</app-button>
+    </div>
   }
 </div>
 
@@ -16,9 +26,13 @@
   <app-alert variant="danger">
     {{ errorMensaje() }}
     @if (limiteAlcanzado()) {
-      <a routerLink="/" fragment="planes" class="alert-link ms-2">Actualizar plan →</a>
+      <a routerLink="/planes" class="alert-link ms-2">Actualizar plan →</a>
     }
   </app-alert>
+}
+
+@if (exitoMensaje()) {
+  <app-alert variant="success">{{ exitoMensaje() }}</app-alert>
 }
 
 @if (cargando()) {

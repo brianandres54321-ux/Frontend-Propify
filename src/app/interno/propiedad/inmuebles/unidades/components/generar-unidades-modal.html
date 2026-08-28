@@ -1,0 +1,123 @@
+<div class="modal-header">
+  <h2 class="modal-title fs-5">Generar unidades</h2>
+  <button type="button" class="btn-close" aria-label="Cerrar" (click)="activeModal.dismiss()"></button>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="enviar()">
+  <div class="modal-body">
+    <p class="text-muted small">
+      Crea varias unidades de una vez a partir de un patrón. Las que ya existan se omiten.
+    </p>
+
+    <div class="btn-group w-100 mb-3" role="group" aria-label="Modo de generación">
+      <input
+        type="radio"
+        class="btn-check"
+        id="modo-pisos"
+        value="pisos"
+        formControlName="modo"
+      />
+      <label class="btn btn-outline-secondary" for="modo-pisos">Por pisos (edificio)</label>
+
+      <input
+        type="radio"
+        class="btn-check"
+        id="modo-consecutivo"
+        value="consecutivo"
+        formControlName="modo"
+      />
+      <label class="btn btn-outline-secondary" for="modo-consecutivo">Rango consecutivo (conjunto)</label>
+    </div>
+
+    @if (form.controls.modo.value === 'pisos') {
+      <div class="row">
+        <div class="col-6">
+          <app-text-field label="Número de pisos">
+            <input type="number" min="1" max="80" class="form-control" formControlName="pisos" />
+          </app-text-field>
+        </div>
+        <div class="col-6">
+          <app-text-field label="Unidades por piso">
+            <input type="number" min="1" max="50" class="form-control" formControlName="unidadesPorPiso" />
+          </app-text-field>
+        </div>
+      </div>
+    } @else {
+      <div class="row">
+        <div class="col-6">
+          <app-text-field label="Desde el número">
+            <input type="number" min="1" class="form-control" formControlName="desde" />
+          </app-text-field>
+        </div>
+        <div class="col-6">
+          <app-text-field label="Hasta el número">
+            <input type="number" min="1" class="form-control" formControlName="hasta" />
+          </app-text-field>
+        </div>
+      </div>
+    }
+
+    <app-text-field
+      label="Prefijo (opcional)"
+      hint="Se antepone tal cual. Ej: “Apto ” → Apto 101 · “Casa ” → Casa 1 · “T1-” → T1-101"
+    >
+      <input type="text" class="form-control" formControlName="prefijo" placeholder="Apto " />
+    </app-text-field>
+
+    <div class="row">
+      <div class="col-6">
+        <app-text-field label="Tipo">
+          <select class="form-select" formControlName="tipo">
+            @for (opcion of opcionesTipo; track opcion.valor) {
+              <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+            }
+          </select>
+        </app-text-field>
+      </div>
+      <div class="col-6">
+        <app-text-field label="Estado inicial">
+          <select class="form-select" formControlName="estadoOcupacion">
+            <option [value]="EstadoOcupacionUnidad.OCUPADA">Ocupada</option>
+            <option [value]="EstadoOcupacionUnidad.VACANTE">Vacante (en arriendo)</option>
+          </select>
+        </app-text-field>
+      </div>
+    </div>
+
+    <div class="preview">
+      <div class="preview__cabecera">
+        <span class="form-label fs-6 mb-0">Vista previa</span>
+        <span class="preview__conteo" [class.preview__conteo--error]="excede()">
+          {{ total() }} {{ total() === 1 ? 'unidad' : 'unidades' }}
+        </span>
+      </div>
+
+      @if (total() === 0) {
+        <p class="text-muted small mb-0">Ajusta los valores para ver las unidades que se crearán.</p>
+      } @else {
+        <div class="preview__chips">
+          @for (id of visibles(); track id) {
+            <span class="preview__chip">{{ id }}</span>
+          }
+          @if (ocultas() > 0) {
+            <span class="preview__chip preview__chip--mas">+{{ ocultas() }} más</span>
+          }
+        </div>
+        @if (excede()) {
+          <p class="text-danger small mb-0 mt-2">
+            Máximo {{ MAX_LOTE }} unidades por operación. Reduce el rango.
+          </p>
+        }
+      }
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" [fullWidth]="false" type="button" (click)="activeModal.dismiss()">
+      Cancelar
+    </app-button>
+    <app-button variant="primary" [fullWidth]="false" type="submit" [disabled]="!puedeGenerar()">
+      Generar {{ total() > 0 && !excede() ? total() : '' }} unidades
+    </app-button>
+  </div>
+</form>

@@ -7,6 +7,8 @@ import {
   ActualizarUnidadRequest,
   CrearUnidadRequest,
   FotoUnidad,
+  GenerarUnidadesRequest,
+  GenerarUnidadesResultado,
   ResumenOcupacion,
   Unidad,
 } from '../models';
@@ -29,6 +31,10 @@ export class UnidadesService {
 
   public registrar(datos: CrearUnidadRequest): Observable<Unidad> {
     return this.http.post<Unidad>(this.baseUrl, datos);
+  }
+
+  public generarLote(datos: GenerarUnidadesRequest): Observable<GenerarUnidadesResultado> {
+    return this.http.post<GenerarUnidadesResultado>(`${this.baseUrl}/lote`, datos);
   }
 
   public actualizar(id: number, datos: ActualizarUnidadRequest): Observable<{ mensaje: string }> {

@@ -3,7 +3,12 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { RoleNames } from '@core/constants';
-import { EstadoOcupacionUnidad, TipoUnidad, Unidad } from '@core/models';
+import {
+  EstadoOcupacionUnidad,
+  GenerarUnidadesRequest,
+  TipoUnidad,
+  Unidad,
+} from '@core/models';
 import { AuthService } from '@core/services/auth.service';
 import { esLimitePlan, mensajeErrorApi } from '@core/utils';
 import { UnidadesService } from '@core/services/unidades.service';
@@ -15,6 +20,7 @@ import { PaginationComponent } from '@shared/components/pagination/pagination';
 import { TableComponent } from '@shared/components/table/table';
 import { TableBadgeVariant, TableColumn } from '@shared/interfaces';
 import { FotosUnidadModal } from './components/fotos-unidad-modal';
+import { GenerarUnidadesModal } from './components/generar-unidades-modal';
 import { UnidadFormModal } from './components/unidad-form-modal';
 
 const TAMANIO_PAGINA = 10;
@@ -71,6 +77,7 @@ export class UnidadesPage implements OnInit {
   protected readonly unidades = signal<Unidad[]>([]);
   protected readonly cargando = signal(true);
   protected readonly errorMensaje = signal<string | null>(null);
+  protected readonly exitoMensaje = signal<string | null>(null);
   protected readonly limiteAlcanzado = signal(false);
   protected readonly paginaActual = signal(1);
 
@@ -137,6 +144,38 @@ export class UnidadesPage implements OnInit {
             this.errorMensaje.set(mensajeErrorApi(error, 'No se pudo crear la unidad.'));
           },
         });
+      },
+      () => undefined,
+    );
+  }
+
+  protected abrirGenerar(): void {
+    const modalRef = this.modalService.open(GenerarUnidadesModal, { centered: true, size: 'lg' });
+
+    modalRef.result.then(
+      (datos: Omit<GenerarUnidadesRequest, 'codInmueble'>) => {
+        this.errorMensaje.set(null);
+        this.exitoMensaje.set(null);
+        this.limiteAlcanzado.set(false);
+        this.unidadesService
+          .generarLote({ ...datos, codInmueble: this.inmuebleId })
+          .subscribe({
+            next: (resultado) => {
+              const partes = [`${resultado.creadas} unidad(es) creada(s)`];
+              if (resultado.omitidas > 0) {
+                partes.push(`${resultado.omitidas} ya existía(n) y se omitió(eron)`);
+              }
+              this.exitoMensaje.set(partes.join(' · '));
+              this.paginaActual.set(1);
+              this.cargar();
+            },
+            error: (error: unknown) => {
+              this.limiteAlcanzado.set(esLimitePlan(error));
+              this.errorMensaje.set(
+                mensajeErrorApi(error, 'No se pudieron generar las unidades.'),
+              );
+            },
+          });
       },
       () => undefined,
     );
