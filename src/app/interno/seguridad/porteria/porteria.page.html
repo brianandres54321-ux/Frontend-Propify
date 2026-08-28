@@ -1,13 +1,10 @@
-<h1 class="h3 mb-4">Portería</h1>
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+  <h1 class="h3 mb-0">Portería</h1>
 
-@if (errorMensaje()) {
-  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
-}
-
-<form class="row mb-3 g-2">
-  <div class="col-6 col-md-3">
+  @if (inmuebles().length > 1) {
     <select
       class="form-select"
+      style="max-width: 18rem"
       [value]="inmuebleSeleccionado()"
       (change)="cambiarInmueble($any($event.target).value)"
     >
@@ -15,77 +12,191 @@
         <option [value]="inmueble.codInmueble">{{ inmueble.nombre }}</option>
       }
     </select>
-  </div>
-  <div class="col-6 col-md-3">
-    <select
-      class="form-select"
-      [value]="unidadSeleccionada()"
-      (change)="cambiarUnidad($any($event.target).value)"
-    >
-      @for (unidad of unidades(); track unidad.codUnidad) {
-        <option [value]="unidad.codUnidad">{{ unidad.identificador }}</option>
-      }
-    </select>
-  </div>
-</form>
+  }
+</div>
+
+@if (errorMensaje()) {
+  <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+}
 
 @if (cargando()) {
   <app-loading />
 } @else if (!inmuebleSeleccionado()) {
   <p class="text-muted">Ninguno de tus inmuebles tiene el módulo de portería activo.</p>
-} @else if (!unidadSeleccionada()) {
+} @else if (unidades().length === 0) {
   <p class="text-muted">Este inmueble todavía no tiene unidades registradas.</p>
 } @else {
-  <div class="d-flex justify-content-between align-items-center mb-2">
-    <h2 class="h5 mb-0">Visitas</h2>
-    @if (esCelador()) {
-      <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirRegistrarVisita()">
-        Registrar entrada
-      </app-button>
-    }
-  </div>
-  <app-table
-    [columnas]="columnasVisitas"
-    [filas]="visitas()"
-    textoVacio="No hay visitas registradas para esta unidad."
+  <nav
+    ngbNav
+    #nav="ngbNav"
+    [activeId]="pestana()"
+    (activeIdChange)="pestana.set($event)"
+    class="nav-tabs mb-4"
   >
-    <ng-template let-fila>
-      @if (esCelador() && !fila.horaSalida) {
-        <app-button variant="secondary" icono="box-arrow-right" [fullWidth]="false" (click)="registrarSalida(fila)">
-          Registrar salida
-        </app-button>
-      }
-    </ng-template>
-  </app-table>
+    <!-- ---------- Visitas ---------- -->
+    <ng-container ngbNavItem="visitas">
+      <a ngbNavLink>
+        <i class="bi bi-people"></i> Visitas
+        <span class="badge rounded-pill badge-soft-neutral ms-1">{{ visitasActivas().length }}</span>
+      </a>
+      <ng-template ngbNavContent>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <input
+            type="search"
+            class="form-control form-control-sm"
+            style="max-width: 20rem"
+            placeholder="Buscar por nombre, unidad o placa…"
+            [ngModel]="filtroVisitas()"
+            (ngModelChange)="filtroVisitas.set($event)"
+          />
+          @if (puedeOperar()) {
+            <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirRegistrarVisita()">
+              Registrar entrada
+            </app-button>
+          }
+        </div>
 
-  <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
-    <h2 class="h5 mb-0">Paquetes</h2>
-    @if (esCelador()) {
-      <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirRegistrarPaquete()">
-        Registrar paquete
-      </app-button>
-    }
-  </div>
-  <app-table
-    [columnas]="columnasPaquetes"
-    [filas]="paquetes()"
-    textoVacio="No hay paquetes registrados para esta unidad."
-  >
-    <ng-template let-fila>
-      @if (esCelador() && !fila.horaRetiro) {
-        <app-button variant="secondary" icono="check2-circle" [fullWidth]="false" (click)="registrarEntrega(fila)">
-          Marcar entregado
-        </app-button>
-      }
-    </ng-template>
-  </app-table>
+        <app-table
+          [columnas]="columnasVisitas"
+          [filas]="visitasActivas()"
+          textoVacio="No hay visitas activas en este momento."
+        >
+          <ng-template let-fila>
+            @if (puedeOperar()) {
+              <app-button
+                variant="secondary"
+                icono="box-arrow-right"
+                [fullWidth]="false"
+                (click)="registrarSalida(fila)"
+              >
+                Registrar salida
+              </app-button>
+            }
+          </ng-template>
+        </app-table>
 
-  @if (esCelador()) {
-    <h2 class="h5 mb-2 mt-4">Autorizaciones previas vigentes</h2>
-    <app-table
-      [columnas]="columnasAutorizaciones"
-      [filas]="autorizaciones()"
-      textoVacio="No hay autorizaciones previas vigentes para esta unidad."
-    />
-  }
+        @if (autorizaciones().length > 0) {
+          <h2 class="h6 text-muted mt-4 mb-2">Autorizaciones previas vigentes</h2>
+          <app-table
+            [columnas]="columnasAutorizaciones"
+            [filas]="autorizaciones()"
+            textoVacio="No hay autorizaciones previas vigentes."
+          />
+        }
+      </ng-template>
+    </ng-container>
+
+    <!-- ---------- Paquetes ---------- -->
+    <ng-container ngbNavItem="paquetes">
+      <a ngbNavLink>
+        <i class="bi bi-box-seam"></i> Paquetes
+        <span class="badge rounded-pill badge-soft-neutral ms-1">{{ paquetesPendientes().length }}</span>
+      </a>
+      <ng-template ngbNavContent>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          @if (paquetesEntregados().length > 0) {
+            <button type="button" class="btn btn-link btn-sm p-0" (click)="mostrarEntregados.set(!mostrarEntregados())">
+              {{ mostrarEntregados() ? 'Ocultar entregados' : 'Ver entregados' }}
+            </button>
+          } @else {
+            <span></span>
+          }
+          @if (puedeOperar()) {
+            <app-button icono="plus-lg" [fullWidth]="false" (click)="abrirRegistrarPaquete()">
+              Registrar paquete
+            </app-button>
+          }
+        </div>
+
+        <app-table
+          [columnas]="columnasPaquetes"
+          [filas]="paquetesPendientes()"
+          textoVacio="No hay paquetes pendientes de entrega."
+        >
+          <ng-template let-fila>
+            @if (puedeOperar()) {
+              <div class="d-flex gap-1 justify-content-end">
+                <app-button
+                  variant="secondary"
+                  icono="whatsapp"
+                  [fullWidth]="false"
+                  (click)="avisarPaquete(fila)"
+                >
+                  {{ fila.notificado ? 'Volver a avisar' : 'Avisar' }}
+                </app-button>
+                <app-button icono="check2-circle" [fullWidth]="false" (click)="registrarEntrega(fila)">
+                  Entregado
+                </app-button>
+              </div>
+            }
+          </ng-template>
+        </app-table>
+
+        @if (mostrarEntregados() && paquetesEntregados().length > 0) {
+          <h2 class="h6 text-muted mt-4 mb-2">Entregados recientemente</h2>
+          <app-table
+            [columnas]="columnasEntregados"
+            [filas]="paquetesEntregados()"
+            textoVacio="Sin entregas recientes."
+          />
+        }
+      </ng-template>
+    </ng-container>
+
+    <!-- ---------- Directorio ---------- -->
+    <ng-container ngbNavItem="directorio">
+      <a ngbNavLink><i class="bi bi-journal-text"></i> Directorio</a>
+      <ng-template ngbNavContent>
+        <input
+          type="search"
+          class="form-control form-control-sm mb-3"
+          style="max-width: 20rem"
+          placeholder="Buscar unidad o residente…"
+          [ngModel]="filtroDirectorio()"
+          (ngModelChange)="filtroDirectorio.set($event)"
+        />
+
+        @if (directorio().length === 0) {
+          <p class="text-muted mb-0">Ninguna unidad coincide con la búsqueda.</p>
+        } @else {
+          <div class="directorio">
+            @for (unidad of directorio(); track unidad.codUnidad) {
+              <article class="directorio__card">
+                <p class="directorio__unidad">
+                  {{ unidad.torre ? unidad.torre + ' · ' : '' }}{{ unidad.identificador }}
+                </p>
+                @if (unidad.residentes.length === 0) {
+                  <p class="directorio__vacio">Sin residentes registrados.</p>
+                } @else {
+                  @for (residente of unidad.residentes; track residente.nombre) {
+                    <div class="directorio__residente">
+                      <div>
+                        <span class="directorio__nombre">{{ residente.nombre }}</span>
+                        @if (residente.esPropietario) {
+                          <span class="badge rounded-pill badge-soft-info ms-1">Propietario</span>
+                        }
+                        <span class="directorio__tel">{{ residente.telefono || 'Sin teléfono' }}</span>
+                      </div>
+                      @if (residente.telefono) {
+                        <app-button
+                          variant="secondary"
+                          icono="whatsapp"
+                          [fullWidth]="false"
+                          (click)="escribirWhatsapp(residente)"
+                        >
+                          WhatsApp
+                        </app-button>
+                      }
+                    </div>
+                  }
+                }
+              </article>
+            }
+          </div>
+        }
+      </ng-template>
+    </ng-container>
+  </nav>
+
+  <div [ngbNavOutlet]="nav"></div>
 }

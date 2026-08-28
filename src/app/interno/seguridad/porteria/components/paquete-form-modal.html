@@ -5,9 +5,41 @@
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
-    <app-text-field label="Descripción (opcional)">
-      <input type="text" class="form-control" formControlName="descripcion" />
-    </app-text-field>
+    <div class="row gx-3">
+      <div class="col-12 col-md-6">
+        <app-text-field
+          label="Unidad de destino"
+          [error]="form.controls.codUnidad.touched && form.controls.codUnidad.invalid ? 'Busca y elige la unidad del paquete' : null"
+        >
+          <app-buscador-unidad
+            [unidades]="unidades"
+            [invalido]="form.controls.codUnidad.touched && form.controls.codUnidad.invalid"
+            (seleccion)="elegirUnidad($event)"
+          />
+        </app-text-field>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <app-text-field label="Descripción (opcional)" hint="Ej: caja mediana de Mercado Libre, sobre, domicilio de comida…">
+          <input type="text" class="form-control" formControlName="descripcion" />
+        </app-text-field>
+      </div>
+
+      @if (unidadElegida; as u) {
+        <div class="col-12">
+          <div class="contacto-unidad">
+            @if (u.residentes.length === 0) {
+              <span class="text-muted">Esta unidad no tiene residentes registrados — no se podrá avisar.</span>
+            } @else {
+              <span class="contacto-unidad__titulo">Se podrá avisar a</span>
+              @for (r of u.residentes; track r.nombre) {
+                <span class="contacto-unidad__item">{{ r.nombre }} · {{ r.telefono || 'sin teléfono' }}</span>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
   </div>
 
   <div class="modal-footer">

@@ -8,6 +8,7 @@ import {
   CrearAutorizacionPreviaRequest,
   CrearPaqueteRequest,
   CrearVisitaRequest,
+  PanoramaPorteria,
   Paquete,
   ResumenPorteria,
   Visita,
@@ -21,6 +22,18 @@ export class PorteriaService {
   private readonly autorizacionesUrl = `${environment.apiUrl}/privado/autorizaciones-previas`;
 
   constructor(private readonly http: HttpClient) {}
+
+  public consultarPanorama(inmuebleId: number): Observable<PanoramaPorteria> {
+    const params = new HttpParams().set('inmuebleId', inmuebleId);
+    return this.http.get<PanoramaPorteria>(`${this.baseUrl}/panorama`, { params });
+  }
+
+  public marcarPaqueteNotificado(id: number): Observable<{ mensaje: string }> {
+    return this.http.patch<{ mensaje: string }>(
+      `${this.paquetesUrl}/${id}/notificado`,
+      {},
+    );
+  }
 
   public consultarVisitas(unidadId: number): Observable<Visita[]> {
     const params = new HttpParams().set('unidadId', unidadId);

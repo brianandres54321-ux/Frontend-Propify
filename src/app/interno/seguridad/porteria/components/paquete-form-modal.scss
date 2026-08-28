@@ -1,0 +1,21 @@
+.contacto-unidad {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+  font-size: 0.85rem;
+}
+
+.contacto-unidad__titulo {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+}
+
+.contacto-unidad__item {
+  font-variant-numeric: tabular-nums;
+}

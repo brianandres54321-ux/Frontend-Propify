@@ -1,0 +1,16 @@
+<input
+  type="text"
+  class="form-control"
+  [class.is-invalid]="invalido()"
+  placeholder="Escribe nombre del residente, apto o torre…"
+  [ngbTypeahead]="buscar"
+  [resultFormatter]="formato"
+  [inputFormatter]="formato"
+  [editable]="false"
+  [container]="'body'"
+  [(ngModel)]="valor"
+  (selectItem)="elegir($event)"
+  (ngModelChange)="alEscribir()"
+  (focus)="foco$.next($any($event.target).value)"
+  (click)="clic$.next($any($event.target).value)"
+/>

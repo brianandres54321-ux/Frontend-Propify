@@ -3,6 +3,7 @@ export * from './button/button';
 export * from './card/card';
 export * from './confirm-dialog/confirm-dialog';
 export * from './confirm-dialog/confirm-dialog.service';
+export * from './firma-pad/firma-pad';
 export * from './loading/loading';
 export * from './notificaciones-bell/notificaciones-bell';
 export * from './pagination/pagination';

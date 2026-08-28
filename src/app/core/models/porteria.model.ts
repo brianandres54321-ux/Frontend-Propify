@@ -3,6 +3,13 @@ export interface Visita {
   codUnidad: number;
   nombreVisitante: string;
   cedulaVisitante?: string;
+  // Total de personas del grupo (incluye a quien firma). 1 si es individual.
+  numeroPersonas: number;
+  acompanantes?: string;
+  // Placa(s) del/los vehículo(s) de la visita, como texto libre.
+  vehiculos?: string;
+  // Firma manuscrita del visitante como data URL PNG.
+  firma?: string;
   horaEntrada: string;
   horaSalida?: string;
   registradoPorId: number;
@@ -12,6 +19,10 @@ export interface CrearVisitaRequest {
   codUnidad: number;
   nombreVisitante: string;
   cedulaVisitante?: string;
+  numeroPersonas?: number;
+  acompanantes?: string;
+  vehiculos?: string;
+  firma?: string;
 }
 
 export interface Paquete {
@@ -51,4 +62,28 @@ export interface CrearAutorizacionPreviaRequest {
 export interface ResumenPorteria {
   visitasActivas: number;
   paquetesPendientes: number;
+}
+
+export interface ContactoResidente {
+  nombre: string;
+  telefono: string;
+  esPropietario: boolean;
+}
+
+export interface UnidadPanorama {
+  codUnidad: number;
+  identificador: string;
+  torre: string | null;
+  piso: number | null;
+  residentes: ContactoResidente[];
+}
+
+// GET /privado/porteria/panorama?inmuebleId= — todo el estado de portería de
+// un inmueble en una sola llamada.
+export interface PanoramaPorteria {
+  unidades: UnidadPanorama[];
+  visitasActivas: Visita[];
+  paquetesPendientes: Paquete[];
+  paquetesEntregados: Paquete[];
+  autorizacionesVigentes: AutorizacionPrevia[];
 }

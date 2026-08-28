@@ -1,0 +1,19 @@
+<div class="firma-pad">
+  <canvas
+    #lienzo
+    class="firma-pad__lienzo"
+    (pointerdown)="inicio($event)"
+    (pointermove)="mover($event)"
+    (pointerup)="fin()"
+    (pointerleave)="fin()"
+    (pointercancel)="fin()"
+  ></canvas>
+
+  @if (vacio) {
+    <span class="firma-pad__placeholder">Firma aquí con el dedo o el lápiz</span>
+  }
+
+  <button type="button" class="firma-pad__limpiar" (click)="limpiar()" [disabled]="vacio">
+    <i class="bi bi-eraser"></i> Borrar
+  </button>
+</div>

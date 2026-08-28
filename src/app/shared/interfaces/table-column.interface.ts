@@ -13,5 +13,8 @@ export interface TableColumn<T> {
   // Si se define, la celda se pinta como una píldora de color en vez de
   // texto plano (p. ej. "Activo" en verde, "3 días" en rojo).
   badge?: (fila: T) => TableBadge;
+  // Si se define, la celda muestra una imagen (src). Devuelve null/'' para
+  // mostrar un guion. Pensado para miniaturas: firmas, avatares, etc.
+  imagen?: (fila: T) => string | null | undefined;
   align?: 'start' | 'end' | 'center';
 }

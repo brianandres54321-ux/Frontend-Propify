@@ -5,21 +5,105 @@
 
 <form [formGroup]="form" (ngSubmit)="enviar()">
   <div class="modal-body">
-    <app-text-field
-      label="Nombre del visitante"
-      [error]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid ? 'Ingresa un nombre' : null"
-    >
-      <input
-        type="text"
-        class="form-control"
-        [class.is-invalid]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid"
-        formControlName="nombreVisitante"
-      />
-    </app-text-field>
+    <div class="row gx-3">
+      <div class="col-12 col-md-6">
+        <app-text-field
+          label="Unidad de destino"
+          [error]="form.controls.codUnidad.touched && form.controls.codUnidad.invalid ? 'Busca y elige la unidad a la que va la visita' : null"
+        >
+          <app-buscador-unidad
+            [unidades]="unidades"
+            [invalido]="form.controls.codUnidad.touched && form.controls.codUnidad.invalid"
+            (seleccion)="elegirUnidad($event)"
+          />
+        </app-text-field>
+      </div>
 
-    <app-text-field label="Cédula (opcional)">
-      <input type="text" class="form-control" formControlName="cedulaVisitante" />
-    </app-text-field>
+      <div class="col-12 col-md-6 d-flex align-items-center">
+        @if (unidadElegida; as u) {
+          <div class="contacto-unidad w-100">
+            @if (u.residentes.length === 0) {
+              <span class="text-muted">Esta unidad no tiene residentes registrados.</span>
+            } @else {
+              <span class="contacto-unidad__titulo">Residentes</span>
+              @for (r of u.residentes; track r.nombre) {
+                <span class="contacto-unidad__item">{{ r.nombre }} · {{ r.telefono || 'sin teléfono' }}</span>
+              }
+            }
+          </div>
+        }
+      </div>
+
+      <div class="col-12 col-md-7">
+        <app-text-field
+          label="Nombre del visitante"
+          hint="La persona responsable del grupo."
+          [error]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid ? 'Ingresa un nombre' : null"
+        >
+          <input
+            type="text"
+            class="form-control"
+            [class.is-invalid]="form.controls.nombreVisitante.touched && form.controls.nombreVisitante.invalid"
+            formControlName="nombreVisitante"
+          />
+        </app-text-field>
+      </div>
+
+      <div class="col-12 col-md-5">
+        <app-text-field label="Cédula (opcional)">
+          <input type="text" class="form-control" formControlName="cedulaVisitante" />
+        </app-text-field>
+      </div>
+
+      <div class="col-6 col-md-4">
+        <app-text-field
+          label="N.º de personas"
+          hint="Incluye a quien firma."
+          [error]="form.controls.numeroPersonas.touched && form.controls.numeroPersonas.invalid ? 'Entre 1 y 50' : null"
+        >
+          <input
+            type="number"
+            inputmode="numeric"
+            min="1"
+            max="50"
+            step="1"
+            class="form-control"
+            [class.is-invalid]="form.controls.numeroPersonas.touched && form.controls.numeroPersonas.invalid"
+            formControlName="numeroPersonas"
+          />
+        </app-text-field>
+      </div>
+
+      <div class="col-6 col-md-8">
+        <app-text-field label="Vehículo(s) (opcional)" hint="Placa(s), separadas con coma.">
+          <input
+            type="text"
+            class="form-control"
+            formControlName="vehiculos"
+            placeholder="Ej: ABC123, XYZ789"
+          />
+        </app-text-field>
+      </div>
+
+      @if (esGrupo) {
+        <div class="col-12">
+          <app-text-field label="Acompañantes (opcional)" hint="Nombres de las demás personas del grupo.">
+            <textarea
+              class="form-control"
+              rows="2"
+              formControlName="acompanantes"
+              placeholder="Ej: María Gómez, Pedro Ruiz…"
+            ></textarea>
+          </app-text-field>
+        </div>
+      }
+
+      <div class="col-12">
+        <app-text-field label="Firma del visitante" hint="Se firma en la pantalla (tablet, celular o mouse). Opcional si no hay dispositivo.">
+          <app-firma-pad (firma)="form.controls.firma.setValue($event)" />
+        </app-text-field>
+      </div>
+    </div>
   </div>
 
   <div class="modal-footer">

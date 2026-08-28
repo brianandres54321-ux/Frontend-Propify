@@ -32,6 +32,14 @@
                   <span class="badge rounded-pill badge-soft-{{ columna.badge(fila).variante }}">
                     {{ columna.badge(fila).texto }}
                   </span>
+                } @else if (columna.imagen) {
+                  @if (columna.imagen(fila); as src) {
+                    <a [href]="src" target="_blank" rel="noopener" title="Ver en grande">
+                      <img [src]="src" [alt]="columna.label" class="tabla-imagen" />
+                    </a>
+                  } @else {
+                    —
+                  }
                 } @else {
                   {{ columna.valor ? columna.valor(fila) : celda(fila, columna.key) }}
                 }
