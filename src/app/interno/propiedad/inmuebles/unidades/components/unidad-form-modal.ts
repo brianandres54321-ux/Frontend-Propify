@@ -46,6 +46,8 @@ export class UnidadFormModal {
       areaM2: fb.control<number | null>(null),
       estadoOcupacion: fb.control<EstadoOcupacionUnidad>(EstadoOcupacionUnidad.OCUPADA),
       precioArriendo: fb.control<number | null>(null),
+      enVenta: fb.control(false),
+      precioVenta: fb.control<number | null>(null),
       numeroCuartos: fb.control<number | null>(null),
       numeroBanos: fb.control<number | null>(null),
       tieneComedor: fb.control(false),
@@ -66,6 +68,8 @@ export class UnidadFormModal {
       areaM2: unidad.areaM2 != null ? Number(unidad.areaM2) : null,
       estadoOcupacion: unidad.estadoOcupacion,
       precioArriendo: unidad.precioArriendo != null ? Number(unidad.precioArriendo) : null,
+      enVenta: unidad.enVenta ?? false,
+      precioVenta: unidad.precioVenta != null ? Number(unidad.precioVenta) : null,
       numeroCuartos: unidad.numeroCuartos ?? null,
       numeroBanos: unidad.numeroBanos ?? null,
       tieneComedor: unidad.tieneComedor,
@@ -80,13 +84,21 @@ export class UnidadFormModal {
       this.form.markAllAsTouched();
       return;
     }
-    const { piso, areaM2, precioArriendo, numeroCuartos, numeroBanos, ...resto } =
-      this.form.getRawValue();
+    const {
+      piso,
+      areaM2,
+      precioArriendo,
+      precioVenta,
+      numeroCuartos,
+      numeroBanos,
+      ...resto
+    } = this.form.getRawValue();
     this.activeModal.close({
       ...resto,
       piso: piso ?? undefined,
       areaM2: areaM2 ?? undefined,
       precioArriendo: precioArriendo ?? undefined,
+      precioVenta: resto.enVenta ? (precioVenta ?? undefined) : undefined,
       numeroCuartos: numeroCuartos ?? undefined,
       numeroBanos: numeroBanos ?? undefined,
     });

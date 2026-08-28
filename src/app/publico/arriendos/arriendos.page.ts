@@ -8,6 +8,7 @@ import {
   ArriendoBusquedaItem,
   ArriendoBusquedaRespuesta,
   BuscarArriendosParams,
+  OperacionPublicacion,
   OrdenArriendos,
   TipoUnidad,
 } from '@core/models';
@@ -31,6 +32,24 @@ const TAMANIO_PAGINA = 12;
 
 function formatoMonto(valor: number): string {
   return '$' + Number(valor).toLocaleString('es-CO');
+}
+
+// Los precios de venta son grandes: se muestran abreviados en millones
+// ("$350 M", "$1.200 M") en las tarjetas; el detalle usa el valor completo.
+function formatoMillones(valor: number): string {
+  const n = Number(valor);
+  if (!Number.isFinite(n) || n <= 0) {
+    return '';
+  }
+  if (n < 1_000_000) {
+    return '$' + n.toLocaleString('es-CO');
+  }
+  const millones = n / 1_000_000;
+  const texto =
+    millones >= 100 || Number.isInteger(millones)
+      ? millones.toLocaleString('es-CO', { maximumFractionDigits: 0 })
+      : millones.toLocaleString('es-CO', { maximumFractionDigits: 1 });
+  return `$${texto} M`;
 }
 
 function aNumero(valor: string | null): number | undefined {
@@ -84,6 +103,7 @@ export class ArriendosPage implements OnInit {
   );
 
   protected readonly form = this.fb.group({
+    operacion: 'arriendo' as OperacionPublicacion,
     q: '',
     ciudad: '',
     barrio: '',
@@ -95,6 +115,19 @@ export class ArriendosPage implements OnInit {
     amoblado: false,
     orden: 'recientes' as OrdenArriendos,
   });
+
+  // Signal propia (no derivada de valorForm) porque en ngOnInit el valor
+  // inicial se aplica con emitEvent:false y valueChanges no dispararía.
+  protected readonly operacion = signal<OperacionPublicacion>('arriendo');
+  protected readonly esVenta = computed(() => this.operacion() === 'venta');
+
+  // Precio a mostrar en la tarjeta según la operación.
+  protected precioItem(item: ArriendoBusquedaItem): string | null {
+    if (this.esVenta()) {
+      return item.precioVenta ? formatoMillones(item.precioVenta) : null;
+    }
+    return item.precioArriendo ? formatoMonto(item.precioArriendo) : null;
+  }
 
   private readonly valorForm = toSignal(
     this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
@@ -130,8 +163,12 @@ export class ArriendosPage implements OnInit {
 
   ngOnInit(): void {
     const qp = this.route.snapshot.queryParamMap;
+    const operacionUrl: OperacionPublicacion =
+      qp.get('operacion') === 'venta' ? 'venta' : 'arriendo';
+    this.operacion.set(operacionUrl);
     this.form.patchValue(
       {
+        operacion: operacionUrl,
         q: qp.get('q') ?? '',
         ciudad: qp.get('ciudad') ?? '',
         barrio: qp.get('barrio') ?? '',
@@ -164,8 +201,24 @@ export class ArriendosPage implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  protected cambiarOperacion(operacion: OperacionPublicacion): void {
+    if (this.operacion() === operacion) {
+      return;
+    }
+    this.operacion.set(operacion);
+    // Al cambiar de operación, el rango de precios y el orden dejan de tener
+    // sentido (arriendo ~cientos de miles, venta ~cientos de millones).
+    this.form.patchValue({
+      operacion,
+      precioMin: '',
+      precioMax: '',
+      orden: 'recientes',
+    });
+  }
+
   protected limpiarFiltros(): void {
     this.form.reset({
+      operacion: this.form.controls.operacion.value,
       q: '',
       ciudad: '',
       barrio: '',
@@ -180,9 +233,10 @@ export class ArriendosPage implements OnInit {
   }
 
   protected urlWhatsapp(item: ArriendoBusquedaItem): string {
+    const verbo = this.esVenta() ? 'comprarlo' : 'arrendarlo';
     return urlWhatsapp(
       item.telefonoContacto!,
-      `Hola, vi tu anuncio de ${item.identificador} en Propify y estoy interesado.`,
+      `Hola, vi tu anuncio de ${item.identificador} en Propify y estoy interesado en ${verbo}.`,
     );
   }
 
@@ -216,6 +270,7 @@ export class ArriendosPage implements OnInit {
   private construirFiltros(): BuscarArriendosParams {
     const v = this.form.getRawValue();
     return {
+      operacion: v.operacion === 'venta' ? 'venta' : undefined,
       q: v.q.trim() || undefined,
       ciudad: v.ciudad.trim() || undefined,
       barrio: v.barrio.trim() || undefined,

@@ -20,6 +20,9 @@ export enum EstadoOcupacionUnidad {
 // torreId, identificador) — para Casa Adaptada torreId es null").
 export interface CaracteristicasUnidad {
   precioArriendo?: number;
+  // Publicación "en venta" — independiente del estado de ocupación.
+  enVenta?: boolean;
+  precioVenta?: number;
   numeroCuartos?: number;
   numeroBanos?: number;
   tieneComedor: boolean;
@@ -99,6 +102,28 @@ export interface FotoUnidad {
   creadoEn: string;
 }
 
+export interface AmenidadesInmueble {
+  zonasComunes: boolean;
+  parqueadero: boolean;
+  porteria: boolean;
+}
+
+// Tarjeta de "otras opciones" al pie del detalle.
+export interface ArriendoRelacionada extends CaracteristicasUnidad {
+  codUnidad: number;
+  codInmueble: number;
+  identificador: string;
+  tipo: TipoUnidad;
+  piso?: number;
+  areaM2?: number;
+  enArriendo?: boolean;
+  codFotoPortada: number | null;
+  fotos: number[];
+  nombreInmueble: string | null;
+  ciudad: string | null;
+  barrio: string | null;
+}
+
 // Respuesta de GET /publico/arriendos/unidades/:id — nunca incluye datos del
 // tenant/dueño ni de residentes, salvo el teléfono de contacto que el propio
 // dueño eligió publicar.
@@ -108,13 +133,17 @@ export interface ArriendoUnidadPublico extends CaracteristicasUnidad {
   tipo: TipoUnidad;
   piso?: number;
   areaM2?: number;
-  nombreInmueble?: string;
-  direccionInmueble?: string;
+  enArriendo?: boolean;
+  nombreInmueble?: string | null;
+  direccionInmueble?: string | null;
+  torre?: string | null;
   ciudad?: string | null;
   barrio?: string | null;
   departamento?: string | null;
+  amenidades: AmenidadesInmueble;
   telefonoContacto: string | null;
   fotos: { codFoto: number }[];
+  relacionadas: ArriendoRelacionada[];
 }
 
 // Respuesta de GET /publico/arriendos/inmuebles/:inmuebleId
@@ -150,9 +179,11 @@ export interface ArriendoDestacada extends CaracteristicasUnidad {
 }
 
 export type OrdenArriendos = 'recientes' | 'precio-asc' | 'precio-desc';
+export type OperacionPublicacion = 'arriendo' | 'venta';
 
 // Filtros de GET /publico/arriendos/buscar.
 export interface BuscarArriendosParams {
+  operacion?: OperacionPublicacion;
   q?: string;
   ciudad?: string;
   barrio?: string;
@@ -175,6 +206,7 @@ export interface ArriendoBusquedaItem extends CaracteristicasUnidad {
   tipo: TipoUnidad;
   piso?: number;
   areaM2?: number;
+  enArriendo?: boolean;
   codFotoPortada: number | null;
   // IDs de todas las fotos, en orden — para el mini-carrusel de la tarjeta.
   fotos: number[];

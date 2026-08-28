@@ -71,6 +71,33 @@
       </div>
     </div>
 
+    <div class="row align-items-end">
+      <div class="col-md-6">
+        <div class="form-check mt-2">
+          <input type="checkbox" class="form-check-input" id="enVenta" formControlName="enVenta" />
+          <label class="form-check-label" for="enVenta">
+            Publicar también en venta
+          </label>
+        </div>
+        <p class="form-text mt-0">
+          Se puede vender esté ocupada o no; puede ir en arriendo y venta a la vez.
+        </p>
+      </div>
+      @if (form.controls.enVenta.value) {
+        <div class="col-md-6">
+          <app-text-field label="Precio de venta">
+            <input
+              type="text"
+              inputmode="numeric"
+              appMoneda
+              class="form-control"
+              formControlName="precioVenta"
+            />
+          </app-text-field>
+        </div>
+      }
+    </div>
+
     <div class="row">
       <div class="col-md-6">
         <app-text-field label="Cuartos">

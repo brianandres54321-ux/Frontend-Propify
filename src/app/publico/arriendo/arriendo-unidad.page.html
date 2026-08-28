@@ -1,4 +1,4 @@
-<div class="container py-5">
+<div class="container py-4 py-lg-5">
   <button type="button" class="volver" (click)="volver()">
     <i class="bi bi-arrow-left"></i> Volver a la búsqueda
   </button>
@@ -7,79 +7,150 @@
     <app-loading />
   } @else if (errorMensaje()) {
     <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
-  } @else if (unidad()) {
-    <div class="row g-4">
-      <div class="col-12 col-lg-7">
+  } @else if (unidad(); as u) {
+    <div class="detalle">
+      <div class="detalle__galeria">
         @if (fotosUrls().length > 0) {
           <app-galeria-fotos
             [fotos]="fotosUrls()"
-            [alt]="'Foto de ' + etiquetasTipo[unidad()!.tipo] + ' ' + unidad()!.identificador"
+            [alt]="'Foto de ' + titulo()"
           />
         } @else {
-          <div class="sin-fotos">Sin fotos disponibles</div>
+          <div class="sin-fotos"><i class="bi bi-camera"></i> Sin fotos disponibles</div>
         }
       </div>
 
-      <div class="col-12 col-lg-5">
-        <span class="badge-en-arriendo">En arriendo</span>
-        <h1 class="h3 mt-2 mb-1">{{ etiquetasTipo[unidad()!.tipo] }} {{ unidad()!.identificador }}</h1>
-        <p class="text-muted mb-3">
-          {{ unidad()!.nombreInmueble }}
-          @if (unidad()!.direccionInmueble) {
-            — {{ unidad()!.direccionInmueble }}
+      <aside class="detalle__panel">
+        <div class="detalle__badges">
+          @if (u.enArriendo) {
+            <span class="etiqueta etiqueta--arriendo"><i class="bi bi-key"></i> En arriendo</span>
           }
+          @if (u.enVenta) {
+            <span class="etiqueta etiqueta--venta"><i class="bi bi-tag"></i> En venta</span>
+          }
+        </div>
+
+        <h1 class="detalle__titulo">{{ titulo() }}</h1>
+
+        <p class="detalle__ubic">
+          <i class="bi bi-geo-alt"></i>
+          @if (u.torre) {<strong>{{ u.torre }}</strong> · }{{ u.nombreInmueble }}
+          @if (ubicacion()) { <span class="detalle__ubic-sec">· {{ ubicacion() }}</span> }
         </p>
 
-        @if (unidad()!.precioArriendo) {
-          <p class="precio">{{ formatoMonto(unidad()!.precioArriendo!) }} <span class="text-muted small">/ mes</span></p>
+        <div class="detalle__precios">
+          @if (u.enArriendo && u.precioArriendo) {
+            <div class="precio">
+              <span class="precio__label">Arriendo</span>
+              <span class="precio__valor">{{ formatoMonto(u.precioArriendo) }} <small>/ mes</small></span>
+            </div>
+          }
+          @if (u.enVenta && u.precioVenta) {
+            <div class="precio">
+              <span class="precio__label">Venta</span>
+              <span class="precio__valor">{{ formatoMonto(u.precioVenta) }}</span>
+            </div>
+          }
+          @if (!(u.precioArriendo && u.enArriendo) && !(u.precioVenta && u.enVenta)) {
+            <p class="text-muted mb-0">Precio a consultar con el anunciante.</p>
+          }
+        </div>
+
+        @if (datosClave().length > 0) {
+          <ul class="datos-clave">
+            @for (dato of datosClave(); track dato.etiqueta) {
+              <li>
+                <i class="bi" [class]="dato.icono"></i>
+                <span class="datos-clave__valor">{{ dato.valor }}</span>
+                <span class="datos-clave__etq">{{ dato.etiqueta }}</span>
+              </li>
+            }
+          </ul>
         }
 
-        <ul class="lista-datos">
-          @if (unidad()!.areaM2) {
-            <li><strong>{{ unidad()!.areaM2 }}</strong> m²</li>
-          }
-          @if (unidad()!.numeroCuartos) {
-            <li><strong>{{ unidad()!.numeroCuartos }}</strong> cuartos</li>
-          }
-          @if (unidad()!.numeroBanos) {
-            <li><strong>{{ unidad()!.numeroBanos }}</strong> baños</li>
-          }
-          @if (unidad()!.piso) {
-            <li>Piso <strong>{{ unidad()!.piso }}</strong></li>
-          }
-        </ul>
-
-        <h2 class="h6 mt-4">Características</h2>
-        <ul class="lista-caracteristicas">
-          @if (unidad()!.tieneComedor) {
-            <li>Comedor</li>
-          }
-          @if (unidad()!.tieneSala) {
-            <li>Sala</li>
-          }
-          @if (unidad()!.tieneCocina) {
-            <li>Cocina</li>
-          }
-          @if (unidad()!.amoblado) {
-            <li>Amoblado</li>
-          }
-        </ul>
-
-        @if (unidad()!.telefonoContacto) {
+        @if (u.telefonoContacto) {
           <a
             class="boton-whatsapp"
-            [href]="urlWhatsapp(unidad()!.telefonoContacto!)"
+            [href]="urlWhatsapp(u.telefonoContacto)"
             target="_blank"
             rel="noopener"
           >
-            Contactar por WhatsApp
+            <i class="bi bi-whatsapp"></i> Contactar por WhatsApp
           </a>
         } @else {
-          <p class="text-muted small mt-4">
+          <p class="text-muted small mt-3 mb-0">
             Este anuncio todavía no tiene un teléfono de contacto publicado.
           </p>
         }
-      </div>
+      </aside>
     </div>
+
+    @if (caracteristicas().length > 0 || amenidades().length > 0 || u.direccionInmueble) {
+      <div class="secciones">
+        @if (caracteristicas().length > 0) {
+          <section class="bloque">
+            <h2 class="bloque__titulo">Características de la unidad</h2>
+            <div class="chips">
+              @for (c of caracteristicas(); track c.texto) {
+                <span class="chip"><i class="bi" [class]="c.icono"></i> {{ c.texto }}</span>
+              }
+            </div>
+          </section>
+        }
+
+        @if (amenidades().length > 0) {
+          <section class="bloque">
+            <h2 class="bloque__titulo">El conjunto / edificio ofrece</h2>
+            <div class="chips">
+              @for (a of amenidades(); track a.texto) {
+                <span class="chip chip--amenidad"><i class="bi" [class]="a.icono"></i> {{ a.texto }}</span>
+              }
+            </div>
+          </section>
+        }
+
+        @if (u.direccionInmueble || ubicacion()) {
+          <section class="bloque">
+            <h2 class="bloque__titulo">Ubicación</h2>
+            <p class="bloque__texto">
+              @if (u.direccionInmueble) { {{ u.direccionInmueble }}<br /> }
+              {{ ubicacion() }}
+            </p>
+          </section>
+        }
+      </div>
+    }
+
+    @if (relacionadas().length > 0) {
+      <section class="relacionadas">
+        <h2 class="relacionadas__titulo">Otras opciones que te pueden interesar</h2>
+        <div class="relacionadas__pista">
+          @for (rel of relacionadas(); track rel.codUnidad) {
+            <a class="mini" [routerLink]="['/arriendo/unidad', rel.codUnidad]">
+              <div class="mini__foto">
+                @if (urlPortada(rel); as src) {
+                  <img [src]="src" [alt]="etiquetasTipo[rel.tipo] + ' ' + rel.identificador" loading="lazy" />
+                } @else {
+                  <div class="mini__sin-foto"><i class="bi bi-camera"></i></div>
+                }
+                <span class="mini__op">{{ etiquetaRel(rel) }}</span>
+              </div>
+              <div class="mini__cuerpo">
+                <span class="mini__titulo">{{ etiquetasTipo[rel.tipo] }} {{ rel.identificador }}</span>
+                @if (rel.nombreInmueble) {
+                  <span class="mini__inmueble">{{ rel.nombreInmueble }}</span>
+                }
+                @if (ubicacionRel(rel); as loc) {
+                  <span class="mini__ubic"><i class="bi bi-geo-alt"></i> {{ loc }}</span>
+                }
+                @if (precioRelacionada(rel); as precio) {
+                  <span class="mini__precio">{{ precio }}</span>
+                }
+              </div>
+            </a>
+          }
+        </div>
+      </section>
+    }
   }
 </div>

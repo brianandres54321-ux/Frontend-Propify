@@ -115,12 +115,36 @@
     }
 
     <div class="arriendos__contenido">
+      <div class="operacion-toggle" role="tablist" aria-label="Tipo de operación">
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="!esVenta()"
+          [class.operacion-toggle__opcion--activa]="!esVenta()"
+          class="operacion-toggle__opcion"
+          (click)="cambiarOperacion('arriendo')"
+        >
+          <i class="bi bi-key"></i> En arriendo
+        </button>
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="esVenta()"
+          [class.operacion-toggle__opcion--activa]="esVenta()"
+          class="operacion-toggle__opcion"
+          (click)="cambiarOperacion('venta')"
+        >
+          <i class="bi bi-tag"></i> En venta
+        </button>
+      </div>
+
       <header class="arriendos__intro">
         <span class="eyebrow">Publicaciones activas</span>
-        <h1>Unidades en arriendo</h1>
+        <h1>{{ esVenta() ? 'Inmuebles en venta' : 'Unidades en arriendo' }}</h1>
         <p>
-          Apartamentos, casas, locales y oficinas publicados por administradores
-          que usan Propify.
+          Apartamentos, casas, locales y oficinas
+          {{ esVenta() ? 'a la venta' : 'en arriendo' }}, publicados por
+          administradores que usan Propify.
         </p>
       </header>
 
@@ -180,8 +204,10 @@
                   }
                 </ul>
                 <div class="tarjeta-unidad__pie">
-                  @if (item.precioArriendo) {
-                    <span class="tarjeta-unidad__precio">{{ formatoMonto(item.precioArriendo) }}<small>/mes</small></span>
+                  @if (precioItem(item); as precio) {
+                    <span class="tarjeta-unidad__precio">
+                      {{ precio }}@if (!esVenta()) {<small>/mes</small>}
+                    </span>
                   } @else {
                     <span class="tarjeta-unidad__precio tarjeta-unidad__precio--consultar">Precio a consultar</span>
                   }
