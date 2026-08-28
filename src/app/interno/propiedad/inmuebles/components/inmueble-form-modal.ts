@@ -37,6 +37,9 @@ export class InmuebleFormModal {
     this.form = fb.group({
       nombre: fb.control('', [Validators.required, Validators.maxLength(250)]),
       direccion: fb.control('', [Validators.maxLength(500)]),
+      ciudad: fb.control('', [Validators.maxLength(120)]),
+      barrio: fb.control('', [Validators.maxLength(120)]),
+      departamento: fb.control('', [Validators.maxLength(120)]),
       tieneTorres: fb.control(false),
       tieneZonasComunes: fb.control(false),
       tieneParqueaderos: fb.control(false),
@@ -67,6 +70,9 @@ export class InmuebleFormModal {
     this.form.patchValue({
       nombre: inmueble.nombre,
       direccion: inmueble.direccion ?? '',
+      ciudad: inmueble.ciudad ?? '',
+      barrio: inmueble.barrio ?? '',
+      departamento: inmueble.departamento ?? '',
       tieneTorres: inmueble.tieneTorres,
       tieneZonasComunes: inmueble.tieneZonasComunes,
       tieneParqueaderos: inmueble.tieneParqueaderos,

@@ -85,6 +85,9 @@ export interface ArriendoUnidadPublico extends CaracteristicasUnidad {
   areaM2?: number;
   nombreInmueble?: string;
   direccionInmueble?: string;
+  ciudad?: string | null;
+  barrio?: string | null;
+  departamento?: string | null;
   telefonoContacto: string | null;
   fotos: { codFoto: number }[];
 }
@@ -116,4 +119,47 @@ export interface ArriendoDestacada extends CaracteristicasUnidad {
   codFotoPortada: number | null;
   nombreInmueble?: string;
   telefonoContacto: string | null;
+}
+
+export type OrdenArriendos = 'recientes' | 'precio-asc' | 'precio-desc';
+
+// Filtros de GET /publico/arriendos/buscar.
+export interface BuscarArriendosParams {
+  q?: string;
+  ciudad?: string;
+  barrio?: string;
+  departamento?: string;
+  tipo?: TipoUnidad;
+  precioMin?: number;
+  precioMax?: number;
+  cuartos?: number;
+  amoblado?: boolean;
+  orden?: OrdenArriendos;
+  pagina?: number;
+  tamanio?: number;
+}
+
+// Un resultado de la búsqueda pública de arriendos.
+export interface ArriendoBusquedaItem extends CaracteristicasUnidad {
+  codUnidad: number;
+  codInmueble: number;
+  identificador: string;
+  tipo: TipoUnidad;
+  piso?: number;
+  areaM2?: number;
+  codFotoPortada: number | null;
+  nombreInmueble: string | null;
+  direccionInmueble: string | null;
+  ciudad: string | null;
+  barrio: string | null;
+  departamento: string | null;
+  telefonoContacto: string | null;
+}
+
+// Respuesta de GET /publico/arriendos/buscar.
+export interface ArriendoBusquedaRespuesta {
+  items: ArriendoBusquedaItem[];
+  total: number;
+  pagina: number;
+  tamanio: number;
 }

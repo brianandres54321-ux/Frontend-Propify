@@ -3,6 +3,9 @@ export interface Inmueble {
   codTenant: number;
   nombre: string;
   direccion?: string;
+  ciudad?: string;
+  barrio?: string;
+  departamento?: string;
   tieneTorres: boolean;
   tieneZonasComunes: boolean;
   tieneParqueaderos: boolean;
@@ -14,6 +17,9 @@ export interface Inmueble {
 export interface CrearInmuebleRequest {
   nombre: string;
   direccion?: string;
+  ciudad?: string;
+  barrio?: string;
+  departamento?: string;
   tieneTorres?: boolean;
   tieneZonasComunes?: boolean;
   tieneParqueaderos?: boolean;

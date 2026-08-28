@@ -1,0 +1,100 @@
+<section class="planes-hero">
+  <span class="eyebrow">Planes</span>
+  <h1>Un plan por cada tipo de propiedad</h1>
+  <p>
+    Empieza gratis con el plan demo (1 inmueble, hasta 5 unidades) y actualiza
+    cuando lo necesites. Sin permanencia — cambias o cancelas cuando quieras.
+  </p>
+</section>
+
+<section class="grid-planes" aria-label="Planes disponibles">
+  @for (plan of planes; track plan.nombre; let i = $index) {
+    <article
+      class="tarjeta-plan"
+      [class.tarjeta-plan--destacada]="plan.destacado"
+      appRevelarAlScroll
+      [style.transition-delay.ms]="i * 90"
+    >
+      @if (plan.destacado) {
+        <span class="tarjeta-plan__badge">Más elegido</span>
+      }
+      <h2>{{ plan.nombre }}</h2>
+      <p class="tarjeta-plan__precio">
+        {{ plan.precio }}<small>{{ plan.periodo }}</small>
+      </p>
+      <p class="tarjeta-plan__desc">{{ plan.descripcion }}</p>
+      <ul class="tarjeta-plan__lista">
+        @for (item of plan.incluye; track item) {
+          <li><i class="bi bi-check-lg"></i> {{ item }}</li>
+        }
+      </ul>
+      <a routerLink="/registro" class="tarjeta-plan__cta">Empezar gratis</a>
+    </article>
+  }
+</section>
+
+<section class="comparativa" appRevelarAlScroll>
+  <h2>Compara los planes</h2>
+  <div class="comparativa__scroll">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Característica</th>
+          <th scope="col">Casas</th>
+          <th scope="col" class="comparativa__destacada">Edificios</th>
+          <th scope="col">Conjuntos</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (fila of comparativa; track fila.caracteristica) {
+          <tr>
+            <th scope="row">{{ fila.caracteristica }}</th>
+            @for (valor of [fila.casas, fila.edificios, fila.conjuntos]; track $index) {
+              <td [class.comparativa__destacada]="$index === 1">
+                @if (esBooleano(valor)) {
+                  @if (valor) {
+                    <i class="bi bi-check-lg comparativa__si" aria-label="Incluido"></i>
+                  } @else {
+                    <span class="comparativa__no" aria-label="No incluido">—</span>
+                  }
+                } @else {
+                  {{ valor }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="planes-faq" appRevelarAlScroll>
+  <h2>Preguntas sobre planes y precios</h2>
+  <div class="planes-faq__lista">
+    @for (item of faqs; track item.pregunta; let indice = $index) {
+      <div class="planes-faq__item" [class.planes-faq__item--abierto]="faqAbierta() === indice">
+        <button type="button" class="planes-faq__pregunta" (click)="alternarFaq(indice)">
+          {{ item.pregunta }}
+          <i
+            class="bi"
+            [class.bi-chevron-down]="faqAbierta() !== indice"
+            [class.bi-chevron-up]="faqAbierta() === indice"
+          ></i>
+        </button>
+        @if (faqAbierta() === indice) {
+          <p class="planes-faq__respuesta">{{ item.respuesta }}</p>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<section class="planes-cta" appRevelarAlScroll>
+  <h2>¿Listo para empezar?</h2>
+  <p>Crea tu cuenta gratis y registra tu primer inmueble hoy mismo.</p>
+  <div class="planes-cta__botones">
+    <a routerLink="/registro" class="planes-cta__primario">Crear cuenta gratis</a>
+    <a routerLink="/contacto" class="planes-cta__ghost">Hablar con el equipo</a>
+  </div>
+</section>

@@ -1,0 +1,162 @@
+<section class="arriendos">
+  <header class="arriendos__intro">
+    <span class="eyebrow">Publicaciones activas</span>
+    <h1>Unidades en arriendo</h1>
+    <p>
+      Apartamentos, casas, locales y oficinas publicados por administradores que
+      usan Propify. Filtra por ciudad, barrio o departamento.
+    </p>
+  </header>
+
+  <form class="filtros" [formGroup]="form">
+    <div class="filtros__buscar">
+      <i class="bi bi-search"></i>
+      <input
+        type="search"
+        formControlName="q"
+        placeholder="Buscar por dirección, barrio, ciudad, nombre del inmueble…"
+        aria-label="Buscar"
+      />
+    </div>
+
+    <div class="filtros__grid">
+      <label>
+        <span>Ciudad</span>
+        <input type="text" formControlName="ciudad" placeholder="Ej. Medellín" />
+      </label>
+      <label>
+        <span>Barrio</span>
+        <input type="text" formControlName="barrio" placeholder="Ej. Laureles" />
+      </label>
+      <label>
+        <span>Departamento</span>
+        <input type="text" formControlName="departamento" placeholder="Ej. Antioquia" />
+      </label>
+      <label>
+        <span>Tipo</span>
+        <select formControlName="tipo">
+          <option value="">Todos</option>
+          @for (tipo of tiposUnidad; track tipo) {
+            <option [value]="tipo">{{ etiquetasTipo[tipo] }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>Precio desde</span>
+        <input type="number" inputmode="numeric" min="0" step="50000" formControlName="precioMin" placeholder="$" />
+      </label>
+      <label>
+        <span>Precio hasta</span>
+        <input type="number" inputmode="numeric" min="0" step="50000" formControlName="precioMax" placeholder="$" />
+      </label>
+      <label>
+        <span>Cuartos (mín.)</span>
+        <input type="number" inputmode="numeric" min="1" step="1" formControlName="cuartos" placeholder="1" />
+      </label>
+      <label>
+        <span>Ordenar por</span>
+        <select formControlName="orden">
+          <option value="recientes">Más recientes</option>
+          <option value="precio-asc">Precio: menor a mayor</option>
+          <option value="precio-desc">Precio: mayor a menor</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="filtros__pie">
+      <label class="filtros__check">
+        <input type="checkbox" formControlName="amoblado" />
+        <span>Solo amoblados</span>
+      </label>
+      <button type="button" class="filtros__limpiar" (click)="limpiarFiltros()">
+        <i class="bi bi-arrow-counterclockwise"></i> Limpiar filtros
+      </button>
+    </div>
+  </form>
+
+  @if (errorMensaje()) {
+    <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+  }
+
+  @if (cargando() && items().length === 0) {
+    <app-loading texto="Buscando unidades…" />
+  } @else if (sinResultados()) {
+    <div class="vacio">
+      <i class="bi bi-house-slash"></i>
+      <h2>No encontramos unidades con esos filtros</h2>
+      <p>Prueba con menos filtros o amplía el rango de precio.</p>
+      <button type="button" class="filtros__limpiar" (click)="limpiarFiltros()">
+        Limpiar filtros
+      </button>
+    </div>
+  } @else if (items().length > 0) {
+    <p class="arriendos__conteo" [class.arriendos__conteo--cargando]="cargando()">
+      {{ total() }} {{ total() === 1 ? 'unidad disponible' : 'unidades disponibles' }}
+    </p>
+
+    <div class="grid-unidades">
+      @for (item of items(); track item.codUnidad) {
+        <article class="tarjeta-unidad">
+          <a class="tarjeta-unidad__link" [routerLink]="['/arriendo/unidad', item.codUnidad]">
+            @if (urlFoto(item); as foto) {
+              <img [src]="foto" [alt]="'Foto de ' + item.identificador" loading="lazy" />
+            } @else {
+              <div class="tarjeta-unidad__sin-foto"><i class="bi bi-image"></i></div>
+            }
+            <span class="tarjeta-unidad__tipo">{{ etiquetasTipo[item.tipo] }}</span>
+          </a>
+          <div class="tarjeta-unidad__cuerpo">
+            <a class="tarjeta-unidad__titulo" [routerLink]="['/arriendo/unidad', item.codUnidad]">
+              {{ item.identificador }}
+            </a>
+            @if (item.nombreInmueble) {
+              <p class="tarjeta-unidad__inmueble">{{ item.nombreInmueble }}</p>
+            }
+            @if (ubicacion(item); as loc) {
+              <p class="tarjeta-unidad__ubicacion"><i class="bi bi-geo-alt"></i> {{ loc }}</p>
+            }
+            <ul class="tarjeta-unidad__specs">
+              @if (item.numeroCuartos) {
+                <li><i class="bi bi-door-open"></i> {{ item.numeroCuartos }} hab.</li>
+              }
+              @if (item.numeroBanos) {
+                <li><i class="bi bi-droplet"></i> {{ item.numeroBanos }} baños</li>
+              }
+              @if (item.areaM2) {
+                <li><i class="bi bi-rulers"></i> {{ item.areaM2 }} m²</li>
+              }
+              @if (item.amoblado) {
+                <li><i class="bi bi-lamp"></i> Amoblado</li>
+              }
+            </ul>
+            <div class="tarjeta-unidad__pie">
+              @if (item.precioArriendo) {
+                <span class="tarjeta-unidad__precio">{{ formatoMonto(item.precioArriendo) }}<small>/mes</small></span>
+              } @else {
+                <span class="tarjeta-unidad__precio tarjeta-unidad__precio--consultar">Precio a consultar</span>
+              }
+              @if (item.telefonoContacto) {
+                <a
+                  class="tarjeta-unidad__wa"
+                  [href]="urlWhatsapp(item)"
+                  target="_blank"
+                  rel="noopener"
+                  aria-label="Preguntar por WhatsApp"
+                >
+                  <i class="bi bi-whatsapp"></i>
+                </a>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <app-pagination
+      [totalItems]="total()"
+      [paginaActual]="pagina()"
+      [tamanioPagina]="TAMANIO_PAGINA"
+      (paginaCambio)="irAPagina($event)"
+    />
+  }
+</section>

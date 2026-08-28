@@ -26,14 +26,31 @@
       </div>
     </div>
 
-    <fieldset class="mt-3">
-      <legend class="form-label fs-6">Módulos habilitados</legend>
+    <div class="row">
+      <div class="col-md-4">
+        <app-text-field label="Ciudad">
+          <input type="text" class="form-control" formControlName="ciudad" />
+        </app-text-field>
+      </div>
+      <div class="col-md-4">
+        <app-text-field label="Barrio">
+          <input type="text" class="form-control" formControlName="barrio" />
+        </app-text-field>
+      </div>
+      <div class="col-md-4">
+        <app-text-field
+          label="Departamento"
+          hint="Ciudad, barrio y departamento se usan para filtrar los anuncios públicos de arriendo."
+        >
+          <input type="text" class="form-control" formControlName="departamento" />
+        </app-text-field>
+      </div>
+    </div>
 
-      @if (!hayBanderasDisponibles) {
-        <p class="text-muted small mb-0">
-          Este tipo de inmueble (según tu plan) no tiene módulos adicionales disponibles.
-        </p>
-      } @else {
+    @if (hayBanderasDisponibles) {
+      <fieldset class="mt-3">
+        <legend class="form-label fs-6">Módulos habilitados</legend>
+
         @if (modo === 'crear') {
           <p class="text-muted small">
             Preseleccionado según tu plan — ajústalo si este inmueble en particular lo necesita distinto.
@@ -82,8 +99,8 @@
             </div>
           }
         </div>
-      }
-    </fieldset>
+      </fieldset>
+    }
   </div>
 
   <div class="modal-footer">

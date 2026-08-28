@@ -1,3 +1,119 @@
-<div class="container py-5">
-  <h1 class="h3">Contacto</h1>
-</div>
+<section class="contacto">
+  <div class="contacto__info">
+    <span class="eyebrow">Contacto</span>
+    <h1>Hablemos de tu propiedad</h1>
+    <p>
+      ¿Dudas sobre los planes, una demo o cómo migrar tu administración a
+      Propify? Escríbenos y te respondemos al correo que nos dejes.
+    </p>
+
+    <ul class="contacto__canales">
+      <li>
+        <span class="contacto__icono"><i class="bi bi-envelope"></i></span>
+        <div>
+          <strong>Correo</strong>
+          <a href="mailto:soporte@propify.com">soporte&#64;propify.com</a>
+        </div>
+      </li>
+      <li>
+        <span class="contacto__icono"><i class="bi bi-chat-dots"></i></span>
+        <div>
+          <strong>Respuesta</strong>
+          <span>Normalmente dentro de 1 día hábil</span>
+        </div>
+      </li>
+      <li>
+        <span class="contacto__icono"><i class="bi bi-life-preserver"></i></span>
+        <div>
+          <strong>¿Ya eres cliente?</strong>
+          <span>Escríbenos desde tu cuenta para soporte prioritario</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="contacto__form-wrap">
+    @if (exito()) {
+      <div class="contacto__exito">
+        <span class="contacto__exito-icono"><i class="bi bi-check-circle"></i></span>
+        <h2>¡Mensaje enviado!</h2>
+        <p>{{ exito() }}</p>
+      </div>
+    } @else {
+      <form [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+        @if (errorMensaje()) {
+          <app-alert variant="danger">{{ errorMensaje() }}</app-alert>
+        }
+
+        <div class="contacto__fila">
+          <app-text-field
+            label="Nombre"
+            [error]="
+              form.controls.nombre.touched && form.controls.nombre.invalid
+                ? 'Ingresa tu nombre'
+                : null
+            "
+          >
+            <input
+              type="text"
+              class="form-control"
+              formControlName="nombre"
+              [class.is-invalid]="form.controls.nombre.touched && form.controls.nombre.invalid"
+            />
+          </app-text-field>
+
+          <app-text-field
+            label="Correo"
+            [error]="
+              form.controls.correo.touched && form.controls.correo.invalid
+                ? 'Ingresa un correo válido'
+                : null
+            "
+          >
+            <input
+              type="email"
+              class="form-control"
+              formControlName="correo"
+              [class.is-invalid]="form.controls.correo.touched && form.controls.correo.invalid"
+            />
+          </app-text-field>
+        </div>
+
+        <div class="contacto__fila">
+          <app-text-field label="Teléfono (opcional)">
+            <input type="tel" class="form-control" formControlName="telefono" />
+          </app-text-field>
+
+          <app-text-field label="Asunto (opcional)">
+            <input type="text" class="form-control" formControlName="asunto" />
+          </app-text-field>
+        </div>
+
+        <app-text-field
+          label="Mensaje"
+          [error]="
+            form.controls.mensaje.touched && form.controls.mensaje.invalid
+              ? 'Cuéntanos en qué te podemos ayudar'
+              : null
+          "
+        >
+          <textarea
+            class="form-control"
+            rows="5"
+            formControlName="mensaje"
+            [class.is-invalid]="form.controls.mensaje.touched && form.controls.mensaje.invalid"
+          ></textarea>
+        </app-text-field>
+
+        <app-button
+          type="submit"
+          variant="primary"
+          [loading]="enviando()"
+          [disabled]="enviando()"
+        >
+          Enviar mensaje
+        </app-button>
+      </form>
+    }
+  </div>
+</section>

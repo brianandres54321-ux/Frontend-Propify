@@ -3,6 +3,7 @@ export * from './arriendos.service';
 export * from './auth.service';
 export * from './avisos.service';
 export * from './cobranza.service';
+export * from './contacto.service';
 export * from './cuentas-mensuales.service';
 export * from './gastos.service';
 export * from './inmuebles.service';

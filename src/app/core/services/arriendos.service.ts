@@ -1,9 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { environment } from '@env/environment';
-import { ArriendoDestacada, ArriendoInmueblePublico, ArriendoUnidadPublico } from '../models';
+import {
+  ArriendoBusquedaRespuesta,
+  ArriendoDestacada,
+  ArriendoInmueblePublico,
+  ArriendoUnidadPublico,
+  BuscarArriendosParams,
+} from '../models';
 
 // Consume /publico/arriendos — sin autenticación, sin tenant, ver
 // ArriendosService/ArriendosController en el backend.
@@ -15,6 +21,16 @@ export class ArriendosService {
 
   public consultarDestacadas(): Observable<ArriendoDestacada[]> {
     return this.http.get<ArriendoDestacada[]>(`${this.baseUrl}/destacadas`);
+  }
+
+  public buscar(filtros: BuscarArriendosParams): Observable<ArriendoBusquedaRespuesta> {
+    let params = new HttpParams();
+    for (const [clave, valor] of Object.entries(filtros)) {
+      if (valor !== undefined && valor !== null && valor !== '') {
+        params = params.set(clave, String(valor));
+      }
+    }
+    return this.http.get<ArriendoBusquedaRespuesta>(`${this.baseUrl}/buscar`, { params });
   }
 
   public consultarPorInmueble(inmuebleId: number): Observable<ArriendoInmueblePublico> {

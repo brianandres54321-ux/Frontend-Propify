@@ -17,8 +17,16 @@ export const PUBLICO_ROUTES: Routes = [
         loadComponent: () => import('./nosotros/nosotros.page').then((m) => m.NosotrosPage),
       },
       {
+        path: 'planes',
+        loadComponent: () => import('./planes/planes.page').then((m) => m.PlanesPage),
+      },
+      {
         path: 'contacto',
         loadComponent: () => import('./contacto/contacto.page').then((m) => m.ContactoPage),
+      },
+      {
+        path: 'arriendos',
+        loadComponent: () => import('./arriendos/arriendos.page').then((m) => m.ArriendosPage),
       },
       {
         path: 'arriendo/unidad/:unidadId',
